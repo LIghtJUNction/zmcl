@@ -18,7 +18,10 @@ def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('action',choices=['install','uninstall'])
     parser.add_argument('--prefix',type=pathlib.Path,default=pathlib.Path.home()/'.local')
-    parser.add_argument('--binary',type=pathlib.Path,default=pathlib.Path(__file__).resolve().parents[1]/'target/release/zmcl')
+    root=pathlib.Path(__file__).resolve().parents[1]
+    default_binary=root/('zmcl.exe' if os.name=='nt' else 'zmcl')
+    if not default_binary.is_file():default_binary=root/'target/release'/('zmcl.exe' if os.name=='nt' else 'zmcl')
+    parser.add_argument('--binary',type=pathlib.Path,default=default_binary)
     args=parser.parse_args()
     prefix=args.prefix.expanduser().resolve()
     if any(c in str(prefix) for c in '\r\n\0'):raise ValueError('Invalid installation path')
@@ -28,7 +31,9 @@ def main():
         entries=json.loads(record.read_text())
         retained=[]
         for entry in entries:
-            path=prefix/entry['path']
+            rel=pathlib.PurePosixPath(entry['path'])
+            if rel.is_absolute() or '..' in rel.parts or str(rel) not in ['bin/zmcl','share/icons/hicolor/scalable/apps/zmcl.svg','share/applications/zmcl.desktop']:raise ValueError('Invalid installation manifest')
+            path=prefix/rel
             if path.is_symlink():retained.append(entry['path']);continue
             if path.exists():
                 if digest(path)!=entry['sha256']:retained.append(entry['path']);continue

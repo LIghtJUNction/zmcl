@@ -494,12 +494,10 @@ fn commit_mods(instance: &Path, temp: &mut Temp, entries: &[Entry]) -> Result<()
         .as_bytes(),
     )?;
     temp.retain = true;
-    if had_mods {
-        if let Err(error) = fs::rename(&target, &previous) {
-            let _ = fs::remove_file(&journal);
-            temp.retain = false;
-            return Err(error.to_string());
-        }
+    if had_mods && let Err(error) = fs::rename(&target, &previous) {
+        let _ = fs::remove_file(&journal);
+        temp.retain = false;
+        return Err(error.to_string());
     }
     let result = fs::rename(temp.path.join("mods"), &target)
         .map_err(|e| e.to_string())
@@ -569,7 +567,12 @@ pub fn add(app: &App, id: &str, project: &str) -> Result<()> {
                     entry.project
                 ));
             }
-            if !existing.enabled { return Err(format!("Required project {} is disabled; enable it before adding this Mod", entry.project)); }
+            if !existing.enabled {
+                return Err(format!(
+                    "Required project {} is disabled; enable it before adding this Mod",
+                    entry.project
+                ));
+            }
             verify_entry(&game, existing)?;
         } else if old.iter().any(|x| x.path.eq_ignore_ascii_case(&entry.path))
             || util::safe_join(&game, &entry.path)?.exists()
@@ -717,8 +720,13 @@ fn parse_pack(bytes: &[u8]) -> Result<Pack> {
             loader = mapped.into();
             loader_version = string(value).ok_or("Invalid loader version")?;
         }
-        if loader != "vanilla" && (loader_version.is_empty() || loader_version.len() > 128
-            || !loader_version.bytes().all(|c| c.is_ascii_alphanumeric() || b"-_.+".contains(&c))) {
+        if loader != "vanilla"
+            && (loader_version.is_empty()
+                || loader_version.len() > 128
+                || !loader_version
+                    .bytes()
+                    .all(|c| c.is_ascii_alphanumeric() || b"-_.+".contains(&c)))
+        {
             return Err("Invalid Mod loader version in pack".into());
         }
         let source = v.get("files").ok_or("Pack has no files array")?;
@@ -1007,7 +1015,8 @@ mod tests {
     fn toggle_preserves_bytes_and_unmanaged_mods() {
         let temp = Temp::new(&std::env::temp_dir()).unwrap();
         let app = App::new(Some(temp.path.join("app").to_string_lossy().into_owned())).unwrap();
-        app.create_instance("toggle", "1.20.1", "fabric", "0.16.0").unwrap();
+        app.create_instance("toggle", "1.20.1", "fabric", "0.16.0")
+            .unwrap();
         let dir = app.dir("toggle").unwrap();
         let game = dir.join("game");
         let body = b"fixture bytes";
@@ -1017,24 +1026,37 @@ mod tests {
         managed.size = body.len() as u64;
         util::atomic_write(&game.join(&managed.path), body).unwrap();
         util::atomic_write(&game.join("mods/unmanaged.jar"), b"preserve").unwrap();
-        util::atomic_write(&dir.join("mods-lock.json"), lock_json(&[managed]).as_bytes()).unwrap();
+        util::atomic_write(
+            &dir.join("mods-lock.json"),
+            lock_json(&[managed]).as_bytes(),
+        )
+        .unwrap();
         toggle(&app, "toggle", "abc123", false).unwrap();
         assert!(!game.join("mods/a.jar").exists());
         assert_eq!(fs::read(game.join("mods/a.jar.disabled")).unwrap(), body);
-        assert_eq!(fs::read(game.join("mods/unmanaged.jar")).unwrap(), b"preserve");
+        assert_eq!(
+            fs::read(game.join("mods/unmanaged.jar")).unwrap(),
+            b"preserve"
+        );
         assert!(!parse_lock(list(&app, "toggle").unwrap().as_bytes()).unwrap()[0].enabled);
         toggle(&app, "toggle", "a.jar", true).unwrap();
         assert_eq!(fs::read(game.join("mods/a.jar")).unwrap(), body);
         assert!(!game.join("mods/a.jar.disabled").exists());
         assert!(!dir.join(".content-journal.json").exists());
-        assert!(fs::read_dir(&dir).unwrap().all(|x| !x.unwrap().file_name().to_string_lossy().starts_with(".content-stage-")));
+        assert!(fs::read_dir(&dir).unwrap().all(|x| {
+            !x.unwrap()
+                .file_name()
+                .to_string_lossy()
+                .starts_with(".content-stage-")
+        }));
     }
 
     #[test]
     fn mrpack_roundtrip_uses_verified_cache_and_preserves_existing_instance() {
         let temp = Temp::new(&std::env::temp_dir()).unwrap();
         let app = App::new(Some(temp.path.join("app").to_string_lossy().into_owned())).unwrap();
-        app.create_instance("source", "1.20.1", "fabric", "0.16.0").unwrap();
+        app.create_instance("source", "1.20.1", "fabric", "0.16.0")
+            .unwrap();
         let source = app.dir("source").unwrap();
         let game = source.join("game");
         let body = b"offline fixture jar bytes";
@@ -1045,16 +1067,27 @@ mod tests {
         let cache = app.shared().join(format!("content/sha1/{}", managed.sha1));
         util::atomic_write(&cache, body).unwrap();
         store::materialize(&cache, &game.join(&managed.path), true).unwrap();
-        util::atomic_write(&source.join("mods-lock.json"), lock_json(&[managed]).as_bytes()).unwrap();
+        util::atomic_write(
+            &source.join("mods-lock.json"),
+            lock_json(&[managed]).as_bytes(),
+        )
+        .unwrap();
         util::atomic_write(&game.join("config/demo.toml"), b"show_menu = true").unwrap();
-        util::atomic_write(&game.join("config/provider.json"), br#"{"api_key":"fixture-secret"}"#).unwrap();
+        util::atomic_write(
+            &game.join("config/provider.json"),
+            br#"{"api_key":"fixture-secret"}"#,
+        )
+        .unwrap();
         let archive = temp.path.join("fixture.mrpack");
         export_pack(&app, "source", &archive).unwrap();
         assert!(export_pack(&app, "source", &archive).is_err());
         import_pack(&app, &archive, "destination").unwrap();
         let imported = app.dir("destination").unwrap();
         assert_eq!(fs::read(imported.join("game/mods/a.jar")).unwrap(), body);
-        assert_eq!(fs::read(imported.join("game/config/demo.toml")).unwrap(), b"show_menu = true");
+        assert_eq!(
+            fs::read(imported.join("game/config/demo.toml")).unwrap(),
+            b"show_menu = true"
+        );
         assert!(!imported.join("game/config/provider.json").exists());
         let instance = app.read_instance("destination").unwrap();
         assert_eq!(instance.loader, "fabric");

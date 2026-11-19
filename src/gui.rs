@@ -22,6 +22,57 @@ const ERROR: u32 = 0xf1a69bff;
 const OUTPUT_LIMIT: usize = 2 * 1024 * 1024;
 const LOG_LINES: usize = 96;
 
+// Preserve the launcher palette when controls are disabled.
+#[allow(clippy::too_many_arguments)]
+trait LauncherInput {
+    fn launcher_input(
+        &mut self,
+        canvas: &mut Canvas<'_>,
+        id: u64,
+        rect: Rect,
+        value: &mut String,
+        placeholder: &str,
+        secret: bool,
+        enabled: bool,
+    ) -> bool;
+}
+#[allow(clippy::too_many_arguments)]
+impl LauncherInput for Ui {
+    fn launcher_input(
+        &mut self,
+        canvas: &mut Canvas<'_>,
+        id: u64,
+        rect: Rect,
+        value: &mut String,
+        placeholder: &str,
+        secret: bool,
+        enabled: bool,
+    ) -> bool {
+        if enabled {
+            return self.input(canvas, id, rect, value, placeholder, secret, true);
+        }
+        canvas.rect(rect, 12., LINE);
+        canvas.rect(rect.inset(1.), 11., PANEL);
+        let display = if value.is_empty() {
+            placeholder.to_owned()
+        } else if secret {
+            "•".repeat(value.chars().count())
+        } else {
+            value.clone()
+        };
+        canvas.ellipsis(
+            &display,
+            rect.x + 11.,
+            rect.y + 11.,
+            (rect.w - 22.).max(1.),
+            15,
+            false,
+            DIM,
+        );
+        false
+    }
+}
+
 #[derive(Clone, Copy, PartialEq, Eq)]
 enum Page {
     Library,
@@ -703,9 +754,6 @@ impl App {
                 if self.new_version.is_empty() {
                     self.new_version = self.latest_release.clone();
                 }
-                if self.versions.is_empty() && !self.busy() {
-                    self.queue.push_back(Task::Versions);
-                }
             }
             Action::CloseForm => self.form = false,
             Action::Cancel => {
@@ -978,7 +1026,7 @@ impl App {
                 self.offline = !self.offline;
             }
             if self.offline {
-                self.ui.input(
+                self.ui.launcher_input(
                     c,
                     111,
                     Rect::new(
@@ -1095,7 +1143,7 @@ impl App {
             "Find mods on Modrinth and add them to your selected instance.",
         );
         let busy = self.busy();
-        self.ui.input(
+        self.ui.launcher_input(
             c,
             300,
             Rect::new(x, 156., w - 104., 42.),
@@ -1119,7 +1167,7 @@ impl App {
             }));
         }
         let filter_w = (w * 0.44).min(220.);
-        self.ui.input(
+        self.ui.launcher_input(
             c,
             302,
             Rect::new(x, 211., filter_w, 40.),
@@ -1274,7 +1322,7 @@ impl App {
             true,
             INK,
         );
-        self.ui.input(
+        self.ui.launcher_input(
             c,
             352,
             Rect::new(x, 257., w, 42.),
@@ -1316,7 +1364,7 @@ impl App {
                 true,
                 INK,
             );
-            self.ui.input(
+            self.ui.launcher_input(
                 c,
                 353,
                 Rect::new(
@@ -1438,7 +1486,7 @@ impl App {
             c.text("No account connected", x, y, 23, true, INK);
         }
         c.text("Microsoft application ID", x, y + 65., 13, true, INK);
-        self.ui.input(
+        self.ui.launcher_input(
             c,
             400,
             Rect::new(x, y + 92., w.min(470.), 42.),
@@ -1667,7 +1715,7 @@ impl App {
         let version = if compact { 158. } else { 203. };
         let loader = if compact { 239. } else { 306. };
         c.text("Instance name", x + 30., y + first, 13, true, INK);
-        self.ui.input(
+        self.ui.launcher_input(
             c,
             701,
             Rect::new(x + 30., y + first + 24., w - 60., 42.),
@@ -1688,7 +1736,7 @@ impl App {
             );
         }
         c.text("Minecraft version", x + 30., y + version, 13, true, INK);
-        self.ui.input(
+        self.ui.launcher_input(
             c,
             702,
             Rect::new(x + 30., y + version + 24., w - 190., 42.),
@@ -1729,7 +1777,7 @@ impl App {
             self.new_loader_version.clear();
         }
         if self.new_loader > 0 {
-            self.ui.input(
+            self.ui.launcher_input(
                 c,
                 705,
                 Rect::new(
@@ -2051,10 +2099,12 @@ pub fn run(smoke_seconds: Option<u64>) -> Result<(), String> {
 
 /// Forward an explicit storage root to CLI children without changing process environment.
 pub fn run_with_root(smoke_seconds: Option<u64>, root: Option<String>) -> Result<(), String> {
+    let started = Instant::now();
+    let metrics = std::env::var("ZMCL_GUI_METRICS").as_deref() == Ok("1");
+    let mut first_frame = true;
     let mut window = Window::new("zmcl — Minecraft Launcher", 1120, 760)?;
     window.set_theme(Theme::Dark);
     let mut app = App::new(root);
-    let started = Instant::now();
     let mut event = None;
     let mut redraw = true;
     loop {
@@ -2065,10 +2115,10 @@ pub fn run_with_root(smoke_seconds: Option<u64>, root: Option<String>) -> Result
             break;
         }
         redraw |= app.poll();
-        if let Some(Event::Move(x, y)) = event.as_ref() {
-            if !app.ui.pointer_changed(*x, *y) {
-                event = None;
-            }
+        if let Some(Event::Move(x, y)) = event.as_ref()
+            && !app.ui.pointer_changed(*x, *y)
+        {
+            event = None;
         }
         redraw |= event.is_some();
         if redraw {
@@ -2077,6 +2127,16 @@ pub fn run_with_root(smoke_seconds: Option<u64>, root: Option<String>) -> Result
             let action = app.draw(&mut canvas, event.take());
             drop(canvas);
             window.present();
+            if first_frame {
+                if metrics {
+                    eprintln!(
+                        "{{\"event\":\"gui_first_frame\",\"startup_ms\":{},\"renderer\":{}}}",
+                        started.elapsed().as_millis(),
+                        zmcl_core::json::quote(&window.gpu())
+                    );
+                }
+                first_frame = false;
+            }
             if let Some(text) = app.ui.clipboard.take() {
                 window.copy(&text);
             }

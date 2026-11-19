@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build a reproducible local release archive without publishing."""
+"""Build a local release archive and checksum without publishing."""
 import argparse,hashlib,json,os,pathlib,platform,tarfile,zipfile
 p=argparse.ArgumentParser();p.add_argument('--binary',type=pathlib.Path,default=pathlib.Path('target/release/zmcl'+('.exe' if os.name=='nt' else '')));p.add_argument('--output',type=pathlib.Path,default=pathlib.Path('dist'));a=p.parse_args()
 root=pathlib.Path(__file__).resolve().parents[1]

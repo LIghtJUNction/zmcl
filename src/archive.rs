@@ -1,9 +1,9 @@
 use crate::util::Result;
-use std::{path::Path,process::Command};
+use std::{path::Path, process::Command};
 
 /// The system Python ZIP reader supplies mature decompression; all paths and limits are checked before writes.
-pub fn extract_natives(archive:&Path,dest:&Path,excludes:&[String])->Result<()> {
-    let script=r#"
+pub fn extract_natives(archive: &Path, dest: &Path, excludes: &[String]) -> Result<()> {
+    let script = r#"
 import json,os,pathlib,stat,sys,zipfile
 source,destination,excluded=sys.argv[1:4]
 root=pathlib.Path(destination)
@@ -46,9 +46,29 @@ with zipfile.ZipFile(source) as z:
                 if count>info.file_size:raise ValueError('Native size mismatch')
                 dst.write(block)
 "#;
-    let excluded=format!("[{}]",excludes.iter().map(|s|zmcl_core::json::quote(s)).collect::<Vec<_>>().join(","));
-    let output=Command::new("python3").args(["-c",script]).arg(archive).arg(dest).arg(excluded).output()
-        .map_err(|e|format!("Native extraction requires system Python 3: {e}"))?;
-    if !output.status.success(){return Err(format!("Native extraction failed: {}",String::from_utf8_lossy(&output.stderr).chars().take(1500).collect::<String>()));}
+    let excluded = format!(
+        "[{}]",
+        excludes
+            .iter()
+            .map(|s| zmcl_core::json::quote(s))
+            .collect::<Vec<_>>()
+            .join(",")
+    );
+    let output = Command::new("python3")
+        .args(["-c", script])
+        .arg(archive)
+        .arg(dest)
+        .arg(excluded)
+        .output()
+        .map_err(|e| format!("Native extraction requires system Python 3: {e}"))?;
+    if !output.status.success() {
+        return Err(format!(
+            "Native extraction failed: {}",
+            String::from_utf8_lossy(&output.stderr)
+                .chars()
+                .take(1500)
+                .collect::<String>()
+        ));
+    }
     Ok(())
 }

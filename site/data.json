@@ -1,0 +1,223 @@
+{
+  "schema_version": 1,
+  "project": {
+    "name": "zmcl",
+    "repository": "https://github.com/LIghtJUNction/zmcl",
+    "baseline": "v0.73.1",
+    "updated": "2026-11-20",
+    "stage": "development"
+  },
+  "measurement": {
+    "phase": "initial",
+    "label": "初版测量 · 等待最终版本复测",
+    "artifact_version": "0.1.0-dev",
+    "commit": null,
+    "environment": "Linux · 隔离 Xvfb · llvmpipe 软件渲染 · 单次早期构建",
+    "scope": "GUI 空闲数据只计启动器进程，不包含 Xvfb、Java 与游戏数据。安装时的下载和解压子进程必须另行统计。",
+    "comparison": "XMCL 已取得初步空首页样本，正在按相同方法复测；当前不提供提升倍数。",
+    "idle_interval_seconds": 2.11582898,
+    "sample_count": 1,
+    "hardware_status": "未测得：当前授权环境缺少有效 X11 会话授权；未改变访问策略。"
+  },
+  "features": [
+    {
+      "name": "原生界面与命令行",
+      "state": "verified",
+      "label": "已验证",
+      "summary": "真实打开界面；实例创建、键盘输入、640×520 缩窗，以及整合包按钮流程已验证。",
+      "evidence": "src/gui.rs"
+    },
+    {
+      "name": "实例与共享存储",
+      "state": "implemented",
+      "label": "已实现",
+      "summary": "实例隔离、Java/内存配置、不可变内容共享、硬链接与复制回退。物理空间节约量需用相同数据集测量。",
+      "evidence": "src/app.rs"
+    },
+    {
+      "name": "原版 Java Edition",
+      "state": "implemented",
+      "label": "已实现",
+      "summary": "版本元数据、客户端、库、资源、原生库和启动参数已接入；验收按具体游戏版本记录。",
+      "evidence": "src/runtime.rs"
+    },
+    {
+      "name": "Fabric / Quilt",
+      "state": "implemented",
+      "label": "已实现",
+      "summary": "加载器查询、版本继承和依赖解析已接入，实际整合包兼容性需要分别验证。",
+      "evidence": "src/runtime.rs"
+    },
+    {
+      "name": "Forge / NeoForge",
+      "state": "implemented",
+      "label": "已实现",
+      "summary": "使用官方安装器，图形界面可指定加载器版本；旧版与新版安装器的兼容性按验收记录更新。",
+      "evidence": "src/runtime.rs"
+    },
+    {
+      "name": "Microsoft 账号",
+      "state": "implemented",
+      "label": "实现待真人验收",
+      "summary": "设备授权、刷新、Xbox/XSTS 和 Minecraft 权益查询；令牌交给系统凭据库。真实授权需已注册应用与合法账号。",
+      "evidence": "src/auth.rs"
+    },
+    {
+      "name": "Modrinth mods",
+      "state": "implemented",
+      "label": "已实现",
+      "summary": "搜索、版本/加载器筛选、必需依赖、内容校验、启用与禁用；更新与可选依赖仍在推进。",
+      "evidence": "src/content.rs"
+    },
+    {
+      "name": "Modrinth .mrpack",
+      "state": "verified",
+      "label": "已验证部分流程",
+      "summary": "导入、导出与归档边界校验已实现。GUI 已完成空 Vanilla 配置往返；大型公开整合包需独立验收。",
+      "evidence": "src/content.rs"
+    },
+    {
+      "name": "Java 管理、备份与本地服务端",
+      "state": "implemented",
+      "label": "CLI 初版",
+      "summary": "对应 CLI 模块正在集成和验收。最终命令与验证结果以当前仓库文档为准。",
+      "evidence": "src/main.rs"
+    },
+    {
+      "name": "Horizon",
+      "state": "planned",
+      "label": "接入中",
+      "summary": "正在接入官方 launcher 下载与签名校验。游戏包仍需官方 launcher 完成正版身份验证与 26.3 资源准备，不等同于下载后直接可玩。",
+      "evidence": "docs/FEATURES.md"
+    },
+    {
+      "name": "其它内容来源与整合包",
+      "state": "planned",
+      "label": "待完成",
+      "summary": "CurseForge、FTB、MCBBS、Packwiz 等来源与格式，以及资源包和光影的完整管理。",
+      "evidence": "docs/FEATURES.md"
+    },
+    {
+      "name": "世界工具、P2P 与远程服务端",
+      "state": "planned",
+      "label": "待完成",
+      "summary": "世界编辑、蓝图、真实双端联机、远程部署与对应异常恢复流程。",
+      "evidence": "docs/FEATURES.md"
+    },
+    {
+      "name": "Bedrock、手柄与完整桌面体验",
+      "state": "planned",
+      "label": "待完成",
+      "summary": "Bedrock、Big Picture、完整主题与本地化、系统无障碍，以及各操作系统的独立实测。",
+      "evidence": "docs/FEATURES.md"
+    }
+  ],
+  "measurements": [
+    {
+      "key": "binary",
+      "label": "启动器可执行文件",
+      "unit": "bytes",
+      "zmcl": {
+        "value": 885288
+      },
+      "xmcl": {
+        "value": null,
+        "label": "待配对复测"
+      },
+      "context": "初版 Linux release，LTO + strip，包含原生 GUI。系统依赖、Java、构建目录与游戏数据另计。"
+    },
+    {
+      "key": "idle_pss",
+      "label": "GUI 空闲 PSS",
+      "unit": "kib",
+      "zmcl": {
+        "value": 78285
+      },
+      "xmcl": {
+        "value": null,
+        "label": "待配对复测"
+      },
+      "context": "Xvfb + llvmpipe 软件渲染；PSS 按比例计入共享页。此值不代表硬件 GPU 路径。"
+    },
+    {
+      "key": "idle_rss",
+      "label": "GUI 空闲 RSS",
+      "unit": "kib",
+      "zmcl": {
+        "value": 96376
+      },
+      "xmcl": {
+        "value": null,
+        "label": "待配对复测"
+      },
+      "context": "同一轮软件渲染测试。RSS 包含映射到该进程的共享驻留页，不能与 PSS 混用。"
+    },
+    {
+      "key": "idle_cpu_ticks",
+      "label": "GUI 空闲 CPU 增量",
+      "unit": "ticks",
+      "zmcl": {
+        "value": 0
+      },
+      "xmcl": {
+        "value": null,
+        "label": "待配对复测"
+      },
+      "context": "约 2.116 秒观察窗内，进程 CPU ticks 未增加。单次短窗口结果不代表长期恒为零。"
+    },
+    {
+      "key": "first_frame",
+      "label": "首帧时间",
+      "unit": "ms",
+      "zmcl": {
+        "value": null,
+        "label": "待最终复测"
+      },
+      "xmcl": {
+        "value": null,
+        "label": "待配对复测"
+      },
+      "context": "从进程内 GUI 入口到第一帧提交，需固定机器、显示后端与冷/热缓存条件。"
+    },
+    {
+      "key": "install_peak",
+      "label": "安装峰值与物理空间",
+      "unit": "bytes",
+      "zmcl": {
+        "value": null,
+        "label": "待统一测量"
+      },
+      "xmcl": {
+        "value": null,
+        "label": "待配对复测"
+      },
+      "context": "下载/解压按完整进程树统计；游戏数据按设备号与 inode 去重，另报缓存与实例数。"
+    }
+  ],
+  "sources": [
+    {
+      "title": "架构与测量协议",
+      "url": "https://github.com/LIghtJUNction/zmcl/blob/main/docs/ARCHITECTURE.md"
+    },
+    {
+      "title": "功能对照记录",
+      "url": "https://github.com/LIghtJUNction/zmcl/blob/main/docs/FEATURES.md"
+    },
+    {
+      "title": "GUI 测量脚本",
+      "url": "https://github.com/LIghtJUNction/zmcl/blob/main/src/gui/smoke.py"
+    },
+    {
+      "title": "XMCL 官方功能",
+      "url": "https://xmcl.app/en/features/"
+    },
+    {
+      "title": "Horizon 官方仓库",
+      "url": "https://github.com/horizon-rust/horizon"
+    },
+    {
+      "title": "Horizon 官方网站",
+      "url": "https://playhorizon.dev"
+    }
+  ]
+}

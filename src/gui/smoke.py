@@ -62,7 +62,7 @@ def main() -> None:
         env["DISPLAY"] = ":" + number
         with (output / "launcher.log").open("wb") as log:
             gui = subprocess.Popen([str(binary), "--root", str(data), "gui", "--smoke-seconds", str(args.seconds)], env=env, stdin=subprocess.DEVNULL, stdout=log, stderr=log)
-            window = subprocess.run(["xdotool", "search", "--sync", "--onlyvisible", "--pid", str(gui.pid)], env=env, capture_output=True, text=True, timeout=10, check=True).stdout.splitlines()[0]
+            window = subprocess.run(["xdotool", "search", "--sync", "--onlyvisible", "--name", "^zmcl"], env=env, capture_output=True, text=True, timeout=10, check=True).stdout.splitlines()[0]
             time.sleep(1)
             ready_deadline = time.monotonic() + 4
             quiet_since = None
