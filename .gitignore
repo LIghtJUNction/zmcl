@@ -1,0 +1,6 @@
+/target/
+/dist/
+/.test-data/
+/.test-evidence/
+*.tmp
+.DS_Store

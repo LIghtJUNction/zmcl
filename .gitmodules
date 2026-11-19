@@ -1,0 +1,9 @@
+[submodule "vendor/zconv"]
+	path = vendor/zconv
+	url = https://github.com/LIghtJUNction/zconv.git
+[submodule "vendor/zclap"]
+	path = vendor/zclap
+	url = https://github.com/LIghtJUNction/zclap.git
+[submodule "vendor/zui"]
+	path = vendor/zui
+	url = https://github.com/LIghtJUNction/zui.git

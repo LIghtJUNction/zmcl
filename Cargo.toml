@@ -1,0 +1,32 @@
+[workspace]
+members = ["crates/zmcl-core"]
+exclude = ["vendor/zconv", "vendor/zclap", "vendor/zui"]
+resolver = "3"
+
+[package]
+name = "zmcl"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.100"
+description = "A small native Minecraft launcher built on Project Z"
+license = "MIT"
+repository = "https://github.com/LIghtJUNction/zmcl"
+
+[features]
+default = ["gui"]
+gui = ["dep:zui"]
+
+[dependencies]
+zmcl-core = { path = "crates/zmcl-core", version = "=0.1.0" }
+zclap = { path = "vendor/zclap", version = "=0.1.4" }
+zui = { package = "zui-native", path = "vendor/zui", version = "=0.1.0", optional = true }
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+
+[profile.dev]
+debug = 1
