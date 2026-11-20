@@ -1,0 +1,54 @@
+{
+  "cases": [
+    {
+      "exit_code": 0,
+      "mutation": "manifest",
+      "stderr_json": {
+        "error": "manifest changed since this build; use the build's original manifest",
+        "status": "error"
+      },
+      "stdout": ""
+    },
+    {
+      "exit_code": 0,
+      "mutation": "receipt",
+      "stderr_json": {
+        "error": "artifact size or SHA-256 does not match its receipt",
+        "status": "error"
+      },
+      "stdout": ""
+    },
+    {
+      "exit_code": 0,
+      "mutation": "artifact",
+      "stderr_json": {
+        "error": "artifact size or SHA-256 does not match its receipt",
+        "status": "error"
+      },
+      "stdout": ""
+    }
+  ],
+  "command_shape": [
+    "python3",
+    "-I",
+    "-S",
+    "zdistro-0.1.0.pyz",
+    "verify",
+    "--manifest",
+    "zdistro.toml",
+    "receipt.json"
+  ],
+  "observed": "The released zipapp calls main without propagating its returned exit code. Verification errors print status:error JSON to stderr but exit 0.",
+  "schema": 1,
+  "scope": "Synthetic native ELF packaging fixture; no application, GUI, system installation or signing acceptance.",
+  "tool": {
+    "asset": "zdistro-0.1.0.pyz",
+    "bytes": 30648,
+    "commit": "6a54a137fc697d372b54ef85105315f2ce522b3d",
+    "repository": "https://github.com/LIghtJUNction/zdistro",
+    "sha256": "a30a4580254a6510c2019e3e7a684c31d4e435b69f32f33d3813ef6264544908",
+    "version": "0.1.0"
+  },
+  "wrapper_gate": "Require valid expected stdout JSON, reject stderr status:error, require all explicit targets, verify immutable manifest/receipt/artifact hashes, then re-run the original verifier.",
+  "zipapp_main": "# -*- coding: utf-8 -*-\nimport zdistro.cli\nzdistro.cli.main()\n"
+}

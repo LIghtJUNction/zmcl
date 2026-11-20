@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "passed": true,
+  "source_base": "7dc09fff213d659d99f98e61ebb2706654c0160b",
+  "tested_at_utc": "2026-11-20T12:10:23.175181+00:00",
+  "tests": {
+    "total": 22,
+    "passed": 22,
+    "skipped": 0,
+    "command": "ZMCL_TEST_ZDISTRO=<pinned-tool> python3 -m unittest discover -s scripts -p 'test_zdistro*.py'",
+    "fixture": "Synthetic native ELF, real isolated Git sources, actual unmodified pinned zdistro, tar.gz + DEB + Linux ZIP; retained paths contain spaces"
+  },
+  "tool": {
+    "name": "zdistro",
+    "version": "0.1.0",
+    "commit": "6a54a137fc697d372b54ef85105315f2ce522b3d",
+    "sha256": "a30a4580254a6510c2019e3e7a684c31d4e435b69f32f33d3813ef6264544908"
+  },
+  "files": {
+    "scripts/zdistro_package.py": {
+      "bytes": 33086,
+      "sha256": "8acef13862c2fb83dc334c60135a25e9500d41a3dbb8c3552818b40c20b65263"
+    },
+    "scripts/test_zdistro_package.py": {
+      "bytes": 18480,
+      "sha256": "e34f1e43dbd94571f2e6aeb530b76391daf4f2001370206ee920366f92b47fc2"
+    },
+    "scripts/test_zdistro_identity.py": {
+      "bytes": 4349,
+      "sha256": "8770da215309e4b38b65e9a2eff3e58a220f857d3288097aeeac1aebe47a6541"
+    }
+  },
+  "checks": [
+    "Native binary architecture, version and frozen digest",
+    "All required targets, without skipped or duplicate outputs",
+    "Original receipts retained and independently reverified",
+    "Archive bytes, confined paths and Linux permissions",
+    "ELF-derived Debian dependency floors and unknown-library rejection",
+    "Manifest, artifact and receipt tampering rejected despite zipapp exit status 0",
+    "Existing evidence/output conflict rejected",
+    "Uncommitted packaged installer/docs/assets/desktop or build configuration rejected",
+    "Ignored source inputs rejected; ordinary target build outputs permitted",
+    "Unmapped SemVer suffixes rejected for DEB to preserve upgrade ordering"
+  ],
+  "application_installation": false,
+  "application_gui_started": false,
+  "windows_runtime": false,
+  "macos_runtime": false,
+  "scope": "Packaging boundary regression only. Real zmcl release, installation and GUI results are recorded separately.",
+  "independent_review": {
+    "tool": "agy",
+    "mode": "read-only plan with sandbox",
+    "completed": true,
+    "tests_run_by_reviewer": false,
+    "follow_up": "Input scope, ignored source files and Debian suffix handling corrected with six regressions. Additional GCC/GLIBCXX dependency floors, optional credential tools and platform acceptance limits documented."
+  }
+}
