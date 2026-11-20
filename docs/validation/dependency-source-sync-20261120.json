@@ -1,0 +1,167 @@
+{
+  "schema": 1,
+  "date": "2026-11-20",
+  "base": "600e7779fbbeee9d4a0e599a09f3e334cec42f2f",
+  "validated_source_tree": "b220998ca50eecec5e998d3e52fea389b40f6c67",
+  "scope": "Source dependency consumption on Linux x86_64; only vendor/zgpui changes before documentation.",
+  "application_version": "0.1.4",
+  "zgpui": {
+    "version": "0.1.5",
+    "previous": "4aba3ba83815253fb7e4013baa8bcf894439d32d",
+    "canonical": "b4d5493e0cd985d00558c7be0b5726965ab5163a",
+    "tree": "caf6d3c249c04f4547aa6556afb03c0c91da5e65",
+    "features": [
+      "native",
+      "linux-software"
+    ]
+  },
+  "other_pins": {
+    "zi18n": "b90984b48465a764bcb699ad2bb3251fa7020024",
+    "zconv": "0af1f7eb0766ff0ce9db5cee7c6184eff511a8c1",
+    "zclap": "4d87f3ae3743e81509d5ac5500909955667c860f"
+  },
+  "cargo_manifest_and_lock_unchanged": true,
+  "application_implementation_unchanged": true,
+  "environment": {
+    "os_arch": "Linux x86_64",
+    "cargo_build_jobs": 1,
+    "rust_test_threads": 1,
+    "private_xdg": true,
+    "private_xvfb": true
+  },
+  "commands": [
+    {
+      "label": "fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "tests",
+      "command": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--locked"
+      ],
+      "exit_code": 0,
+      "test_results": [
+        "test result: ok. 92 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.86s",
+        "test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.37s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "label": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "build",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--locked"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "gui",
+      "command": [
+        "python3",
+        "scripts/bench_gui_activity.py",
+        "--binary",
+        "target/release/zmcl",
+        "--output",
+        "artifacts/dependency-refresh/gui",
+        "--version",
+        "0.1.4",
+        "--revision",
+        "b220998ca50eecec5e998d3e52fea389b40f6c67",
+        "--trials",
+        "1",
+        "--warmup",
+        "1",
+        "--samples",
+        "2",
+        "--idle-interval",
+        "0.25",
+        "--sample-interval",
+        "0.05",
+        "--drawing-seconds",
+        "1",
+        "--expose-hz",
+        "5",
+        "--settle",
+        "0.2"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "diff",
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--check"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "tests": {
+    "application": 92,
+    "core": 22,
+    "failed": 0,
+    "ignored": 0
+  },
+  "binary": {
+    "sha256": "3a5a518c7bd293b81237efa345b19276bfa02361e458b02a2c67fa3bf1c58997",
+    "bytes": 1505192
+  },
+  "gui": {
+    "status": "completed",
+    "trial_status": "completed",
+    "revision": "b220998ca50eecec5e998d3e52fea389b40f6c67",
+    "window": [
+      1120,
+      760
+    ],
+    "scenario": "Fresh empty launcher root; visible library, idle, forced full-window Expose and settled idle",
+    "benchmark_script_sha256": "f6280fafa5fbc2fab079c68dd580e0f288c8a1157e601636b652e18c1ee1f815",
+    "bench_linux_sha256": "9a0614c63639308db2307c5e8be5ec6a7d602001817596b3f17a9ce91db09cbf",
+    "screenshot": {
+      "sha256": "7c384f5156525f6dcdb1a26bd95331f09282d9f113d8da4690e23956e1e412ed",
+      "bytes": 33656
+    },
+    "interpretation": "One short functional smoke: visible window, requested dimensions, idle, forced Expose and continued execution; no performance conclusion."
+  },
+  "recovery": {
+    "first_upstream_fetch_exit_code": 128,
+    "cause": "TLS connect error: unexpected EOF while reading",
+    "action": "Fetched the same canonical Git object from the task-owned, already verified ztty submodule; verified tree caf6d3c249c04f4547aa6556afb03c0c91da5e65 before all application gates.",
+    "acceptance_retry_complete": true
+  },
+  "limitations": [
+    "No new release, package installation, AUR or desktop deployment.",
+    "No new game, online account, server or user-data acceptance.",
+    "No Windows/macOS application runtime acceptance.",
+    "The short single-trial GUI smoke does not establish performance or memory improvements.",
+    "Unchanged Python helpers were not rerun as a broad unrelated suite."
+  ],
+  "evidence_policy": "Summarized native receipts only; no raw session logs, private paths, credentials, account data, game data or benchmark profiles."
+}

@@ -1,5 +1,11 @@
 # zmcl 开发与验收报告
 
+## 当前源码依赖同步：2026-11-20
+
+基于主线 `600e7779`，仅将共享 `vendor/zgpui` 固定到 `b4d5493`；应用版本保持 0.1.4，源码验证树为 `b220998ca50eecec5e998d3e52fea389b40f6c67`。本地 114 项 Rust 测试、fmt、严格 Clippy、Release 构建，以及私有 Xvfb 可见软件窗口与 Expose 检查均通过。[本轮报告](reports/dependency-source-sync-20261120.zh-CN.md)和[脱敏证据](validation/dependency-source-sync-20261120.json)记录实际命令、二进制摘要、固定来源与覆盖边界。
+
+本轮是源码消费验收，没有重新发布或安装应用；单轮短时窗口检查不用于性能结论。下面的发行、安装、游戏和测量记录保持各自原始版本与身份。
+
 ## v0.1.3 源码、发行与安装验收
 
 [应用源码 9ef89bb](https://github.com/LIghtJUNction/zmcl/commit/9ef89bb92d46d324172d6ea8b13054c81434e178) 的构建输入经过逐文件 SHA-256 比对，与实际先行构建一致；没有倒写构建时的 HEAD。本版通过 97 项 Rust、51 项受影响 Python 测试、fmt、严格全目标全特性 Clippy、Linux release、5 项管理 CLI 检查和 21 条生命周期命令（其中 3 次为预期保护拒绝）。默认与系统 Python 条件各完成 6 组原生 GUI 流程。[门禁与来源证明](validation/helper-release-0.1.3-2026-11-20.json)

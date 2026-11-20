@@ -1,8 +1,21 @@
 # Project Z 依赖与传播记录
 
-日期：2026-11-20（Asia/Taipei）。当前应用为 zmcl 0.1.2；旧版本的构建身份和发布/测量记录保留在历史章节。
+## 当前源码：zmcl 0.1.4 / 统一 zgpui 来源
 
-## 当前：zmcl 0.1.2
+2026-11-20 本轮维护在应用基线 `600e7779fbbeee9d4a0e599a09f3e334cec42f2f` 上，将 `vendor/zgpui` 同步到 `b4d5493e0cd985d00558c7be0b5726965ab5163a`（树 `caf6d3c249c04f4547aa6556afb03c0c91da5e65`）。精确 crate 版本仍为 `0.1.5`，manifest 和锁文件保持原内容；它是新的源码固定点，不是新的 registry 发行。
+
+| 库 | 包版本 | 当前固定来源 |
+| --- | --- | --- |
+| zgpui | `0.1.5` | `b4d5493e0cd985d00558c7be0b5726965ab5163a` |
+| zi18n | `0.1.0` | `b90984b48465a764bcb699ad2bb3251fa7020024` |
+| zconv | `0.4.0` | `0af1f7eb0766ff0ce9db5cee7c6184eff511a8c1` |
+| zclap | `0.1.4` | `4d87f3ae3743e81509d5ac5500909955667c860f` |
+
+114 项 Rust 测试、fmt、严格 Clippy、Linux Release 和私有 Xvfb 软件窗口检查通过；具体源码树、二进制身份、网络重试与验收边界见[本轮报告](reports/dependency-source-sync-20261120.zh-CN.md)。Project Z 聚合维护者据最终应用提交继续统一聚合指针。本节不宣称整个套件已完成同步、安装或发行，以下各版本保留原观察时点。
+
+历史记录日期：2026-11-20（Asia/Taipei）。以下章节记录当时 zmcl 0.1.2 的构建身份与发布/测量结果。
+
+## 历史：zmcl 0.1.2
 
 应用源码固定于 [e86b584](https://github.com/LIghtJUNction/zmcl/commit/e86b5841532ef04cc74cea5585ae396150452408)。
 
