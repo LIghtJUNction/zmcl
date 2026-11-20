@@ -92,6 +92,115 @@ fn resolve(app: &App, id: &str, online: bool, seen: &mut BTreeSet<String>) -> Re
         Ok(child)
     }
 }
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+enum VersionIdentifier {
+    Numeric(u64),
+    Text(String),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+struct LoaderVersionOrder {
+    core: [u64; 3],
+    release: bool,
+    prerelease: Vec<VersionIdentifier>,
+}
+
+// Neither provider's response order is a version ordering contract. Quilt also
+// omits Fabric's stable flag, so infer release status from its SemVer spelling.
+fn loader_version_order(version: &str) -> Option<LoaderVersionOrder> {
+    if version.is_empty() || version.len() > 128 || !version.is_ascii() {
+        return None;
+    }
+    let (body, build) = version
+        .split_once('+')
+        .map_or((version, None), |(body, build)| (body, Some(build)));
+    let valid_identifier = |part: &str| {
+        !part.is_empty()
+            && part
+                .bytes()
+                .all(|byte| byte.is_ascii_alphanumeric() || byte == b'-')
+    };
+    if let Some(build) = build
+        && !build.split('.').all(valid_identifier)
+    {
+        return None;
+    }
+    let (main, pre) = body
+        .split_once('-')
+        .map_or((body, None), |(main, pre)| (main, Some(pre)));
+    let mut core = [0; 3];
+    let mut numbers = main.split('.');
+    for part in &mut core {
+        let number = numbers.next()?;
+        if number.is_empty()
+            || !number.bytes().all(|byte| byte.is_ascii_digit())
+            || (number.len() > 1 && number.starts_with('0'))
+        {
+            return None;
+        }
+        *part = number.parse().ok()?;
+    }
+    if numbers.next().is_some() {
+        return None;
+    }
+    let mut prerelease = Vec::new();
+    if let Some(pre) = pre {
+        for part in pre.split('.') {
+            if !valid_identifier(part) {
+                return None;
+            }
+            if part.bytes().all(|byte| byte.is_ascii_digit()) {
+                if part.len() > 1 && part.starts_with('0') {
+                    return None;
+                }
+                prerelease.push(VersionIdentifier::Numeric(part.parse().ok()?));
+            } else {
+                prerelease.push(VersionIdentifier::Text(part.into()));
+            }
+        }
+    }
+    Some(LoaderVersionOrder {
+        core,
+        release: pre.is_none(),
+        prerelease,
+    })
+}
+
+fn select_loader_version(bytes: &[u8]) -> Result<String> {
+    with_json(bytes, |value| {
+        if value.kind() != zmcl_core::json::Kind::Array {
+            return Err("Invalid loader version list".into());
+        }
+        let mut best: Option<(bool, LoaderVersionOrder, String)> = None;
+        for entry in value.array() {
+            let Some(loader) = entry.get("loader") else {
+                continue;
+            };
+            let Some(version) = get_str(loader, "version") else {
+                continue;
+            };
+            let Some(order) = loader_version_order(&version) else {
+                continue;
+            };
+            let stable = if let Some(flag) = loader.get("stable") {
+                let Some(stable) = flag.as_bool() else {
+                    continue;
+                };
+                stable
+            } else {
+                order.release
+            };
+            let candidate = (stable, order, version);
+            if best.as_ref().is_none_or(|old| candidate.cmp(old).is_gt()) {
+                best = Some(candidate);
+            }
+        }
+        best.map(|(_, _, version)| version).ok_or_else(|| {
+            "No valid compatible loader version found; specify --loader-version".into()
+        })
+    })
+}
+
 fn loader_profile(app: &App, instance: &mut Instance) -> Result<Vec<u8>> {
     let (base, api) = match instance.loader.as_str() {
         "fabric" => ("https://meta.fabricmc.net", "v2"),
@@ -103,20 +212,7 @@ fn loader_profile(app: &App, instance: &mut Instance) -> Result<Vec<u8>> {
             "{base}/{api}/versions/loader/{}",
             net::encode(&instance.version)
         ))?;
-        instance.loader_version = with_json(&bytes, |v| {
-            let entries: Vec<_> = v.array().collect();
-            let first = entries
-                .iter()
-                .find(|x| {
-                    x.get("loader")
-                        .and_then(|l| l.get("stable"))
-                        .and_then(|s| s.as_bool())
-                        == Some(true)
-                })
-                .or(entries.first())
-                .ok_or("No compatible loader versions")?;
-            req_str(first.get("loader").ok_or("Missing loader")?, "version")
-        })?;
+        instance.loader_version = select_loader_version(&bytes)?;
     }
     let url = format!(
         "{base}/{api}/versions/loader/{}/{}/profile/json",
@@ -616,4 +712,40 @@ pub fn launch(
         ("started", true.to_string()),
         ("waited", wait.to_string()),
     ]))
+}
+
+#[cfg(test)]
+mod loader_tests {
+    use super::{loader_version_order, select_loader_version};
+
+    #[test]
+    fn unordered_quilt_metadata_selects_the_newest_release() {
+        let versions = br#"[{"loader":{"version":"0.20.0-beta.9"}},
+            {"loader":{"version":"0.24.0"}},{"loader":{"version":"0.29.10"}},
+            {"loader":{"version":"0.30.0-beta.1"}},{"loader":{"version":"0.29.9"}}]"#;
+        assert_eq!(select_loader_version(versions).unwrap(), "0.29.10");
+        assert_eq!(
+            select_loader_version(
+                br#"[{"loader":{"version":"0.20.0-beta.9"}},
+                {"loader":{"version":"0.20.0-beta.10"}}]"#
+            )
+            .unwrap(),
+            "0.20.0-beta.10"
+        );
+    }
+
+    #[test]
+    fn fabric_stability_flags_and_semantic_versions_are_respected() {
+        let versions = br#"[{"loader":{"version":"0.17.0","stable":false}},
+            {"loader":{"version":"0.16.9","stable":true}},
+            {"loader":{"version":"0.16.10","stable":true}}]"#;
+        assert_eq!(select_loader_version(versions).unwrap(), "0.16.10");
+        for value in [
+            "", "1.2", "01.2.3", "1.2.3-", "1.2.3-01", "1.2.3+", "../1.2.3",
+        ] {
+            assert!(loader_version_order(value).is_none(), "{value}");
+        }
+        assert!(loader_version_order("1.2.3+build.7").is_some());
+        assert!(select_loader_version(br#"{"loader":{"version":"1.2.3"}}"#).is_err());
+    }
 }
