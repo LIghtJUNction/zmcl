@@ -18,6 +18,19 @@ pub struct Instance {
     pub java: String,
     pub installed: bool,
 }
+
+fn validate_version_id(version: &str) -> Result<()> {
+    if version.is_empty()
+        || version.len() > 128
+        || !version
+            .bytes()
+            .all(|x| x.is_ascii_alphanumeric() || b"-_. ".contains(&x))
+    {
+        return Err("Invalid Minecraft version ID".into());
+    }
+    Ok(())
+}
+
 impl Instance {
     pub fn json(&self) -> String {
         util::object(&[
@@ -36,6 +49,7 @@ impl Instance {
             let id = req_str(v, "id")?;
             util::valid_id(&id)?;
             let version = req_str(v, "version")?;
+            validate_version_id(&version)?;
             let loader = get_str(v, "loader").unwrap_or_else(|| "vanilla".into());
             if !matches!(
                 loader.as_str(),
@@ -133,14 +147,7 @@ impl App {
         ) {
             return Err("Unsupported loader".into());
         }
-        if version.is_empty()
-            || version.len() > 128
-            || !version
-                .bytes()
-                .all(|x| x.is_ascii_alphanumeric() || b"-_. ".contains(&x))
-        {
-            return Err("Invalid Minecraft version ID".into());
-        }
+        validate_version_id(version)?;
         let dir = self.dir(id)?;
         fs::create_dir(&dir).map_err(|e| format!("Cannot create instance '{id}': {e}"))?;
         let instance = Instance {

@@ -16,6 +16,15 @@ static NEXT: AtomicU64 = AtomicU64::new(0);
 const MAX_FILES: usize = 50_000;
 const MAX_BYTES: u64 = 4 * 1024 * 1024 * 1024;
 struct Stage(PathBuf);
+impl Stage {
+    fn new_clone(app: &App) -> Result<Self> {
+        // Instance IDs cannot start with '.', so unfinished copies never enter
+        // the public inventory, even if the copying process is interrupted.
+        let path = util::safe_join(&app.root, &format!("instances/{}", token(".clone")))?;
+        fs::create_dir(&path).map_err(|e| e.to_string())?;
+        Ok(Self(path))
+    }
+}
 impl Drop for Stage {
     fn drop(&mut self) {
         let _ = fs::remove_dir_all(&self.0);
@@ -123,9 +132,7 @@ pub fn clone_instance(app: &App, source_id: &str, destination_id: &str) -> Resul
     if destination.exists() {
         return Err("Destination instance already exists".into());
     }
-    let stage_path = util::safe_join(&app.root, &format!("instances/{}", token("clone")))?;
-    fs::create_dir(&stage_path).map_err(|e| e.to_string())?;
-    let stage = Stage(stage_path);
+    let stage = Stage::new_clone(app)?;
     let (files, bytes) = copy_tree(&source.join("game"), &stage.0.join("game"))?;
     // The copied Modrinth lock describes the copied game/mods contents.
     for file in ["mods-lock.json", "resources-lock.json"] {
@@ -248,6 +255,37 @@ pub fn restore(app: &App, trash_id: &str, new_id: Option<&str>) -> Result<String
 mod tests {
     use super::*;
     #[test]
+    fn unfinished_clone_is_private_without_hiding_damaged_instances() {
+        let dir = std::env::temp_dir().join(token("zmcl-instance-stage"));
+        let app = App::new(Some(dir.to_string_lossy().into_owned())).unwrap();
+        let mut instance = app
+            .create_instance("source", "1.21.1", "vanilla", "")
+            .unwrap();
+        let stage = Stage::new_clone(&app).unwrap();
+        fs::create_dir(stage.0.join("game")).unwrap();
+        fs::write(stage.0.join("game/options.txt"), b"incomplete copy").unwrap();
+        assert_eq!(app.instances().unwrap()[0].id, "source");
+        assert_eq!(app.instances().unwrap().len(), 1);
+
+        instance.id = "copy".into();
+        util::atomic_write(&stage.0.join("instance.json"), instance.json().as_bytes()).unwrap();
+        let reopened = App::new(Some(dir.to_string_lossy().into_owned())).unwrap();
+        assert_eq!(reopened.instances().unwrap().len(), 1);
+        assert!(!app.dir("copy").unwrap().exists());
+
+        let damaged = app.dir("damaged").unwrap();
+        fs::create_dir(&damaged).unwrap();
+        fs::write(damaged.join("instance.json"), b"not json").unwrap();
+        assert!(app.instances().is_err());
+        assert_eq!(
+            fs::read(damaged.join("instance.json")).unwrap(),
+            b"not json"
+        );
+        drop(stage);
+        fs::remove_dir_all(dir).unwrap();
+    }
+
+    #[test]
     fn clone_and_trash_preserve_original_game_bytes() {
         let dir = std::env::temp_dir().join(token("zmcl-instance-test"));
         let app = App::new(Some(dir.to_string_lossy().into_owned())).unwrap();
@@ -256,6 +294,14 @@ mod tests {
         let file = app.dir("source").unwrap().join("game/options.txt");
         fs::write(&file, b"music:0.5").unwrap();
         clone_instance(&app, "source", "copy").unwrap();
+        assert_eq!(
+            app.instances()
+                .unwrap()
+                .into_iter()
+                .map(|instance| instance.id)
+                .collect::<Vec<_>>(),
+            ["copy", "source"]
+        );
         let copy = app.dir("copy").unwrap().join("game/options.txt");
         fs::write(&copy, b"music:1.0").unwrap();
         assert_eq!(fs::read(&file).unwrap(), b"music:0.5");

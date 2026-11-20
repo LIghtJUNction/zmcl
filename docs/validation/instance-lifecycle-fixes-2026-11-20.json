@@ -1,0 +1,574 @@
+{
+  "schema": 1,
+  "scope": "actual CLI with synthetic NBT and opaque region fixture",
+  "game_launched": false,
+  "network_downloads_requested": false,
+  "real_world_compatibility_claimed": false,
+  "started_at": "2026-11-20T06:03:48.397677+00:00",
+  "platform": "Linux-x86_64",
+  "binary_sha256": "b5460441834064e7da9b5e1a80357628caff5702a1f66b370d0ce31e045cc5c8",
+  "commands": [
+    {
+      "arguments": [
+        "--root",
+        "<test-case>/home",
+        "instance",
+        "create",
+        "alpha",
+        "--version",
+        "1.21.1"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "result": {
+        "id": "alpha",
+        "name": "alpha",
+        "version": "1.21.1",
+        "loader": "vanilla",
+        "loader_version": "",
+        "memory_mib": 2048,
+        "java": "",
+        "installed": false
+      }
+    },
+    {
+      "arguments": [
+        "--root",
+        "<test-case>/home",
+        "instance",
+        "create",
+        "beta",
+        "--version",
+        "1.21.1"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "result": {
+        "id": "beta",
+        "name": "beta",
+        "version": "1.21.1",
+        "loader": "vanilla",
+        "loader_version": "",
+        "memory_mib": 2048,
+        "java": "",
+        "installed": false
+      }
+    },
+    {
+      "arguments": [
+        "--root",
+        "<test-case>/home",
+        "world",
+        "import",
+        "alpha",
+        "<test-case>/synthetic-world",
+        "Fixture"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "result": {
+        "id": "Fixture",
+        "path": "<test-case>/home/instances/alpha/game/saves/Fixture",
+        "format": "java",
+        "valid": true,
+        "metadata_file": "level.dat",
+        "name": "Synthetic lifecycle fixture",
+        "last_played_ms": 1730000000123,
+        "game_type": 1,
+        "hardcore": false,
+        "difficulty": 2,
+        "data_version": 3955,
+        "version": "1.21.1",
+        "version_id": 3955,
+        "snapshot": false,
+        "file_count": 3,
+        "bytes": 2111
+      }
+    },
+    {
+      "arguments": [
+        "--root",
+        "<test-case>/home",
+        "world",
+        "list",
+        "alpha"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "result": [
+        {
+          "id": "Fixture",
+          "path": "<test-case>/home/instances/alpha/game/saves/Fixture",
+          "format": "java",
+          "valid": true,
+          "metadata_file": "level.dat",
+          "name": "Synthetic lifecycle fixture",
+          "last_played_ms": 1730000000123,
+          "game_type": 1,
+          "hardcore": false,
+          "difficulty": 2,
+          "data_version": 3955,
+          "version": "1.21.1",
+          "version_id": 3955,
+          "snapshot": false
+        }
+      ]
+    },
+    {
+      "arguments": [
+        "--root",
+        "<test-case>/home",
+        "world",
+        "info",
+        "alpha",
+        "Fixture"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "result": {
+        "id": "Fixture",
+        "path": "<test-case>/home/instances/alpha/game/saves/Fixture",
+        "format": "java",
+        "valid": true,
+        "metadata_file": "level.dat",
+        "name": "Synthetic lifecycle fixture",
+        "last_played_ms": 1730000000123,
+        "game_type": 1,
+        "hardcore": false,
+        "difficulty": 2,
+        "data_version": 3955,
+        "version": "1.21.1",
+        "version_id": 3955,
+        "snapshot": false,
+        "file_count": 3,
+        "bytes": 2111
+      }
+    },
+    {
+      "arguments": [
+        "--root",
+        "<test-case>/home",
+        "world",
+        "path",
+        "alpha",
+        "Fixture"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "result": {
+        "id": "Fixture",
+        "path": "<test-case>/home/instances/alpha/game/saves/Fixture",
+        "format": "java",
+        "valid": true,
+        "metadata_file": "level.dat",
+        "name": "Synthetic lifecycle fixture",
+        "last_played_ms": 1730000000123,
+        "game_type": 1,
+        "hardcore": false,
+        "difficulty": 2,
+        "data_version": 3955,
+        "version": "1.21.1",
+        "version_id": 3955,
+        "snapshot": false,
+        "file_count": 3,
+        "bytes": 2111
+      }
+    },
+    {
+      "arguments": [
+        "--root",
+        "<test-case>/home",
+        "world",
+        "export",
+        "alpha",
+        "Fixture",
+        "<test-case>/exported-world.zip"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "result": {
+        "path": "<test-case>/exported-world.zip",
+        "world": {
+          "id": "Fixture",
+          "path": "<test-case>/home/instances/alpha/game/saves/Fixture",
+          "format": "java",
+          "valid": true,
+          "metadata_file": "level.dat",
+          "name": "Synthetic lifecycle fixture",
+          "last_played_ms": 1730000000123,
+          "game_type": 1,
+          "hardcore": false,
+          "difficulty": 2,
+          "data_version": 3955,
+          "version": "1.21.1",
+          "version_id": 3955,
+          "snapshot": false
+        },
+        "file_count": 3,
+        "bytes": 2111,
+        "archive_bytes": 737,
+        "sha256": "f1d525a40cc6716d84ac4bd8fb290690401adeb66148594b5197c3ee22ab5a93"
+      }
+    },
+    {
+      "arguments": [
+        "--root",
+        "<test-case>/home",
+        "world",
+        "import",
+        "beta",
+        "<test-case>/exported-world.zip",
+        "RoundTrip"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "result": {
+        "id": "RoundTrip",
+        "path": "<test-case>/home/instances/beta/game/saves/RoundTrip",
+        "format": "java",
+        "valid": true,
+        "metadata_file": "level.dat",
+        "name": "Synthetic lifecycle fixture",
+        "last_played_ms": 1730000000123,
+        "game_type": 1,
+        "hardcore": false,
+        "difficulty": 2,
+        "data_version": 3955,
+        "version": "1.21.1",
+        "version_id": 3955,
+        "snapshot": false,
+        "file_count": 3,
+        "bytes": 2111
+      }
+    },
+    {
+      "arguments": [
+        "--root",
+        "<test-case>/home",
+        "world",
+        "clone",
+        "alpha",
+        "Fixture",
+        "beta",
+        "Cloned"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "result": {
+        "id": "Cloned",
+        "path": "<test-case>/home/instances/beta/game/saves/Cloned",
+        "format": "java",
+        "valid": true,
+        "metadata_file": "level.dat",
+        "name": "Synthetic lifecycle fixture",
+        "last_played_ms": 1730000000123,
+        "game_type": 1,
+        "hardcore": false,
+        "difficulty": 2,
+        "data_version": 3955,
+        "version": "1.21.1",
+        "version_id": 3955,
+        "snapshot": false,
+        "file_count": 3,
+        "bytes": 2111
+      }
+    },
+    {
+      "arguments": [
+        "--root",
+        "<test-case>/home",
+        "world",
+        "import",
+        "alpha",
+        "<test-case>/synthetic-world",
+        "Fixture"
+      ],
+      "exit_code": 1,
+      "expected_success": false,
+      "stderr": "zmcl: A world with this folder name already exists\n"
+    },
+    {
+      "arguments": [
+        "--root",
+        "<test-case>/home",
+        "world",
+        "export",
+        "alpha",
+        "Fixture",
+        "<test-case>/exported-world.zip"
+      ],
+      "exit_code": 1,
+      "expected_success": false,
+      "stderr": "zmcl: Export destination already exists\n"
+    },
+    {
+      "arguments": [
+        "--root",
+        "<test-case>/home",
+        "backup",
+        "create",
+        "alpha",
+        "Synthetic fixture before edit"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "result": {
+        "id": "b1795154629-2547957-1795154629371208788",
+        "bytes": 2237,
+        "created": 1795154629,
+        "label": "Synthetic fixture before edit",
+        "files": 5,
+        "file_bytes": 2146,
+        "policy": "mutable-game-v1",
+        "roots": [
+          "options.txt",
+          "saves"
+        ],
+        "root_count": 2,
+        "roots_truncated": false
+      }
+    },
+    {
+      "arguments": [
+        "--root",
+        "<test-case>/home",
+        "backup",
+        "list",
+        "alpha"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "result": [
+        {
+          "id": "b1795154629-2547957-1795154629371208788",
+          "bytes": 2237,
+          "created": 1795154629,
+          "label": "Synthetic fixture before edit",
+          "files": 5,
+          "file_bytes": 2146,
+          "policy": "mutable-game-v1",
+          "roots": [
+            "options.txt",
+            "saves"
+          ],
+          "root_count": 2,
+          "roots_truncated": false,
+          "manifest_valid": true,
+          "data_verified": false
+        }
+      ]
+    },
+    {
+      "arguments": [
+        "--root",
+        "<test-case>/home",
+        "backup",
+        "restore",
+        "alpha",
+        "b1795154629-2547957-1795154629371208788"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "result": {
+        "restored": true
+      }
+    },
+    {
+      "arguments": [
+        "--root",
+        "<test-case>/home",
+        "backup",
+        "list",
+        "alpha"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "result": [
+        {
+          "id": "pre-1795154629749567045-2548018",
+          "bytes": 2493,
+          "created": 1795154629,
+          "label": "Before restoring b1795154629-2547957-1795154629371208788",
+          "files": 6,
+          "file_bytes": 326,
+          "policy": "mutable-game-v1",
+          "roots": [
+            "created-after-backup.txt",
+            "options.txt",
+            "saves"
+          ],
+          "root_count": 3,
+          "roots_truncated": false,
+          "manifest_valid": true,
+          "data_verified": false
+        },
+        {
+          "id": "b1795154629-2547957-1795154629371208788",
+          "bytes": 2237,
+          "created": 1795154629,
+          "label": "Synthetic fixture before edit",
+          "files": 5,
+          "file_bytes": 2146,
+          "policy": "mutable-game-v1",
+          "roots": [
+            "options.txt",
+            "saves"
+          ],
+          "root_count": 2,
+          "roots_truncated": false,
+          "manifest_valid": true,
+          "data_verified": false
+        }
+      ]
+    },
+    {
+      "arguments": [
+        "--root",
+        "<test-case>/home",
+        "instance",
+        "clone",
+        "alpha",
+        "copy"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "result": {
+        "instance": {
+          "id": "copy",
+          "name": "alpha (copy)",
+          "version": "1.21.1",
+          "loader": "vanilla",
+          "loader_version": "",
+          "memory_mib": 2048,
+          "java": "",
+          "installed": false
+        },
+        "copied_entries": 10,
+        "copied_bytes": 2184,
+        "requires_install": true
+      }
+    },
+    {
+      "arguments": [
+        "--root",
+        "<test-case>/home",
+        "instance",
+        "trash",
+        "copy"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "result": {
+        "trash_id": "copy-1795154630-2548106-0",
+        "instance_id": "copy",
+        "name": "alpha (copy)",
+        "trashed_at": 1795154630
+      }
+    },
+    {
+      "arguments": [
+        "--root",
+        "<test-case>/home",
+        "instance",
+        "trash-list"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "result": [
+        {
+          "trash_id": "copy-1795154630-2548106-0",
+          "instance_id": "copy",
+          "name": "alpha (copy)",
+          "trashed_at": 1795154630
+        }
+      ]
+    },
+    {
+      "arguments": [
+        "--root",
+        "<test-case>/home",
+        "instance",
+        "restore",
+        "copy-1795154630-2548106-0",
+        "alpha"
+      ],
+      "exit_code": 1,
+      "expected_success": false,
+      "stderr": "zmcl: An instance with the restore ID already exists\n"
+    },
+    {
+      "arguments": [
+        "--root",
+        "<test-case>/home",
+        "instance",
+        "restore",
+        "copy-1795154630-2548106-0"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "result": {
+        "id": "copy",
+        "name": "alpha (copy)",
+        "version": "1.21.1",
+        "loader": "vanilla",
+        "loader_version": "",
+        "memory_mib": 2048,
+        "java": "",
+        "installed": false
+      }
+    },
+    {
+      "arguments": [
+        "--root",
+        "<test-case>/home",
+        "instance",
+        "trash-list"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "result": []
+    }
+  ],
+  "checks": {
+    "world_directory_zip_clone": {
+      "passed": true,
+      "files": 3,
+      "bytes": 2111,
+      "metadata_name": "Synthetic lifecycle fixture",
+      "existing_destinations_refused": true,
+      "export_sha256": "f1d525a40cc6716d84ac4bd8fb290690401adeb66148594b5197c3ee22ab5a93"
+    },
+    "backup_restore": {
+      "passed": true,
+      "original_bytes_restored": true,
+      "excluded_mods_preserved": true,
+      "manifest_sha256_verified": true,
+      "original_snapshot": {
+        "id": "b1795154629-2547957-1795154629371208788",
+        "sha256": "ed814de549f9741852f181fc68e32db5e6769c3cccf0c813f4343bd336b1c91f",
+        "file_count": 5
+      },
+      "pre_restore_snapshot": {
+        "id": "pre-1795154629749567045-2548018",
+        "sha256": "dccd83624624bd7b42971d97a64674e55d8af01214b2682ecedf3a6101f61f72",
+        "file_count": 6
+      }
+    },
+    "instance_clone_trash_restore": {
+      "passed": true,
+      "independent_writable_files": true,
+      "requires_install": true,
+      "occupied_target_refused": true,
+      "restored_changed_clone_bytes": true
+    },
+    "no_pending_journals": true
+  },
+  "passed": true,
+  "command_count": 21,
+  "expected_protection_failures": 3,
+  "finished_at": "2026-11-20T06:03:50.480342+00:00",
+  "source_commit": "2041e8337b344e2cab5b8503e73b3655bcfc91f1",
+  "source_base": "0a7dda0a582f00334a61a1c236cb9f50ca9a64ed",
+  "build_profile": "debug",
+  "source_identity_basis": "Verified source files were published unchanged after the local run."
+}
