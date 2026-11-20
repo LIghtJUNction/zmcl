@@ -1,0 +1,119 @@
+{
+  "schema": 1,
+  "report_date": "2026-11-20",
+  "report_timezone": "Asia/Taipei",
+  "platform": "Linux x86_64",
+  "mode": "explicit offline profile",
+  "review": "Captured real game windows, directly visually reviewed.",
+  "not_tested": [
+    "world gameplay",
+    "online account entitlement",
+    "Realms",
+    "multiplayer"
+  ],
+  "cases": [
+    {
+      "minecraft": "1.21.1",
+      "loader": "vanilla",
+      "outcome": "welcome/accessibility screen",
+      "main_menu_observed": false,
+      "java_major": 21,
+      "binary_sha256": null,
+      "source_commit": null,
+      "images": [
+        {
+          "path": "images/vanilla-1.21.1-welcome.jpg",
+          "sha256": "c2c9917079c545e1c4fc0ab1cedd87edd1d189fb668fdb1b0a15cbc877304830",
+          "bytes": 48660,
+          "captured_utc": "2026-11-19T23:13:14.613914+00:00"
+        }
+      ]
+    },
+    {
+      "minecraft": "1.21.1",
+      "loader": "fabric",
+      "loader_version": "0.20.1",
+      "outcome": "main menu and Mod Menu",
+      "main_menu_observed": true,
+      "java_major": 21,
+      "binary_sha256": null,
+      "source_commit": null,
+      "installed_projects": [
+        "Mod Menu 11.0.5",
+        "Fabric API 0.116.18+1.21.1",
+        "Placeholder API 2.4.2+1.21"
+      ],
+      "note": "56 displayed mods include internal Fabric API modules; this is not 56 downloaded projects.",
+      "images": [
+        {
+          "path": "images/fabric-1.21.1-main-menu.jpg",
+          "sha256": "92cfa20fe1156f5f21a614d17410f2a752fb98025a0dfdf617dc77a44d6eb3f3",
+          "bytes": 78318,
+          "captured_utc": "2026-11-19T23:23:33.084612+00:00"
+        },
+        {
+          "path": "images/fabric-1.21.1-mod-menu.jpg",
+          "sha256": "0732690bf2bb0780290504243f66acfa6b67e46aa09cad866a8cd184cadd5a32",
+          "bytes": 54002,
+          "captured_utc": "2026-11-19T23:23:46.765785+00:00"
+        }
+      ]
+    },
+    {
+      "minecraft": "1.21.1",
+      "loader": "forge",
+      "loader_version": "52.1.20",
+      "outcome": "main menu",
+      "main_menu_observed": true,
+      "java_major": 21,
+      "binary_sha256": "ed315dc1261332f343cccde85a798855bbfbbc85044dc43510b316e4752781a0",
+      "source_commit": "38595c07d805905a95a15d9de9ecf6cc13e4465c",
+      "images": [
+        {
+          "path": "images/forge-1.21.1-main-menu.jpg",
+          "sha256": "6ab349de2ab58fad24677269a016706596af2e8fb8a472e4331ecda6b2316d75",
+          "bytes": 83114,
+          "captured_utc": "2026-11-20T00:29:41.134299+00:00"
+        }
+      ]
+    },
+    {
+      "minecraft": "1.21.1",
+      "loader": "quilt",
+      "loader_version": "0.30.2",
+      "outcome": "main menu",
+      "main_menu_observed": true,
+      "java_major": 21,
+      "binary_sha256": "ed315dc1261332f343cccde85a798855bbfbbc85044dc43510b316e4752781a0",
+      "source_commit": "38595c07d805905a95a15d9de9ecf6cc13e4465c",
+      "images": [
+        {
+          "path": "images/quilt-1.21.1-main-menu.jpg",
+          "sha256": "6ba502c5a30e879f0c86fd65799fd3fdae83436d2fd2d99dd344e19f6f3f7a86",
+          "bytes": 83411,
+          "captured_utc": "2026-11-20T00:30:31.975357+00:00"
+        }
+      ]
+    },
+    {
+      "minecraft": "26.3",
+      "loader": "vanilla",
+      "outcome": "main menu",
+      "main_menu_observed": true,
+      "java_major": 25,
+      "binary_sha256": "8139bab8416ec9720bc4c9e11765944755f85bbe778b5cf404863bd6fb3ba30c",
+      "source_commit": "033776287ab10aab90f46fd5b65309fecb9b8711",
+      "display_backend": "SDL x11",
+      "renderer": "llvmpipe (LLVM 23.1.1, 256 bits)",
+      "images": [
+        {
+          "path": "images/vanilla-26.3-main-menu.jpg",
+          "sha256": "32159b1e835de35379fd90e28fc2628cf2043dc69a9dd824b1be0ee1fafbfbcd",
+          "bytes": 83381,
+          "captured_utc": "2026-11-20T00:41:01.642546+00:00"
+        }
+      ],
+      "test_harness_note": "Initial inherited Wayland session and title-only X11 discovery were unsuitable. The private X11 retry was located by game PID and visually reviewed."
+    }
+  ]
+}

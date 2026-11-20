@@ -8,180 +8,276 @@
     "stage": "development"
   },
   "measurement": {
-    "phase": "initial",
-    "label": "初版测量 · 等待最终版本复测",
-    "artifact_version": "0.1.0-dev",
-    "commit": null,
-    "environment": "Linux · 隔离 Xvfb · llvmpipe 软件渲染 · 单次早期构建",
-    "scope": "GUI 空闲数据只计启动器进程，不包含 Xvfb、Java 与游戏数据。安装时的下载和解压子进程必须另行统计。",
-    "comparison": "XMCL 已取得初步空首页样本，正在按相同方法复测；当前不提供提升倍数。",
-    "idle_interval_seconds": 2.11582898,
-    "sample_count": 1,
-    "hardware_status": "未测得：当前授权环境缺少有效 X11 会话授权；未改变访问策略。"
+    "phase": "final",
+    "label": "2026-11-20 · 固定构建 · 每款 3 轮 × 11 样本",
+    "artifact_version": "0.1.0",
+    "commit": "033776287ab10aab90f46fd5b65309fecb9b8711",
+    "binary_sha256": "8139bab8416ec9720bc4c9e11765944755f85bbe778b5cf404863bd6fb3ba30c",
+    "benchmark_schema": 4,
+    "benchmark_script_sha256": "e1f6171edeabf67c0664545df696805ca4565ee59d5801e19f366b5b2f5fbaa2",
+    "environment": "Linux x86_64 · 独立 Xvfb · 软件图形环境 llvmpipe · 窗口 1024×720",
+    "scope": "数值为每轮中位数再取三轮中位数，包含观察到的启动器进程树；不含 Xvfb、Java、Minecraft。",
+    "comparison": "共享开发机，未清空系统缓存。XMCL 与 zmcl 测试开始时的可用内存分别为 1,894,756 与 6,492,216 KiB；XMCL 存在换页。两个默认首页内容不同，结果不代表相同功能或硬件 GPU 场景。",
+    "idle_interval_seconds": null,
+    "sample_count": 33,
+    "samples_per_trial": 11,
+    "trials_per_application": 3,
+    "hardware_status": "未测得硬件 GPU 路径；没有改变已有桌面的访问策略。",
+    "raw_records": [
+      "docs/measurements/2026-11-20-zmcl-0337762.json",
+      "docs/measurements/2026-11-20-xmcl-0.73.1.json"
+    ],
+    "summary_record": "docs/measurements/2026-11-20-comparison.json"
   },
   "features": [
     {
       "name": "原生界面与命令行",
       "state": "verified",
-      "label": "已验证",
-      "summary": "真实打开界面；实例创建、键盘输入、640×520 缩窗，以及整合包按钮流程已验证。",
+      "label": "Linux 交互已验证",
+      "summary": "实例创建、安装/修复、单机与账号启动、Modrinth 搜索/添加、mrpack 和诊断已接入。实际验证了基础交互和启动后退出；新增管理能力仍以 CLI 为主。",
       "evidence": "src/gui.rs"
     },
     {
       "name": "实例与共享存储",
-      "state": "implemented",
-      "label": "已实现",
-      "summary": "实例隔离、Java/内存配置、不可变内容共享、硬链接与复制回退。物理空间节约量需用相同数据集测量。",
-      "evidence": "src/app.rs"
+      "state": "verified",
+      "label": "CLI 与夹具验收",
+      "summary": "配置、独立可写克隆、回收站与恢复；校验后的缓存复用与损坏修复已有验收。多实例的实际物理空间仍需单独测量。",
+      "evidence": "docs/FEATURES.md"
     },
     {
       "name": "原版 Java Edition",
-      "state": "implemented",
-      "label": "已实现",
-      "summary": "版本元数据、客户端、库、资源、原生库和启动参数已接入；验收按具体游戏版本记录。",
-      "evidence": "src/runtime.rs"
+      "state": "verified",
+      "label": "真实游戏已验证",
+      "summary": "Linux Minecraft 1.21.1 欢迎页与 26.3 主菜单已有记录。安装、Java 要求与启动参数按版本解析；游玩和保存世界仍是独立验收项目。",
+      "evidence": "docs/FEATURES.md"
     },
     {
-      "name": "Fabric / Quilt",
-      "state": "implemented",
-      "label": "已实现",
-      "summary": "加载器查询、版本继承和依赖解析已接入，实际整合包兼容性需要分别验证。",
-      "evidence": "src/runtime.rs"
+      "name": "Fabric / Quilt / Forge",
+      "state": "verified",
+      "label": "1.21.1 实测",
+      "summary": "三种加载器分别进入真实主菜单；Fabric API / Mod Menu 有指定组合的画面记录。覆盖不等于所有历史版本或 mod 组合均已验证。",
+      "evidence": "docs/FEATURES.md"
     },
     {
-      "name": "Forge / NeoForge",
+      "name": "NeoForge",
       "state": "implemented",
-      "label": "已实现",
-      "summary": "使用官方安装器，图形界面可指定加载器版本；旧版与新版安装器的兼容性按验收记录更新。",
+      "label": "实现待实机验收",
+      "summary": "官方安装器与显式加载器版本已接入，GUI 可以创建对应实例；新实例安装及游戏运行仍需按版本验收。",
       "evidence": "src/runtime.rs"
     },
     {
       "name": "Microsoft 账号",
       "state": "implemented",
-      "label": "实现待真人验收",
-      "summary": "设备授权、刷新、Xbox/XSTS 和 Minecraft 权益查询；令牌交给系统凭据库。真实授权需已注册应用与合法账号。",
+      "label": "待真实授权验收",
+      "summary": "设备授权、刷新、Xbox/XSTS、Minecraft 权益和系统凭据库已接入。需要注册应用 ID 与合法账号完成真实登录、刷新和启动。",
       "evidence": "src/auth.rs"
     },
     {
       "name": "Modrinth mods",
-      "state": "implemented",
-      "label": "已实现",
-      "summary": "搜索、版本/加载器筛选、必需依赖、内容校验、启用与禁用；更新与可选依赖仍在推进。",
+      "state": "verified",
+      "label": "基础流程与 CLI 已验",
+      "summary": "GUI 支持搜索/添加；CLI 支持依赖、启停、更新、移除和恢复。真实版本更新及必需依赖保护已验证；可选依赖与复杂组合仍有限制。",
       "evidence": "src/content.rs"
     },
     {
-      "name": "Modrinth .mrpack",
+      "name": "Modrinth 整合包",
       "state": "verified",
       "label": "已验证部分流程",
-      "summary": "导入、导出与归档边界校验已实现。GUI 已完成空 Vanilla 配置往返；大型公开整合包需独立验收。",
-      "evidence": "src/content.rs"
+      "summary": "mrpack 导入/导出、官方目录搜索和选定包下载已接入。GUI 完成空 Vanilla 往返；真实公开包完成安装与启动计划，未声称该包游戏已运行。",
+      "evidence": "docs/FEATURES.md"
     },
     {
-      "name": "Java 管理、备份与本地服务端",
+      "name": "资源包与光影包",
+      "state": "verified",
+      "label": "20 条 CLI 验收",
+      "summary": "真实下载、追踪文件、更新、启停、历史版本、恢复和手工修改保护。GUI 尚未覆盖；光影引擎安装与游戏内渲染另行验收。",
+      "evidence": "src/resources/test_cli.py"
+    },
+    {
+      "name": "Java 管理",
+      "state": "verified",
+      "label": "Linux 下载已验证",
+      "summary": "官方运行时下载、大小/SHA-256 校验与版本检查；Minecraft 26.3 安装已按要求自动准备 Java 25。跨平台原生运行仍待验证。",
+      "evidence": "src/java.rs"
+    },
+    {
+      "name": "存档与备份",
+      "state": "verified",
+      "label": "CLI / 合成夹具验收",
+      "summary": "世界目录/ZIP 导入导出、克隆、手动快照、校验与受保护恢复已有真实 CLI 和合成存档验收；没有把合成样本写成实际游戏存档游玩。",
+      "evidence": "docs/FEATURES.md"
+    },
+    {
+      "name": "本地 Java 服务端",
       "state": "implemented",
-      "label": "CLI 初版",
-      "summary": "对应 CLI 模块正在集成和验收。最终命令与验证结果以当前仓库文档为准。",
-      "evidence": "src/main.rs"
+      "label": "安装与保护路径已验",
+      "summary": "创建、安装、状态、启动/停止与协议探测已实现；已验安装及未接受 EULA 时拒绝启动。真实服务端世界运行需用户明确授权。",
+      "evidence": "src/server.rs"
     },
     {
       "name": "Horizon",
+      "state": "verified",
+      "label": "官方启动器组件已验",
+      "summary": "官方 launcher@0.2.84 的下载、签名/清单校验、解包和版本运行已验证。正版登录、26.3 资源准备与进入 Horizon 游戏仍由后续流程完成。",
+      "evidence": "src/horizon.rs"
+    },
+    {
+      "name": "其它内容来源与账号",
       "state": "planned",
-      "label": "接入中",
-      "summary": "正在接入官方 launcher 下载与签名校验。游戏包仍需官方 launcher 完成正版身份验证与 26.3 资源准备，不等同于下载后直接可玩。",
+      "label": "待完成",
+      "summary": "CurseForge、FTB、MCBBS、Packwiz 等分发/整合包流程，OptiFine/LabyMod，以及其它 Yggdrasil 账号服务仍在功能矩阵的待办范围。",
       "evidence": "docs/FEATURES.md"
     },
     {
-      "name": "其它内容来源与整合包",
+      "name": "世界编辑、协作与远程服务",
       "state": "planned",
       "label": "待完成",
-      "summary": "CurseForge、FTB、MCBBS、Packwiz 等来源与格式，以及资源包和光影的完整管理。",
+      "summary": "世界/NBT/区块编辑、蓝图、P2P 联机、STUN/中继、远程服务端、定时与云备份，以及完整 AI 崩溃分析仍待实现和验收。",
       "evidence": "docs/FEATURES.md"
     },
     {
-      "name": "世界工具、P2P 与远程服务端",
+      "name": "完整桌面与平台体验",
       "state": "planned",
       "label": "待完成",
-      "summary": "世界编辑、蓝图、真实双端联机、远程部署与对应异常恢复流程。",
-      "evidence": "docs/FEATURES.md"
-    },
-    {
-      "name": "Bedrock、手柄与完整桌面体验",
-      "state": "planned",
-      "label": "待完成",
-      "summary": "Bedrock、Big Picture、完整主题与本地化、系统无障碍，以及各操作系统的独立实测。",
+      "summary": "Bedrock、手柄/Big Picture、完整主题、本地化与无障碍、签名自更新和 Windows/macOS 独立实测仍是目标。",
       "evidence": "docs/FEATURES.md"
     }
   ],
   "measurements": [
     {
       "key": "binary",
-      "label": "启动器可执行文件",
+      "label": "主程序 ELF",
       "unit": "bytes",
       "zmcl": {
-        "value": 885288
+        "value": 1412176
       },
       "xmcl": {
-        "value": null,
-        "label": "待配对复测"
+        "value": 224836856
       },
-      "context": "初版 Linux release，LTO + strip，包含原生 GUI。系统依赖、Java、构建目录与游戏数据另计。"
+      "context": "固定构建的可执行文件逻辑字节数。动态系统库、Java、游戏和缓存另计。"
+    },
+    {
+      "key": "archive",
+      "label": "压缩发行包",
+      "unit": "bytes",
+      "zmcl": {
+        "value": null,
+        "label": "待最终打包"
+      },
+      "xmcl": {
+        "value": 85934576,
+        "note": "官方 Linux x64 tar.xz"
+      },
+      "context": "发行包包含的内容及压缩方式不同；与主程序体积单独列出。"
+    },
+    {
+      "key": "payload",
+      "label": "展开后常规文件",
+      "unit": "bytes",
+      "zmcl": {
+        "value": null,
+        "label": "待最终打包"
+      },
+      "xmcl": {
+        "value": 293657164,
+        "note": "23 个常规文件"
+      },
+      "context": "常规文件逻辑字节合计，不是物理磁盘块占用。"
     },
     {
       "key": "idle_pss",
       "label": "GUI 空闲 PSS",
       "unit": "kib",
       "zmcl": {
-        "value": 78285
+        "value": 89946,
+        "note": "1 进程；轮中位数 89,826–90,300 KiB"
       },
       "xmcl": {
-        "value": null,
-        "label": "待配对复测"
+        "value": 376722,
+        "note": "7 进程；轮中位数 366,925–490,434 KiB"
       },
-      "context": "Xvfb + llvmpipe 软件渲染；PSS 按比例计入共享页。此值不代表硬件 GPU 路径。"
+      "context": "按份额计入共享驻留页。每款 33 个完整样本，暖机 20 秒。"
     },
     {
-      "key": "idle_rss",
-      "label": "GUI 空闲 RSS",
+      "key": "idle_swap_pss",
+      "label": "GUI 空闲 SwapPss",
       "unit": "kib",
-      "zmcl": {
-        "value": 96376
-      },
-      "xmcl": {
-        "value": null,
-        "label": "待配对复测"
-      },
-      "context": "同一轮软件渲染测试。RSS 包含映射到该进程的共享驻留页，不能与 PSS 混用。"
-    },
-    {
-      "key": "idle_cpu_ticks",
-      "label": "GUI 空闲 CPU 增量",
-      "unit": "ticks",
       "zmcl": {
         "value": 0
       },
       "xmcl": {
-        "value": null,
-        "label": "待配对复测"
+        "value": 104439,
+        "note": "轮中位数 0–117,641 KiB"
       },
-      "context": "约 2.116 秒观察窗内，进程 CPU ticks 未增加。单次短窗口结果不代表长期恒为零。"
+      "context": "换出页的相应份额；与 PSS 同时展示，避免把换页当成内存消失。"
     },
     {
-      "key": "first_frame",
-      "label": "首帧时间",
-      "unit": "ms",
+      "key": "resident_plus_swap",
+      "label": "驻留与换出页面合计",
+      "unit": "kib",
       "zmcl": {
-        "value": null,
-        "label": "待最终复测"
+        "value": 89946
       },
       "xmcl": {
-        "value": null,
-        "label": "待配对复测"
+        "value": 484747
       },
-      "context": "从进程内 GUI 入口到第一帧提交，需固定机器、显示后端与冷/热缓存条件。"
+      "context": "每个样本先 PSS+SwapPss，再取轮内与轮间中位数。非实际物理 RAM。"
+    },
+    {
+      "key": "idle_rss",
+      "label": "GUI 空闲 RSS 合计",
+      "unit": "kib",
+      "zmcl": {
+        "value": 108728
+      },
+      "xmcl": {
+        "value": 696252
+      },
+      "context": "多进程直接求和，会重复计入共享驻留页；不能与 PSS 混用。"
+    },
+    {
+      "key": "idle_cpu_seconds",
+      "label": "空闲观察窗 CPU 时间",
+      "unit": "seconds",
+      "zmcl": {
+        "value": 0,
+        "note": "每轮约 10.05–10.08 秒，未观察到 tick 增量"
+      },
+      "xmcl": {
+        "value": 0.7,
+        "note": "每轮约 10.15–10.25 秒，范围 0.61–0.76 s"
+      },
+      "context": "六轮采样点进程身份集合均稳定；内核计数 100 Hz。零计数不代表长期零开销。"
+    },
+    {
+      "key": "window_visible",
+      "label": "窗口被发现的时间",
+      "unit": "ms",
+      "zmcl": {
+        "value": 296.322
+      },
+      "xmcl": {
+        "value": 1621.568
+      },
+      "context": "外部约 250 ms 轮询检测的中位数；不是可交互时间。系统缓存未清空，运行顺序未随机化。"
     },
     {
       "key": "install_peak",
-      "label": "安装峰值与物理空间",
+      "label": "安装峰值 PSS",
+      "unit": "kib",
+      "zmcl": {
+        "value": null,
+        "label": "待统一测量"
+      },
+      "xmcl": {
+        "value": null,
+        "label": "待统一测量"
+      },
+      "context": "安装、下载和解压需同时覆盖子进程，不能由首页空闲值推断。"
+    },
+    {
+      "key": "game_physical_storage",
+      "label": "同配置游戏物理空间",
       "unit": "bytes",
       "zmcl": {
         "value": null,
@@ -189,9 +285,9 @@
       },
       "xmcl": {
         "value": null,
-        "label": "待配对复测"
+        "label": "待统一测量"
       },
-      "context": "下载/解压按完整进程树统计；游戏数据按设备号与 inode 去重，另报缓存与实例数。"
+      "context": "固定游戏、mods、实例数和缓存，按设备号与 inode 去重后分别核算。"
     }
   ],
   "sources": [
@@ -204,10 +300,6 @@
       "url": "https://github.com/LIghtJUNction/zmcl/blob/main/docs/FEATURES.md"
     },
     {
-      "title": "GUI 测量脚本",
-      "url": "https://github.com/LIghtJUNction/zmcl/blob/main/src/gui/smoke.py"
-    },
-    {
       "title": "XMCL 官方功能",
       "url": "https://xmcl.app/en/features/"
     },
@@ -218,6 +310,18 @@
     {
       "title": "Horizon 官方网站",
       "url": "https://playhorizon.dev"
+    },
+    {
+      "title": "性能协议与完整样本",
+      "url": "https://github.com/LIghtJUNction/zmcl/blob/main/docs/PERFORMANCE.md"
+    },
+    {
+      "title": "最终基准脚本",
+      "url": "https://github.com/LIghtJUNction/zmcl/blob/main/scripts/bench_linux.py"
+    },
+    {
+      "title": "最终派生汇总",
+      "url": "https://github.com/LIghtJUNction/zmcl/blob/main/docs/measurements/2026-11-20-comparison.json"
     }
   ]
 }

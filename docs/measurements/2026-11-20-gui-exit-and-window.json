@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "application": "zmcl",
+  "source_revision": "0850a64203b51eb207c1f0318d7e459f97734cb0",
+  "binary_sha256": "cb96a9e99d6b2a077571b947e7d147e6f94d724f8e482e47ca3bf1bd88625492",
+  "binary_bytes": 1408912,
+  "checks": [
+    "Native GUI launch with --exit-after-launch",
+    "Real installed Java Edition process survives GUI exit",
+    "Native X11 window identity and caller size hints"
+  ],
+  "game": {
+    "edition": "Java Edition",
+    "version": "1.21.1",
+    "mode": "explicit single-player",
+    "instance": "dedicated test clone",
+    "memory_mib": 1024
+  },
+  "environment": {
+    "os": "Linux",
+    "display": "Owned temporary Xvfb; no existing desktop input",
+    "cpu_affinity_cores": 1,
+    "nice_increment": 10,
+    "LIBGL_ALWAYS_SOFTWARE": "1",
+    "LP_NUM_THREADS": "1",
+    "java_active_processor_count": 1
+  },
+  "performance_measurement": false,
+  "observations": {
+    "gui_exit_code": 0,
+    "gui_pid": 3069915,
+    "game_pid": 3070447,
+    "game_process_group": 3070447,
+    "separate_process_group": true,
+    "confirmed_alive_seconds_after_gui_exit": 10.162,
+    "game_alive_at_cleanup": true,
+    "game_no_longer_running_after_cleanup": true,
+    "owned_xvfb_cleanup_complete": true
+  },
+  "native_window": {
+    "WM_CLASS": [
+      "zmcl",
+      "Zmcl"
+    ],
+    "_NET_WM_NAME": "zmcl — Minecraft Launcher",
+    "WM_NORMAL_HINTS_minimum": {
+      "width": 1120,
+      "height": 760
+    },
+    "observed_geometry": {
+      "x": 80,
+      "y": 80,
+      "width": 1120,
+      "height": 760
+    },
+    "raw_xprop": "WM_CLASS(STRING) = \"zmcl\", \"Zmcl\"\n_NET_WM_NAME(UTF8_STRING) = \"zmcl — Minecraft Launcher\"\nWM_NORMAL_HINTS(WM_SIZE_HINTS):\n\t\tprogram specified minimum size: 1120 by 760\n",
+    "raw_geometry": "WINDOW=2097155\nX=80\nY=80\nWIDTH=1120\nHEIGHT=760\nSCREEN=0\n"
+  },
+  "limitations": [
+    "No Minecraft game-window screenshot was captured by the initial 10-second probe; this check proves process lifetime, not arrival at the main menu.",
+    "The explicit single-core and software-driver limits are functional-test conditions and are not used for the performance comparison.",
+    "An earlier manually operated attempt reached the harness smoke timeout before Play was delivered; it started no Java process. The automated repeat passed.",
+    "This functional check predates the benchmark allocator restricted to displays 100-199."
+  ]
+}

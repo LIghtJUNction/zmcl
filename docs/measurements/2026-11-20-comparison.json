@@ -1,0 +1,511 @@
+{
+  "schema": 1,
+  "date": "2026-11-20",
+  "status": "final_for_source_0337762",
+  "measurement_schema": 4,
+  "benchmark_script_sha256": "e1f6171edeabf67c0664545df696805ca4565ee59d5801e19f366b5b2f5fbaa2",
+  "protocol": {
+    "trial_order": [
+      "xmcl-1",
+      "xmcl-2",
+      "xmcl-3",
+      "zmcl-1",
+      "zmcl-2",
+      "zmcl-3"
+    ],
+    "trials_per_app": 3,
+    "warmup_seconds": 20,
+    "samples_per_trial": 11,
+    "requested_sample_interval_seconds": 1,
+    "window": {
+      "width": 1024,
+      "height": 720
+    },
+    "xvfb_screen": "1280x800x24",
+    "software_rendering_environment": true,
+    "x_server_renderer": "llvmpipe (LLVM 23.1.1, 256 bits)",
+    "resident_plus_swap_pss_method": "Sum PSS+SwapPss within each complete sample, take each trial median, then median of the three trial medians.",
+    "resident_plus_swap_pss_label_zh": "驻留和换出页面的合计，非实际物理 RAM",
+    "cpu_clock_ticks_per_second": 100,
+    "memory_scope": "Observed launcher processes/session; Xvfb, controller, Java and Minecraft excluded.",
+    "os_caches_flushed": false,
+    "background_workload_isolated": false,
+    "sample_complete_count": 66,
+    "stable_cpu_trial_count": 6
+  },
+  "limitations": [
+    "Shared host with different available memory at each app start; swapped pages and PSS fluctuate.",
+    "Default home pages differ; XMCL includes news and services. Feature parity is not established.",
+    "Same Xvfb/environment settings do not imply identical internal graphics backends.",
+    "All results describe this software-rendered Linux scenario; no hardware GPU, Windows or macOS conclusion.",
+    "Zero CPU ticks only describes finite observation windows at a 100 Hz accounting clock.",
+    "Window detection uses polling; visible-window time is not interactive-ready time.",
+    "Three consecutive trials per app, not randomized or interleaved; host state may change with order.",
+    "Snapshot CPU accounting can miss processes born and exited between sample points.",
+    "ELF bytes exclude dynamic system libraries, Java, games, caches and physical allocation effects."
+  ],
+  "applications": {
+    "xmcl": {
+      "version": "0.73.1",
+      "revision": "v0.73.1",
+      "binary_bytes": 224836856,
+      "binary_sha256": "34c11d2cbb5bf342cc701a10d205b2b34db37adf1d5d68c73174aeccf69fa7cd",
+      "raw_file": "2026-11-20-xmcl-0.73.1.json",
+      "raw_file_sha256": "d4e8c12f0ffcd7b317e9f285ca6717c200bce9ec312ad4864f37903629647973",
+      "system": {
+        "os": "Linux",
+        "arch": "x86_64",
+        "kernel": "7.3.4-arch1-1",
+        "distribution": "Omarchy",
+        "logical_cpus": 24,
+        "memory_at_start_kib": {
+          "MemTotal": 16090532,
+          "MemAvailable": 1894756,
+          "SwapTotal": 47535828,
+          "SwapFree": 29582628
+        },
+        "cpu_model": "12th Gen Intel(R) Core(TM) i9-12900HX"
+      },
+      "recorded_at_utc": "2026-11-20T00:42:28Z",
+      "summary": {
+        "pss_kib": {
+          "median_of_trial_medians": 376722,
+          "trial_median_range": {
+            "min": 366925,
+            "max": 490434
+          },
+          "sample_range": {
+            "min": 340145,
+            "max": 496167
+          }
+        },
+        "rss_kib": {
+          "median_of_trial_medians": 696252,
+          "trial_median_range": {
+            "min": 692344,
+            "max": 852600
+          },
+          "sample_range": {
+            "min": 657612,
+            "max": 858108
+          }
+        },
+        "swap_kib": {
+          "median_of_trial_medians": 132516,
+          "trial_median_range": {
+            "min": 12228,
+            "max": 147944
+          },
+          "sample_range": {
+            "min": 1704,
+            "max": 148160
+          }
+        },
+        "swap_pss_kib": {
+          "median_of_trial_medians": 104439,
+          "trial_median_range": {
+            "min": 0,
+            "max": 117641
+          },
+          "sample_range": {
+            "min": 0,
+            "max": 117850
+          }
+        },
+        "resident_plus_swap_pss_kib": {
+          "median_of_trial_medians": 484747,
+          "trial_median_range": {
+            "min": 481459,
+            "max": 490434
+          },
+          "sample_range": {
+            "min": 424310,
+            "max": 496167
+          }
+        },
+        "idle_cpu_seconds": {
+          "median": 0.7,
+          "min": 0.61,
+          "max": 0.76
+        },
+        "one_core_cpu_percent": {
+          "median": 6.8995185130150745,
+          "min": 5.993900694892429,
+          "max": 7.416674072517433
+        },
+        "sample_elapsed_seconds": {
+          "median": 10.177012116997503,
+          "min": 10.145635506007238,
+          "max": 10.247180778998882
+        },
+        "window_visible_ms": {
+          "median": 1621.568,
+          "min": 1066.178,
+          "max": 3334.413
+        },
+        "process_count_range": {
+          "min": 7,
+          "max": 7
+        }
+      },
+      "trials": [
+        {
+          "trial": 1,
+          "memory": {
+            "pss_kib": {
+              "median": 376722,
+              "min": 340145,
+              "max": 490270
+            },
+            "rss_kib": {
+              "median": 696252,
+              "min": 657612,
+              "max": 846232
+            },
+            "swap_kib": {
+              "median": 132516,
+              "min": 1704,
+              "max": 145368
+            },
+            "swap_pss_kib": {
+              "median": 104439,
+              "min": 684,
+              "max": 104737
+            },
+            "resident_plus_swap_pss_kib": {
+              "median": 481459,
+              "min": 424310,
+              "max": 490958
+            }
+          },
+          "sample_count": 11,
+          "complete_samples": 11,
+          "processes": 7,
+          "processes_min": 7,
+          "processes_max": 7,
+          "cpu_process_set_stable_at_sample_points": true,
+          "idle_cpu_seconds": 0.76,
+          "sample_elapsed_seconds": 10.247180778998882,
+          "one_core_cpu_percent": 7.416674072517433,
+          "window_visible_ms": 1621.568
+        },
+        {
+          "trial": 2,
+          "memory": {
+            "pss_kib": {
+              "median": 366925,
+              "min": 356488,
+              "max": 373585
+            },
+            "rss_kib": {
+              "median": 692344,
+              "min": 680000,
+              "max": 699332
+            },
+            "swap_kib": {
+              "median": 147944,
+              "min": 143316,
+              "max": 148160
+            },
+            "swap_pss_kib": {
+              "median": 117641,
+              "min": 113035,
+              "max": 117850
+            },
+            "resident_plus_swap_pss_kib": {
+              "median": 484747,
+              "min": 469523,
+              "max": 491142
+            }
+          },
+          "sample_count": 11,
+          "complete_samples": 11,
+          "processes": 7,
+          "processes_min": 7,
+          "processes_max": 7,
+          "cpu_process_set_stable_at_sample_points": true,
+          "idle_cpu_seconds": 0.7,
+          "sample_elapsed_seconds": 10.145635506007238,
+          "one_core_cpu_percent": 6.8995185130150745,
+          "window_visible_ms": 3334.413
+        },
+        {
+          "trial": 3,
+          "memory": {
+            "pss_kib": {
+              "median": 490434,
+              "min": 447468,
+              "max": 496167
+            },
+            "rss_kib": {
+              "median": 852600,
+              "min": 805088,
+              "max": 858108
+            },
+            "swap_kib": {
+              "median": 12228,
+              "min": 12004,
+              "max": 12228
+            },
+            "swap_pss_kib": {
+              "median": 0,
+              "min": 0,
+              "max": 0
+            },
+            "resident_plus_swap_pss_kib": {
+              "median": 490434,
+              "min": 447468,
+              "max": 496167
+            }
+          },
+          "sample_count": 11,
+          "complete_samples": 11,
+          "processes": 7,
+          "processes_min": 7,
+          "processes_max": 7,
+          "cpu_process_set_stable_at_sample_points": true,
+          "idle_cpu_seconds": 0.61,
+          "sample_elapsed_seconds": 10.177012116997503,
+          "one_core_cpu_percent": 5.993900694892429,
+          "window_visible_ms": 1066.178
+        }
+      ]
+    },
+    "zmcl": {
+      "version": "0.1.0",
+      "revision": "033776287ab10aab90f46fd5b65309fecb9b8711",
+      "binary_bytes": 1412176,
+      "binary_sha256": "8139bab8416ec9720bc4c9e11765944755f85bbe778b5cf404863bd6fb3ba30c",
+      "raw_file": "2026-11-20-zmcl-0337762.json",
+      "raw_file_sha256": "f24e3421ff01122c56778350767d5d47a5c3374647450ddba39a2afa78b37f95",
+      "system": {
+        "os": "Linux",
+        "arch": "x86_64",
+        "kernel": "7.3.4-arch1-1",
+        "distribution": "Omarchy",
+        "logical_cpus": 24,
+        "memory_at_start_kib": {
+          "MemTotal": 16090532,
+          "MemAvailable": 6492216,
+          "SwapTotal": 47535828,
+          "SwapFree": 29239648
+        },
+        "cpu_model": "12th Gen Intel(R) Core(TM) i9-12900HX"
+      },
+      "recorded_at_utc": "2026-11-20T00:44:16Z",
+      "summary": {
+        "pss_kib": {
+          "median_of_trial_medians": 89946,
+          "trial_median_range": {
+            "min": 89826,
+            "max": 90300
+          },
+          "sample_range": {
+            "min": 89816,
+            "max": 90300
+          }
+        },
+        "rss_kib": {
+          "median_of_trial_medians": 108728,
+          "trial_median_range": {
+            "min": 108600,
+            "max": 109100
+          },
+          "sample_range": {
+            "min": 108600,
+            "max": 109100
+          }
+        },
+        "swap_kib": {
+          "median_of_trial_medians": 0,
+          "trial_median_range": {
+            "min": 0,
+            "max": 0
+          },
+          "sample_range": {
+            "min": 0,
+            "max": 0
+          }
+        },
+        "swap_pss_kib": {
+          "median_of_trial_medians": 0,
+          "trial_median_range": {
+            "min": 0,
+            "max": 0
+          },
+          "sample_range": {
+            "min": 0,
+            "max": 0
+          }
+        },
+        "resident_plus_swap_pss_kib": {
+          "median_of_trial_medians": 89946,
+          "trial_median_range": {
+            "min": 89826,
+            "max": 90300
+          },
+          "sample_range": {
+            "min": 89816,
+            "max": 90300
+          }
+        },
+        "idle_cpu_seconds": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "one_core_cpu_percent": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "sample_elapsed_seconds": {
+          "median": 10.077437852989533,
+          "min": 10.04726717498852,
+          "max": 10.079772381999646
+        },
+        "window_visible_ms": {
+          "median": 296.322,
+          "min": 292.377,
+          "max": 296.835
+        },
+        "process_count_range": {
+          "min": 1,
+          "max": 1
+        }
+      },
+      "trials": [
+        {
+          "trial": 1,
+          "memory": {
+            "pss_kib": {
+              "median": 89946,
+              "min": 89929,
+              "max": 89965
+            },
+            "rss_kib": {
+              "median": 108728,
+              "min": 108728,
+              "max": 108728
+            },
+            "swap_kib": {
+              "median": 0,
+              "min": 0,
+              "max": 0
+            },
+            "swap_pss_kib": {
+              "median": 0,
+              "min": 0,
+              "max": 0
+            },
+            "resident_plus_swap_pss_kib": {
+              "median": 89946,
+              "min": 89929,
+              "max": 89965
+            }
+          },
+          "sample_count": 11,
+          "complete_samples": 11,
+          "processes": 1,
+          "processes_min": 1,
+          "processes_max": 1,
+          "cpu_process_set_stable_at_sample_points": true,
+          "idle_cpu_seconds": 0.0,
+          "sample_elapsed_seconds": 10.079772381999646,
+          "one_core_cpu_percent": 0.0,
+          "window_visible_ms": 292.377
+        },
+        {
+          "trial": 2,
+          "memory": {
+            "pss_kib": {
+              "median": 89826,
+              "min": 89816,
+              "max": 89835
+            },
+            "rss_kib": {
+              "median": 108600,
+              "min": 108600,
+              "max": 108600
+            },
+            "swap_kib": {
+              "median": 0,
+              "min": 0,
+              "max": 0
+            },
+            "swap_pss_kib": {
+              "median": 0,
+              "min": 0,
+              "max": 0
+            },
+            "resident_plus_swap_pss_kib": {
+              "median": 89826,
+              "min": 89816,
+              "max": 89835
+            }
+          },
+          "sample_count": 11,
+          "complete_samples": 11,
+          "processes": 1,
+          "processes_min": 1,
+          "processes_max": 1,
+          "cpu_process_set_stable_at_sample_points": true,
+          "idle_cpu_seconds": 0.0,
+          "sample_elapsed_seconds": 10.077437852989533,
+          "one_core_cpu_percent": 0.0,
+          "window_visible_ms": 296.835
+        },
+        {
+          "trial": 3,
+          "memory": {
+            "pss_kib": {
+              "median": 90300,
+              "min": 90284,
+              "max": 90300
+            },
+            "rss_kib": {
+              "median": 109100,
+              "min": 109100,
+              "max": 109100
+            },
+            "swap_kib": {
+              "median": 0,
+              "min": 0,
+              "max": 0
+            },
+            "swap_pss_kib": {
+              "median": 0,
+              "min": 0,
+              "max": 0
+            },
+            "resident_plus_swap_pss_kib": {
+              "median": 90300,
+              "min": 90284,
+              "max": 90300
+            }
+          },
+          "sample_count": 11,
+          "complete_samples": 11,
+          "processes": 1,
+          "processes_min": 1,
+          "processes_max": 1,
+          "cpu_process_set_stable_at_sample_points": true,
+          "idle_cpu_seconds": 0.0,
+          "sample_elapsed_seconds": 10.04726717498852,
+          "one_core_cpu_percent": 0.0,
+          "window_visible_ms": 296.322
+        }
+      ]
+    }
+  },
+  "xmcl_distribution": {
+    "application": "XMCL",
+    "version": "0.73.1",
+    "release_url": "https://github.com/Voxelum/x-minecraft-launcher/releases/tag/v0.73.1",
+    "download_url": "https://github.com/Voxelum/x-minecraft-launcher/releases/download/v0.73.1/xmcl-0.73.1-x64.tar.xz",
+    "archive_bytes": 85934576,
+    "sha256": "b2baa582131f53c7c017124c8e8e6d801576794c2ac77e422105259dff6b4461",
+    "regular_file_bytes": 293657164,
+    "files": 23
+  }
+}

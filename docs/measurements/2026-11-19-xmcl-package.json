@@ -1,0 +1,10 @@
+{
+  "application": "XMCL",
+  "version": "0.73.1",
+  "release_url": "https://github.com/Voxelum/x-minecraft-launcher/releases/tag/v0.73.1",
+  "download_url": "https://github.com/Voxelum/x-minecraft-launcher/releases/download/v0.73.1/xmcl-0.73.1-x64.tar.xz",
+  "archive_bytes": 85934576,
+  "sha256": "b2baa582131f53c7c017124c8e8e6d801576794c2ac77e422105259dff6b4461",
+  "regular_file_bytes": 293657164,
+  "files": 23
+}

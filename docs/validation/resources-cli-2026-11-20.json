@@ -1,0 +1,327 @@
+{
+  "schema_version": 1,
+  "suite": "resources_cli",
+  "result": "passed",
+  "test_date_utc": "2026-11-20",
+  "date_basis": "UTC modification time of the preserved acceptance.json; per-command timestamps were not recorded.",
+  "provenance": [
+    {
+      "report": "acceptance.json",
+      "sha256": "894ed2fae0886d43973b3e44345cc8c70d9ae6d90ee6f401081ec21e1207a43f",
+      "modified_utc": "2026-11-20T00:01:53.735240+00:00"
+    }
+  ],
+  "source_reference": {
+    "commit": "0850a64203b51eb207c1f0318d7e459f97734cb0",
+    "commit_time_utc": "2026-11-20T00:12:34Z",
+    "files": [
+      "src/resources.rs",
+      "src/resources/test_cli.py"
+    ],
+    "relationship": "Later committed implementation reference; not a recorded binary build attestation."
+  },
+  "binary_at_execution": {
+    "sha256": null,
+    "source_commit": null,
+    "reason": "The original report did not record the binary digest or a build-to-commit attestation. No later binary was substituted."
+  },
+  "test_script": "src/resources/test_cli.py",
+  "command_count": 20,
+  "expected_protection_count": 3,
+  "resource": {
+    "project_id": "iQRsGaVM",
+    "version_id": "kcDL19Mv",
+    "path": "resourcepacks/No Pumpkin Blur 1.4.zip",
+    "url": "https://cdn.modrinth.com/data/iQRsGaVM/versions/kcDL19Mv/No%20Pumpkin%20Blur%201.4.zip",
+    "bytes": 768,
+    "hashes": {
+      "sha1": "079caf05c2fc2f68b9c4597ad907ebbedb11b052"
+    },
+    "kind": "resourcepack",
+    "slug": "no-pumpkin-blur",
+    "title": "No Pumpkin Blur",
+    "version_number": "1.4",
+    "published": "2026-09-15T22:11:19.639531Z",
+    "game_version": "1.21.1",
+    "enabled": true,
+    "loaders": [
+      "minecraft"
+    ],
+    "requirements": []
+  },
+  "shader": {
+    "project_id": "j8vzmojd",
+    "version_id": "IEpWGvCX",
+    "path": "shaderpacks/Terders-Potato-Shader-alpha-v1.1.zip",
+    "url": "https://cdn.modrinth.com/data/j8vzmojd/versions/IEpWGvCX/Terders-Potato-Shader-alpha-v1.1.zip",
+    "bytes": 24189,
+    "hashes": {
+      "sha1": "3d3912c556282829b40962f4bd7b7e51c8392768"
+    },
+    "kind": "shader",
+    "slug": "terders-potato-shader",
+    "title": "Terder's Potato Shader",
+    "version_number": "1.1",
+    "published": "2026-10-25T05:55:53.921182Z",
+    "game_version": "1.21.1",
+    "enabled": true,
+    "loaders": [
+      "iris"
+    ],
+    "requirements": []
+  },
+  "upgrade": {
+    "available_older_compatible_revision": true,
+    "from_version": "1BoGsbLr",
+    "to_version": "kcDL19Mv",
+    "retained_previous_bytes": true
+  },
+  "assertions": {
+    "manual_files_unchanged": true,
+    "options_unchanged": true,
+    "shader_loader_installed": false
+  },
+  "commands": [
+    {
+      "arguments": [
+        "instance",
+        "create",
+        "proof",
+        "--version",
+        "1.21.1"
+      ],
+      "exit_code": 0,
+      "changed": null,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "resources",
+        "search",
+        "resourcepack",
+        "pumpkin",
+        "--version",
+        "1.21.1"
+      ],
+      "exit_code": 0,
+      "changed": null,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "resources",
+        "search",
+        "shader",
+        "potato",
+        "--version",
+        "1.21.1"
+      ],
+      "exit_code": 0,
+      "changed": null,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "resources",
+        "add",
+        "proof",
+        "resourcepack",
+        "no-pumpkin-blur"
+      ],
+      "exit_code": 0,
+      "changed": 1,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "resources",
+        "add",
+        "proof",
+        "shader",
+        "terders-potato-shader"
+      ],
+      "exit_code": 0,
+      "changed": 1,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "resources",
+        "add",
+        "proof",
+        "resourcepack",
+        "no-pumpkin-blur"
+      ],
+      "exit_code": 0,
+      "changed": 0,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "resources",
+        "list",
+        "proof"
+      ],
+      "exit_code": 0,
+      "changed": null,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "resources",
+        "disable",
+        "proof",
+        "resourcepack",
+        "no-pumpkin-blur"
+      ],
+      "exit_code": 0,
+      "changed": 1,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "resources",
+        "enable",
+        "proof",
+        "resourcepack",
+        "no-pumpkin-blur"
+      ],
+      "exit_code": 0,
+      "changed": 1,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "resources",
+        "update",
+        "proof"
+      ],
+      "exit_code": 0,
+      "changed": 0,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "resources",
+        "update",
+        "proof",
+        "resourcepack",
+        "no-pumpkin-blur"
+      ],
+      "exit_code": 0,
+      "changed": 1,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "resources",
+        "remove",
+        "proof",
+        "resourcepack",
+        "no-pumpkin-blur"
+      ],
+      "exit_code": 0,
+      "changed": 1,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "resources",
+        "history",
+        "proof"
+      ],
+      "exit_code": 0,
+      "changed": null,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "resources",
+        "restore",
+        "proof",
+        "<REVISION_FROM_HISTORY>"
+      ],
+      "exit_code": 0,
+      "changed": 1,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "resources",
+        "recover",
+        "proof"
+      ],
+      "exit_code": 0,
+      "changed": null,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "resources",
+        "remove",
+        "proof",
+        "resourcepack",
+        "no-pumpkin-blur"
+      ],
+      "exit_code": 1,
+      "changed": null,
+      "outcome": "expected_protection",
+      "protection": "modified_managed_resource_refused"
+    },
+    {
+      "arguments": [
+        "instance",
+        "create",
+        "collision",
+        "--version",
+        "1.21.1"
+      ],
+      "exit_code": 0,
+      "changed": null,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "resources",
+        "add",
+        "collision",
+        "resourcepack",
+        "no-pumpkin-blur"
+      ],
+      "exit_code": 1,
+      "changed": null,
+      "outcome": "expected_protection",
+      "protection": "manual_filename_collision_refused"
+    },
+    {
+      "arguments": [
+        "resources",
+        "disable",
+        "proof",
+        "resourcepack",
+        "no-pumpkin-blur"
+      ],
+      "exit_code": 1,
+      "changed": null,
+      "outcome": "expected_protection",
+      "protection": "live_process_fixture_refused"
+    },
+    {
+      "arguments": [
+        "resources",
+        "list",
+        "proof"
+      ],
+      "exit_code": 0,
+      "changed": null,
+      "outcome": "success"
+    }
+  ],
+  "limits": [
+    "The original report records a binary path but no binary hash or source commit; the private path was removed and the binary identity remains unknown.",
+    "The live-process guard used a controlled sleeping Python process in the game directory plus a launch record; it was not a running Minecraft game.",
+    "No shader loader was installed and shader rendering was not tested.",
+    "The restore revision argument is replaced with a placeholder; original exit codes and changed counts are preserved.",
+    "Complete logs, private test roots and account information are omitted."
+  ]
+}

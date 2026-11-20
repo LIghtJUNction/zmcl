@@ -1,0 +1,140 @@
+{
+  "scope": "one private acceptance data set; includes all instances, providers, caches and retained recovery fixtures",
+  "recorded_utc": "2026-11-20T00:25:42.331155+00:00",
+  "minecraft": "1.21.1",
+  "instance": "vanilla-1_21_1",
+  "library": "com.mojang:blocklist:1.0.10",
+  "source_url": "https://libraries.minecraft.net/com/mojang/blocklist/1.0.10/blocklist-1.0.10.jar",
+  "expected_sha1": "5c685c5ffa94c4cd39496c7184c1d122e515ecef",
+  "expected_bytes": 964,
+  "shared_relative_path": "libraries/com/mojang/blocklist/1.0.10/blocklist-1.0.10.jar",
+  "before": {
+    "target": {
+      "sha1": "5c685c5ffa94c4cd39496c7184c1d122e515ecef",
+      "size": 964,
+      "mode": "0o444",
+      "readonly": true,
+      "device": 68,
+      "inode": 184182137,
+      "nlink": 2
+    },
+    "cas": {
+      "sha1": "5c685c5ffa94c4cd39496c7184c1d122e515ecef",
+      "size": 964,
+      "mode": "0o444",
+      "readonly": true,
+      "device": 68,
+      "inode": 184182137,
+      "nlink": 2
+    }
+  },
+  "replacement_method": "unlink each pathname, then create separate same-length files with different byte flips; never modify original shared inode in place",
+  "corrupt": {
+    "target": {
+      "sha1": "ca4aca51bddcd905d2bc239e95e777f58a7458ed",
+      "size": 964,
+      "mode": "0o600",
+      "readonly": false,
+      "device": 68,
+      "inode": 184483523,
+      "nlink": 1
+    },
+    "cas": {
+      "sha1": "778d8d9f7d794e1f0c965e3813e2b3dc7ff86a16",
+      "size": 964,
+      "mode": "0o600",
+      "readonly": false,
+      "device": 68,
+      "inode": 184483524,
+      "nlink": 1
+    }
+  },
+  "after": {
+    "target": {
+      "sha1": "5c685c5ffa94c4cd39496c7184c1d122e515ecef",
+      "size": 964,
+      "mode": "0o400",
+      "readonly": true,
+      "device": 68,
+      "inode": 184483535,
+      "nlink": 2
+    },
+    "cas": {
+      "sha1": "5c685c5ffa94c4cd39496c7184c1d122e515ecef",
+      "size": 964,
+      "mode": "0o400",
+      "readonly": true,
+      "device": 68,
+      "inode": 184483535,
+      "nlink": 2
+    }
+  },
+  "repair_verified": true,
+  "storage_stats": {
+    "files": 18565,
+    "logical_bytes": 3899100332,
+    "allocated_bytes": 2278838272,
+    "physical_deduplication_measured": true
+  },
+  "allocation_definition": "sum(st_blocks * 512) once per distinct (st_dev, st_ino); includes filesystem block rounding, excludes directory entries",
+  "comparison_limit": "This is the measured acceptance data set, not a general savings ratio or a cold-install benchmark.",
+  "schema_version": 1,
+  "suite": "same_length_library_and_cas_corruption_repair",
+  "result": "passed",
+  "test_date_utc": "2026-11-20",
+  "provenance": [
+    {
+      "report": "cache-repair-result.json",
+      "sha256": "62aeb39513fb99415582dc16fc58b87042fb2bcc528caa2835fa6328acf9ba73",
+      "modified_utc": "2026-11-20T00:25:53.152946+00:00"
+    }
+  ],
+  "source_reference": {
+    "commit": "0850a64203b51eb207c1f0318d7e459f97734cb0",
+    "commit_time_utc": "2026-11-20T00:12:34Z",
+    "files": [
+      "src/store.rs",
+      "src/runtime.rs"
+    ],
+    "relationship": "Implementation reference; not a recorded binary build attestation."
+  },
+  "binary_at_execution": {
+    "sha256": null,
+    "source_commit": null,
+    "reason": "The original report did not record the binary digest or a build-to-commit attestation. No later binary was substituted."
+  },
+  "repair_command": {
+    "argv": [
+      "zmcl",
+      "--root",
+      "<PRIVATE_TEST_ROOT>",
+      "install",
+      "vanilla-1_21_1",
+      "--jobs",
+      "2"
+    ],
+    "exit": 0,
+    "duration_s": 10.706,
+    "downloaded_verified_files": 1
+  },
+  "storage_command": {
+    "argv": [
+      "zmcl",
+      "--root",
+      "<PRIVATE_TEST_ROOT>",
+      "storage",
+      "stats"
+    ],
+    "exit": 0,
+    "duration_s": 0.096
+  },
+  "permission_note": "The verifier used umask 077; the repaired shared inode is read-only mode 0400.",
+  "reproduction_script": "../../scripts/test_cache_repair.py",
+  "limits": [
+    "The two damaged pathnames were unlinked and recreated separately; no live shared inode was modified in place.",
+    "Both corrupt files retained the original byte length, exercising digest verification.",
+    "The private test root was checked for Java processes before mutation. Original bytes were preserved for failure rollback.",
+    "The original library bytes and all complete command logs remain private.",
+    "The historical run did not record a binary digest. The public reproduction script records a digest before future runs."
+  ]
+}

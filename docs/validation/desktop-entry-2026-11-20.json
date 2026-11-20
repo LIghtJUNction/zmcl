@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "passed": true,
+  "prefix_contains_spaces": true,
+  "desktop_file_validate_exit_code": 0,
+  "desktop_file_validate_stdout": "",
+  "desktop_file_validate_stderr": "",
+  "glib_parsed_argv_matches_executable_and_gui": true,
+  "gio_version_probe_exit_code": 0,
+  "gio_version_probe_stdout": "zmcl 0.1.0\n",
+  "gio_version_probe_stderr": "",
+  "icon_identifier": "zmcl",
+  "icon_file_present": true,
+  "gui_started": false,
+  "game_started": false,
+  "uninstall_exit_code": 0,
+  "installer_sha256": "f92330b4e63ba1e3f6adda19423d03fa514e3b6a43f01cabfaf3fa5586bc7ed9",
+  "binary_sha256": "8139bab8416ec9720bc4c9e11765944755f85bbe778b5cf404863bd6fb3ba30c",
+  "glib_parsed_argument_count": 2,
+  "probe_scope": "A copy of the generated desktop entry retained the same quoted executable path and changed only gui to --version; gio launch executed this non-GUI probe.",
+  "steps": [
+    "Install into a private prefix containing spaces.",
+    "Validate the installed desktop entry with desktop-file-validate.",
+    "Parse Exec with GLib and match exactly the executable path and gui argument.",
+    "Launch a copy through GIO with only gui changed to --version.",
+    "Verify Icon=zmcl and the corresponding installed SVG exists.",
+    "Uninstall the test prefix and clean its private temporary directory."
+  ]
+}

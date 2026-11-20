@@ -1,0 +1,1242 @@
+{
+  "schema": 3,
+  "app": "xmcl",
+  "version": "0.73.1",
+  "recorded_at_utc": "2026-11-19T23:50:05Z",
+  "revision": "v0.73.1",
+  "binary_sha256": "34c11d2cbb5bf342cc701a10d205b2b34db37adf1d5d68c73174aeccf69fa7cd",
+  "benchmark_script_sha256": "0f2c79d94cb45dc661824dbcee076dd6e16329f1015e871b7606526f62e314ef",
+  "binary_bytes": 224836856,
+  "system": {
+    "os": "Linux",
+    "arch": "x86_64",
+    "kernel": "7.3.4-arch1-1",
+    "distribution": "Omarchy",
+    "logical_cpus": 24,
+    "memory_at_start_kib": {
+      "MemTotal": 16090532,
+      "MemAvailable": 4877908,
+      "SwapTotal": 47535828,
+      "SwapFree": 26368228
+    },
+    "cpu_model": "12th Gen Intel(R) Core(TM) i9-12900HX"
+  },
+  "scenario": "Fresh isolated data, no account, no instance, visible default home/library",
+  "display": "Xvfb 1280x800x24; launcher window 1024x720; LIBGL_ALWAYS_SOFTWARE=1",
+  "scope": "Launcher processes/session; excludes Xvfb, controller, Java and Minecraft",
+  "conditions": {
+    "warmup_seconds": 20.0,
+    "samples_per_trial": 11,
+    "interval_seconds": 1.0,
+    "os_caches_flushed": false,
+    "cpu_clock_ticks_per_second": 100,
+    "software_driver_environment": {
+      "LP_NUM_THREADS": null,
+      "GALLIUM_DRIVER": null,
+      "MESA_LOADER_DRIVER_OVERRIDE": null,
+      "MESA_GL_VERSION_OVERRIDE": null
+    },
+    "background_workload": "Shared development machine; no system-wide isolation"
+  },
+  "limitations": [
+    "Default home pages differ: XMCL displays news and services.",
+    "Applications share Xvfb/environment settings but may use different internal rendering stacks.",
+    "CPU totals are reported only when sampled PID/starttime sets stay stable and reads succeed.",
+    "Processes born and exited wholly between sample points are not observable with /proc snapshots.",
+    "Software renderer environment is not a hardware GPU benchmark.",
+    "Visible window time is not first interactive frame time.",
+    "RSS sums double-count shared pages; use aggregate PSS for memory comparison.",
+    "System library/runtime installation space is not in the ELF byte count."
+  ],
+  "trials": [
+    {
+      "trial": 1,
+      "window_visible_ms": 1349.359,
+      "rss_median_kib": 795336,
+      "pss_median_kib": 443953,
+      "pss_min_kib": 377646,
+      "pss_max_kib": 488173,
+      "swap_median_kib": 41128,
+      "swap_pss_median_kib": 37344,
+      "cpu_process_set_stable_at_sample_points": true,
+      "cpu_identity": "PID:starttime_ticks",
+      "idle_cpu_seconds": 0.4,
+      "one_core_cpu_percent": 3.9470289987576552,
+      "observed_common_cpu_seconds": 0.4,
+      "cpu_intervals": [
+        {
+          "elapsed_seconds": 1.0130117910011904,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 1
+        },
+        {
+          "elapsed_seconds": 1.0130948559963144,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 0
+        },
+        {
+          "elapsed_seconds": 1.0135691090108594,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 0
+        },
+        {
+          "elapsed_seconds": 1.0125513699895237,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 1
+        },
+        {
+          "elapsed_seconds": 1.0126549340056954,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 20
+        },
+        {
+          "elapsed_seconds": 1.0129503439966356,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 0
+        },
+        {
+          "elapsed_seconds": 1.0124842439981876,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 0
+        },
+        {
+          "elapsed_seconds": 1.0175937700114446,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 1
+        },
+        {
+          "elapsed_seconds": 1.0146317239996279,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 7
+        },
+        {
+          "elapsed_seconds": 1.011662600998534,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 10
+        }
+      ],
+      "sample_elapsed_seconds": 10.134204743008013,
+      "memory_complete_samples": 11,
+      "memory_all_samples_complete": true,
+      "processes": 7,
+      "processes_min": 7,
+      "processes_max": 7,
+      "display_renderer": "llvmpipe (LLVM 23.1.1, 256 bits)",
+      "samples": [
+        {
+          "rss_kib": 842140,
+          "pss_kib": 488173,
+          "swap_kib": 1068,
+          "swap_pss_kib": 0,
+          "processes": 7,
+          "cpu_ticks": {
+            "2557129:6797214": 140,
+            "2557165:6797226": 2,
+            "2557167:6797226": 2,
+            "2557190:6797229": 0,
+            "2557404:6797277": 60,
+            "2557407:6797278": 11,
+            "2557424:6797284": 96
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 0.012459837002097629
+        },
+        {
+          "rss_kib": 841528,
+          "pss_kib": 487964,
+          "swap_kib": 1068,
+          "swap_pss_kib": 0,
+          "processes": 7,
+          "cpu_ticks": {
+            "2557129:6797214": 141,
+            "2557165:6797226": 2,
+            "2557167:6797226": 2,
+            "2557190:6797229": 0,
+            "2557404:6797277": 60,
+            "2557407:6797278": 11,
+            "2557424:6797284": 96
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 1.025471628003288
+        },
+        {
+          "rss_kib": 795336,
+          "pss_kib": 443953,
+          "swap_kib": 41128,
+          "swap_pss_kib": 37344,
+          "processes": 7,
+          "cpu_ticks": {
+            "2557129:6797214": 141,
+            "2557165:6797226": 2,
+            "2557167:6797226": 2,
+            "2557190:6797229": 0,
+            "2557404:6797277": 60,
+            "2557407:6797278": 11,
+            "2557424:6797284": 96
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 2.0385664839996025
+        },
+        {
+          "rss_kib": 794812,
+          "pss_kib": 443465,
+          "swap_kib": 41128,
+          "swap_pss_kib": 37344,
+          "processes": 7,
+          "cpu_ticks": {
+            "2557129:6797214": 141,
+            "2557165:6797226": 2,
+            "2557167:6797226": 2,
+            "2557190:6797229": 0,
+            "2557404:6797277": 60,
+            "2557407:6797278": 11,
+            "2557424:6797284": 96
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 3.052135593010462
+        },
+        {
+          "rss_kib": 788000,
+          "pss_kib": 441577,
+          "swap_kib": 41128,
+          "swap_pss_kib": 37344,
+          "processes": 7,
+          "cpu_ticks": {
+            "2557129:6797214": 142,
+            "2557165:6797226": 2,
+            "2557167:6797226": 2,
+            "2557190:6797229": 0,
+            "2557404:6797277": 60,
+            "2557407:6797278": 11,
+            "2557424:6797284": 96
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 4.0646869629999856
+        },
+        {
+          "rss_kib": 801544,
+          "pss_kib": 449611,
+          "swap_kib": 40936,
+          "swap_pss_kib": 37144,
+          "processes": 7,
+          "cpu_ticks": {
+            "2557129:6797214": 144,
+            "2557165:6797226": 2,
+            "2557167:6797226": 2,
+            "2557190:6797229": 0,
+            "2557404:6797277": 66,
+            "2557407:6797278": 11,
+            "2557424:6797284": 108
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 5.077341897005681
+        },
+        {
+          "rss_kib": 801324,
+          "pss_kib": 449453,
+          "swap_kib": 41532,
+          "swap_pss_kib": 37364,
+          "processes": 7,
+          "cpu_ticks": {
+            "2557129:6797214": 144,
+            "2557165:6797226": 2,
+            "2557167:6797226": 2,
+            "2557190:6797229": 0,
+            "2557404:6797277": 66,
+            "2557407:6797278": 11,
+            "2557424:6797284": 108
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 6.090292241002317
+        },
+        {
+          "rss_kib": 801356,
+          "pss_kib": 449485,
+          "swap_kib": 41532,
+          "swap_pss_kib": 37364,
+          "processes": 7,
+          "cpu_ticks": {
+            "2557129:6797214": 144,
+            "2557165:6797226": 2,
+            "2557167:6797226": 2,
+            "2557190:6797229": 0,
+            "2557404:6797277": 66,
+            "2557407:6797278": 11,
+            "2557424:6797284": 108
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 7.102776485000504
+        },
+        {
+          "rss_kib": 771436,
+          "pss_kib": 421159,
+          "swap_kib": 71720,
+          "swap_pss_kib": 62912,
+          "processes": 7,
+          "cpu_ticks": {
+            "2557129:6797214": 145,
+            "2557165:6797226": 2,
+            "2557167:6797226": 2,
+            "2557190:6797229": 0,
+            "2557404:6797277": 66,
+            "2557407:6797278": 11,
+            "2557424:6797284": 108
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 8.120370255011949
+        },
+        {
+          "rss_kib": 775224,
+          "pss_kib": 413715,
+          "swap_kib": 69904,
+          "swap_pss_kib": 60760,
+          "processes": 7,
+          "cpu_ticks": {
+            "2557129:6797214": 152,
+            "2557165:6797226": 2,
+            "2557167:6797226": 2,
+            "2557190:6797229": 0,
+            "2557404:6797277": 66,
+            "2557407:6797278": 11,
+            "2557424:6797284": 108
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 9.135001979011577
+        },
+        {
+          "rss_kib": 734176,
+          "pss_kib": 377646,
+          "swap_kib": 57240,
+          "swap_pss_kib": 47968,
+          "processes": 7,
+          "cpu_ticks": {
+            "2557129:6797214": 154,
+            "2557165:6797226": 2,
+            "2557167:6797226": 2,
+            "2557190:6797229": 0,
+            "2557404:6797277": 66,
+            "2557407:6797278": 12,
+            "2557424:6797284": 115
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 10.14666458001011
+        }
+      ]
+    },
+    {
+      "trial": 2,
+      "window_visible_ms": 1079.641,
+      "rss_median_kib": 678028,
+      "pss_median_kib": 346517,
+      "pss_min_kib": 315265,
+      "pss_max_kib": 455706,
+      "swap_median_kib": 182728,
+      "swap_pss_median_kib": 131633,
+      "cpu_process_set_stable_at_sample_points": true,
+      "cpu_identity": "PID:starttime_ticks",
+      "idle_cpu_seconds": 0.47,
+      "one_core_cpu_percent": 4.6292866442688485,
+      "observed_common_cpu_seconds": 0.47,
+      "cpu_intervals": [
+        {
+          "elapsed_seconds": 1.0180203299969435,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 2
+        },
+        {
+          "elapsed_seconds": 1.014860953000607,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 0
+        },
+        {
+          "elapsed_seconds": 1.0144481379975332,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 1
+        },
+        {
+          "elapsed_seconds": 1.0131139530130895,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 0
+        },
+        {
+          "elapsed_seconds": 1.0143199019948952,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 22
+        },
+        {
+          "elapsed_seconds": 1.013142144001904,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 0
+        },
+        {
+          "elapsed_seconds": 1.0191069249995053,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 2
+        },
+        {
+          "elapsed_seconds": 1.0198199290025514,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 0
+        },
+        {
+          "elapsed_seconds": 1.0131535249965964,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 1
+        },
+        {
+          "elapsed_seconds": 1.0127663659950485,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 19
+        }
+      ],
+      "sample_elapsed_seconds": 10.152752164998674,
+      "memory_complete_samples": 11,
+      "memory_all_samples_complete": true,
+      "processes": 7,
+      "processes_min": 7,
+      "processes_max": 7,
+      "display_renderer": "llvmpipe (LLVM 23.1.1, 256 bits)",
+      "samples": [
+        {
+          "rss_kib": 815260,
+          "pss_kib": 455706,
+          "swap_kib": 40180,
+          "swap_pss_kib": 28036,
+          "processes": 7,
+          "cpu_ticks": {
+            "2565043:6800691": 158,
+            "2565051:6800694": 2,
+            "2565052:6800694": 2,
+            "2565059:6800696": 0,
+            "2565112:6800745": 73,
+            "2565115:6800746": 14,
+            "2565135:6800753": 116
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 0.01314177799213212
+        },
+        {
+          "rss_kib": 683604,
+          "pss_kib": 352331,
+          "swap_kib": 172752,
+          "swap_pss_kib": 124290,
+          "processes": 7,
+          "cpu_ticks": {
+            "2565043:6800691": 160,
+            "2565051:6800694": 2,
+            "2565052:6800694": 2,
+            "2565059:6800696": 0,
+            "2565112:6800745": 73,
+            "2565115:6800746": 14,
+            "2565135:6800753": 116
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 1.0311621079890756
+        },
+        {
+          "rss_kib": 683608,
+          "pss_kib": 346052,
+          "swap_kib": 172752,
+          "swap_pss_kib": 124290,
+          "processes": 7,
+          "cpu_ticks": {
+            "2565043:6800691": 160,
+            "2565051:6800694": 2,
+            "2565052:6800694": 2,
+            "2565059:6800696": 0,
+            "2565112:6800745": 73,
+            "2565115:6800746": 14,
+            "2565135:6800753": 116
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 2.0460230609896826
+        },
+        {
+          "rss_kib": 682348,
+          "pss_kib": 351066,
+          "swap_kib": 175952,
+          "swap_pss_kib": 124746,
+          "processes": 7,
+          "cpu_ticks": {
+            "2565043:6800691": 161,
+            "2565051:6800694": 2,
+            "2565052:6800694": 2,
+            "2565059:6800696": 0,
+            "2565112:6800745": 73,
+            "2565115:6800746": 14,
+            "2565135:6800753": 116
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 3.0604711989872158
+        },
+        {
+          "rss_kib": 667780,
+          "pss_kib": 342525,
+          "swap_kib": 183076,
+          "swap_pss_kib": 131950,
+          "processes": 7,
+          "cpu_ticks": {
+            "2565043:6800691": 161,
+            "2565051:6800694": 2,
+            "2565052:6800694": 2,
+            "2565059:6800696": 0,
+            "2565112:6800745": 73,
+            "2565115:6800746": 14,
+            "2565135:6800753": 116
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 4.073585152000305
+        },
+        {
+          "rss_kib": 679396,
+          "pss_kib": 350029,
+          "swap_kib": 182728,
+          "swap_pss_kib": 131633,
+          "processes": 7,
+          "cpu_ticks": {
+            "2565043:6800691": 163,
+            "2565051:6800694": 2,
+            "2565052:6800694": 2,
+            "2565059:6800696": 0,
+            "2565112:6800745": 80,
+            "2565115:6800746": 15,
+            "2565135:6800753": 128
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 5.0879050539952
+        },
+        {
+          "rss_kib": 678028,
+          "pss_kib": 349371,
+          "swap_kib": 183984,
+          "swap_pss_kib": 131673,
+          "processes": 7,
+          "cpu_ticks": {
+            "2565043:6800691": 163,
+            "2565051:6800694": 2,
+            "2565052:6800694": 2,
+            "2565059:6800696": 0,
+            "2565112:6800745": 80,
+            "2565115:6800746": 15,
+            "2565135:6800753": 128
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 6.101047197997104
+        },
+        {
+          "rss_kib": 674888,
+          "pss_kib": 346396,
+          "swap_kib": 184348,
+          "swap_pss_kib": 131781,
+          "processes": 7,
+          "cpu_ticks": {
+            "2565043:6800691": 165,
+            "2565051:6800694": 2,
+            "2565052:6800694": 2,
+            "2565059:6800696": 0,
+            "2565112:6800745": 80,
+            "2565115:6800746": 15,
+            "2565135:6800753": 128
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 7.12015412299661
+        },
+        {
+          "rss_kib": 674792,
+          "pss_kib": 346517,
+          "swap_kib": 184340,
+          "swap_pss_kib": 131773,
+          "processes": 7,
+          "cpu_ticks": {
+            "2565043:6800691": 165,
+            "2565051:6800694": 2,
+            "2565052:6800694": 2,
+            "2565059:6800696": 0,
+            "2565112:6800745": 80,
+            "2565115:6800746": 15,
+            "2565135:6800753": 128
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 8.139974051999161
+        },
+        {
+          "rss_kib": 643380,
+          "pss_kib": 315265,
+          "swap_kib": 215216,
+          "swap_pss_kib": 162465,
+          "processes": 7,
+          "cpu_ticks": {
+            "2565043:6800691": 166,
+            "2565051:6800694": 2,
+            "2565052:6800694": 2,
+            "2565059:6800696": 0,
+            "2565112:6800745": 80,
+            "2565115:6800746": 15,
+            "2565135:6800753": 128
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 9.153127576995757
+        },
+        {
+          "rss_kib": 646328,
+          "pss_kib": 322695,
+          "swap_kib": 160776,
+          "swap_pss_kib": 108427,
+          "processes": 7,
+          "cpu_ticks": {
+            "2565043:6800691": 176,
+            "2565051:6800694": 2,
+            "2565052:6800694": 2,
+            "2565059:6800696": 0,
+            "2565112:6800745": 80,
+            "2565115:6800746": 15,
+            "2565135:6800753": 137
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 10.165893942990806
+        }
+      ]
+    },
+    {
+      "trial": 3,
+      "window_visible_ms": 1345.063,
+      "rss_median_kib": 816436,
+      "pss_median_kib": 455864,
+      "pss_min_kib": 417124,
+      "pss_max_kib": 476579,
+      "swap_median_kib": 34400,
+      "swap_pss_median_kib": 19884,
+      "cpu_process_set_stable_at_sample_points": true,
+      "cpu_identity": "PID:starttime_ticks",
+      "idle_cpu_seconds": 0.53,
+      "one_core_cpu_percent": 5.162610398857392,
+      "observed_common_cpu_seconds": 0.53,
+      "cpu_intervals": [
+        {
+          "elapsed_seconds": 1.0328887759969803,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 0
+        },
+        {
+          "elapsed_seconds": 1.015214183003991,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 1
+        },
+        {
+          "elapsed_seconds": 1.0166597599891247,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 0
+        },
+        {
+          "elapsed_seconds": 1.017504537012428,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 1
+        },
+        {
+          "elapsed_seconds": 1.0208481619920349,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 23
+        },
+        {
+          "elapsed_seconds": 1.0258753810048802,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 1
+        },
+        {
+          "elapsed_seconds": 1.0197968619904714,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 1
+        },
+        {
+          "elapsed_seconds": 1.087236882012803,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 2
+        },
+        {
+          "elapsed_seconds": 1.016535455986741,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 10
+        },
+        {
+          "elapsed_seconds": 1.013564288005,
+          "process_set_stable_at_endpoints": true,
+          "entered_identities": [],
+          "left_identities": [],
+          "observed_common_cpu_ticks": 14
+        }
+      ],
+      "sample_elapsed_seconds": 10.266124286994454,
+      "memory_complete_samples": 11,
+      "memory_all_samples_complete": true,
+      "processes": 7,
+      "processes_min": 7,
+      "processes_max": 7,
+      "display_renderer": "llvmpipe (LLVM 23.1.1, 256 bits)",
+      "samples": [
+        {
+          "rss_kib": 845168,
+          "pss_kib": 476579,
+          "swap_kib": 10380,
+          "swap_pss_kib": 156,
+          "processes": 7,
+          "cpu_ticks": {
+            "2575828:6804157": 146,
+            "2575837:6804160": 3,
+            "2575838:6804160": 1,
+            "2575841:6804163": 0,
+            "2576025:6804229": 65,
+            "2576028:6804230": 13,
+            "2576051:6804237": 99
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 0.015533942001638934
+        },
+        {
+          "rss_kib": 842372,
+          "pss_kib": 469406,
+          "swap_kib": 12704,
+          "swap_pss_kib": 1364,
+          "processes": 7,
+          "cpu_ticks": {
+            "2575828:6804157": 146,
+            "2575837:6804160": 3,
+            "2575838:6804160": 1,
+            "2575841:6804163": 0,
+            "2576025:6804229": 65,
+            "2576028:6804230": 13,
+            "2576051:6804237": 99
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 1.0484227179986192
+        },
+        {
+          "rss_kib": 831576,
+          "pss_kib": 463907,
+          "swap_kib": 23856,
+          "swap_pss_kib": 12132,
+          "processes": 7,
+          "cpu_ticks": {
+            "2575828:6804157": 147,
+            "2575837:6804160": 3,
+            "2575838:6804160": 1,
+            "2575841:6804163": 0,
+            "2576025:6804229": 65,
+            "2576028:6804230": 13,
+            "2576051:6804237": 99
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 2.06363690100261
+        },
+        {
+          "rss_kib": 823504,
+          "pss_kib": 455864,
+          "swap_kib": 31868,
+          "swap_pss_kib": 19884,
+          "processes": 7,
+          "cpu_ticks": {
+            "2575828:6804157": 147,
+            "2575837:6804160": 3,
+            "2575838:6804160": 1,
+            "2575841:6804163": 0,
+            "2576025:6804229": 65,
+            "2576028:6804230": 13,
+            "2576051:6804237": 99
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 3.080296660991735
+        },
+        {
+          "rss_kib": 806676,
+          "pss_kib": 451119,
+          "swap_kib": 33468,
+          "swap_pss_kib": 20892,
+          "processes": 7,
+          "cpu_ticks": {
+            "2575828:6804157": 148,
+            "2575837:6804160": 3,
+            "2575838:6804160": 1,
+            "2575841:6804163": 0,
+            "2576025:6804229": 65,
+            "2576028:6804230": 13,
+            "2576051:6804237": 99
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 4.097801198004163
+        },
+        {
+          "rss_kib": 817416,
+          "pss_kib": 457659,
+          "swap_kib": 35768,
+          "swap_pss_kib": 20872,
+          "processes": 7,
+          "cpu_ticks": {
+            "2575828:6804157": 150,
+            "2575837:6804160": 3,
+            "2575838:6804160": 1,
+            "2575841:6804163": 0,
+            "2576025:6804229": 72,
+            "2576028:6804230": 13,
+            "2576051:6804237": 113
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 5.118649359996198
+        },
+        {
+          "rss_kib": 816436,
+          "pss_kib": 456898,
+          "swap_kib": 38520,
+          "swap_pss_kib": 21296,
+          "processes": 7,
+          "cpu_ticks": {
+            "2575828:6804157": 151,
+            "2575837:6804160": 3,
+            "2575838:6804160": 1,
+            "2575841:6804163": 0,
+            "2576025:6804229": 72,
+            "2576028:6804230": 13,
+            "2576051:6804237": 113
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 6.144524741001078
+        },
+        {
+          "rss_kib": 815008,
+          "pss_kib": 455700,
+          "swap_kib": 39792,
+          "swap_pss_kib": 22144,
+          "processes": 7,
+          "cpu_ticks": {
+            "2575828:6804157": 152,
+            "2575837:6804160": 3,
+            "2575838:6804160": 1,
+            "2575841:6804163": 0,
+            "2576025:6804229": 72,
+            "2576028:6804230": 13,
+            "2576051:6804237": 113
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 7.164321602991549
+        },
+        {
+          "rss_kib": 810976,
+          "pss_kib": 452560,
+          "swap_kib": 40828,
+          "swap_pss_kib": 22212,
+          "processes": 7,
+          "cpu_ticks": {
+            "2575828:6804157": 153,
+            "2575837:6804160": 3,
+            "2575838:6804160": 1,
+            "2575841:6804163": 0,
+            "2576025:6804229": 72,
+            "2576028:6804230": 13,
+            "2576051:6804237": 114
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 8.251558485004352
+        },
+        {
+          "rss_kib": 791680,
+          "pss_kib": 435746,
+          "swap_kib": 34948,
+          "swap_pss_kib": 10852,
+          "processes": 7,
+          "cpu_ticks": {
+            "2575828:6804157": 162,
+            "2575837:6804160": 3,
+            "2575838:6804160": 1,
+            "2575841:6804163": 0,
+            "2576025:6804229": 72,
+            "2576028:6804230": 13,
+            "2576051:6804237": 115
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 9.268093940991093
+        },
+        {
+          "rss_kib": 768976,
+          "pss_kib": 417124,
+          "swap_kib": 34400,
+          "swap_pss_kib": 10888,
+          "processes": 7,
+          "cpu_ticks": {
+            "2575828:6804157": 164,
+            "2575837:6804160": 3,
+            "2575838:6804160": 1,
+            "2575841:6804163": 0,
+            "2576025:6804229": 73,
+            "2576028:6804230": 13,
+            "2576051:6804237": 126
+          },
+          "process_names": [
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl",
+            "xmcl"
+          ],
+          "unread_processes": [],
+          "elapsed_seconds": 10.281658228996093
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "median_trial_pss_kib": 443953,
+    "median_trial_rss_kib": 795336,
+    "median_trial_swap_kib": 41128,
+    "median_trial_swap_pss_kib": 37344,
+    "median_window_visible_ms": 1345.063,
+    "cpu_stable_trials": 3,
+    "median_idle_cpu_seconds": 0.47,
+    "median_one_core_cpu_percent": 4.6292866442688485
+  }
+}

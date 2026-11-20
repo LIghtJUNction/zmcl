@@ -27,7 +27,7 @@ Edit data.json without rebuilding the site. schema_version is currently 1.
 - Do not calculate or publish speed or memory ratios until both applications have paired observations on the same machine and equivalent functionality.
 - Never put account tokens, personal paths, private launch logs or user worlds in this directory.
 
-The supplied numbers describe an early 885,288-byte build in Xvfb/llvmpipe. Replace them with the final validation record before presenting them as final release figures. Hardware GPU and installation peak remain unmeasured. The initial XMCL run is preliminary; wait for paired repeat measurements before replacing the comparison placeholders.
+The current data describes source 033776287ab10aab90f46fd5b65309fecb9b8711 (ELF SHA-256 8139bab8416ec9720bc4c9e11765944755f85bbe778b5cf404863bd6fb3ba30c) and official XMCL 0.73.1, measured on 2026-11-20 with the same schema 4 script, three trials and eleven samples per trial. Exact raw records and derived summaries are under docs/measurements/. The screenshot is from the final zmcl trial. Shared-host memory pressure differed between application batches; the page discloses available memory, swapped pages and different default home content. Hardware GPU, installation peak and physical game storage remain unmeasured. Earlier records are historical and do not supply the displayed final values.
 
 ## Publish
 

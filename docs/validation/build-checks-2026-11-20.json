@@ -1,0 +1,133 @@
+{
+  "schema": 1,
+  "report_date": "2026-11-20",
+  "source_commit": "033776287ab10aab90f46fd5b65309fecb9b8711",
+  "binary_sha256": "8139bab8416ec9720bc4c9e11765944755f85bbe778b5cf404863bd6fb3ba30c",
+  "binary_bytes": 1412176,
+  "rust_toolchain": "1.100.0",
+  "platform": {
+    "system": "Linux",
+    "arch": "x86_64",
+    "kernel": "7.3.4-arch1-1"
+  },
+  "rust_tests": {
+    "application": 58,
+    "core": 19,
+    "total": 77,
+    "failed": 0
+  },
+  "cargo_steps": [
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--all"
+      ],
+      "exit_code": 0,
+      "seconds": 3.566
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--locked",
+        "--offline",
+        "-j",
+        "1"
+      ],
+      "exit_code": 0,
+      "seconds": 7.51
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--locked",
+        "--offline",
+        "-j",
+        "1",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 1.225
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--locked",
+        "--offline",
+        "-j",
+        "1"
+      ],
+      "exit_code": 0,
+      "seconds": 12.096
+    }
+  ],
+  "python_helper_tests": [
+    {
+      "file": "src/content/test_archive.py",
+      "exit_code": 0,
+      "tests": 9,
+      "seconds": 0.082,
+      "count_source": "unittest output from validation job f7"
+    },
+    {
+      "file": "src/java/test_extract.py",
+      "exit_code": 0,
+      "tests": 6,
+      "seconds": 0.078,
+      "count_source": "unittest output from validation job f7"
+    },
+    {
+      "file": "src/server/test_process.py",
+      "exit_code": 0,
+      "tests": 6,
+      "seconds": 0.085,
+      "count_source": "unittest output from validation job f7"
+    },
+    {
+      "file": "src/backup/test_archive.py",
+      "exit_code": 0,
+      "tests": 15,
+      "seconds": 0.178,
+      "count_source": "unittest output from validation job f7"
+    },
+    {
+      "file": "src/worlds/test_manage.py",
+      "exit_code": 0,
+      "tests": 16,
+      "seconds": 0.15,
+      "count_source": "unittest output from validation job f7"
+    },
+    {
+      "file": "src/horizon/test_archive.py",
+      "exit_code": 0,
+      "tests": 10,
+      "seconds": 0.179,
+      "count_source": "unittest output from validation job f7"
+    }
+  ],
+  "python_helper_total": 62,
+  "benchmark_script_tests": "Separate evidence in PERFORMANCE.md; not included in 62 helper tests.",
+  "dependency_pins": {
+    "zconv": {
+      "version": "0.4.0",
+      "sha": "0af1f7eb0766ff0ce9db5cee7c6184eff511a8c1"
+    },
+    "zclap": {
+      "version": "0.1.4",
+      "sha": "4d87f3ae3743e81509d5ac5500909955667c860f"
+    },
+    "zui-native": {
+      "version": "0.1.0",
+      "sha": "5e37fcfb791eec9ac523fc19373e95d0a513112f"
+    }
+  }
+}

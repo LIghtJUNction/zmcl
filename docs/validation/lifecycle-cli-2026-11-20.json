@@ -1,0 +1,340 @@
+{
+  "schema_version": 1,
+  "suite": "world_backup_instance_lifecycle",
+  "result": "passed",
+  "test_date_utc": "2026-11-20",
+  "started_utc": "2026-11-20T00:32:25.614209+00:00",
+  "finished_utc": "2026-11-20T00:32:27.842078+00:00",
+  "platform": "Linux-x86_64",
+  "provenance": {
+    "report": "acceptance.json",
+    "sha256": "61136e264719aa5151250702ff84a5275dc7af580d502527866ebedbec684a08",
+    "modified_utc": "2026-11-20T00:32:27.842713+00:00"
+  },
+  "source_reference": {
+    "commit": "38595c07d805905a95a15d9de9ecf6cc13e4465c",
+    "commit_time_utc": "2026-11-20T00:26:07Z",
+    "files": [
+      "src/worlds.rs",
+      "src/backup.rs",
+      "src/instance_manage.rs"
+    ]
+  },
+  "binary_at_execution": {
+    "sha256": "ed315dc1261332f343cccde85a798855bbfbbc85044dc43510b316e4752781a0",
+    "source_commit": "38595c07d805905a95a15d9de9ecf6cc13e4465c",
+    "source_commit_evidence": "The test report captured the binary SHA256; the coordinator separately verified this source commit."
+  },
+  "command_count": 21,
+  "expected_protection_count": 3,
+  "common_arguments": [
+    "--root",
+    "<PRIVATE_TEST_ROOT>"
+  ],
+  "commands": [
+    {
+      "arguments": [
+        "instance",
+        "create",
+        "alpha",
+        "--version",
+        "1.21.1"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "instance",
+        "create",
+        "beta",
+        "--version",
+        "1.21.1"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "world",
+        "import",
+        "alpha",
+        "<SYNTHETIC_WORLD_DIRECTORY>",
+        "Fixture"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "world",
+        "list",
+        "alpha"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "world",
+        "info",
+        "alpha",
+        "Fixture"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "world",
+        "path",
+        "alpha",
+        "Fixture"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "world",
+        "export",
+        "alpha",
+        "Fixture",
+        "<EXPORTED_WORLD_ZIP>"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "world",
+        "import",
+        "beta",
+        "<EXPORTED_WORLD_ZIP>",
+        "RoundTrip"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "world",
+        "clone",
+        "alpha",
+        "Fixture",
+        "beta",
+        "Cloned"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "world",
+        "import",
+        "alpha",
+        "<SYNTHETIC_WORLD_DIRECTORY>",
+        "Fixture"
+      ],
+      "exit_code": 1,
+      "expected_success": false,
+      "outcome": "expected_protection",
+      "protection": "existing_world_destination_refused"
+    },
+    {
+      "arguments": [
+        "world",
+        "export",
+        "alpha",
+        "Fixture",
+        "<EXPORTED_WORLD_ZIP>"
+      ],
+      "exit_code": 1,
+      "expected_success": false,
+      "outcome": "expected_protection",
+      "protection": "existing_export_destination_refused"
+    },
+    {
+      "arguments": [
+        "backup",
+        "create",
+        "alpha",
+        "Synthetic fixture before edit"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "backup",
+        "list",
+        "alpha"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "backup",
+        "restore",
+        "alpha",
+        "<ORIGINAL_BACKUP_ID>"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "backup",
+        "list",
+        "alpha"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "instance",
+        "clone",
+        "alpha",
+        "copy"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "instance",
+        "trash",
+        "copy"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "instance",
+        "trash-list"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "instance",
+        "restore",
+        "<TRASH_ID>",
+        "alpha"
+      ],
+      "exit_code": 1,
+      "expected_success": false,
+      "outcome": "expected_protection",
+      "protection": "occupied_instance_destination_refused"
+    },
+    {
+      "arguments": [
+        "instance",
+        "restore",
+        "<TRASH_ID>"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "instance",
+        "trash-list"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "outcome": "success"
+    }
+  ],
+  "fixture": {
+    "type": "synthetic gzip NBT metadata plus opaque region sentinel bytes",
+    "metadata_name": "Synthetic lifecycle fixture",
+    "files": 3,
+    "bytes": 2111,
+    "playable_world": false
+  },
+  "artifacts": {
+    "world_export": {
+      "bytes": 737,
+      "sha256": "f1d525a40cc6716d84ac4bd8fb290690401adeb66148594b5197c3ee22ab5a93"
+    },
+    "original_backup": {
+      "bytes": 2237,
+      "files": 5,
+      "file_bytes": 2146,
+      "sha256": "65f419659e7c23b0a345e921a481c7ce72dd3912e4177d14a8d6bff40f960011"
+    },
+    "pre_restore_backup": {
+      "bytes": 2493,
+      "files": 6,
+      "file_bytes": 326,
+      "sha256": "07702ab4ceadea0d8579f12605728cfdf62406f12434398fce77b090f1937b42"
+    }
+  },
+  "checks": {
+    "world_directory_zip_clone": {
+      "passed": true,
+      "files": 3,
+      "bytes": 2111,
+      "metadata_name": "Synthetic lifecycle fixture",
+      "existing_destinations_refused": true,
+      "export_sha256": "f1d525a40cc6716d84ac4bd8fb290690401adeb66148594b5197c3ee22ab5a93"
+    },
+    "backup_restore": {
+      "passed": true,
+      "original_bytes_restored": true,
+      "excluded_mods_preserved": true,
+      "manifest_sha256_verified": true,
+      "original_snapshot": {
+        "id": "<ORIGINAL_BACKUP_ID>",
+        "sha256": "65f419659e7c23b0a345e921a481c7ce72dd3912e4177d14a8d6bff40f960011",
+        "file_count": 5
+      },
+      "pre_restore_snapshot": {
+        "id": "<PRE_RESTORE_BACKUP_ID>",
+        "sha256": "07702ab4ceadea0d8579f12605728cfdf62406f12434398fce77b090f1937b42",
+        "file_count": 6
+      }
+    },
+    "instance_clone_trash_restore": {
+      "passed": true,
+      "independent_writable_files": true,
+      "requires_install": true,
+      "occupied_target_refused": true,
+      "restored_changed_clone_bytes": true
+    },
+    "no_pending_journals": true
+  },
+  "game_launched": false,
+  "network_downloads_requested": false,
+  "real_world_compatibility_claimed": false,
+  "reproduction_script": "../../scripts/test_lifecycle_cli.py",
+  "limits": [
+    "The 3-file, 2111-byte fixture is synthetic and cannot establish compatibility with a game-loadable Minecraft world.",
+    "These were actual CLI invocations; no Minecraft game was launched and no network download was requested.",
+    "Backup listing validated metadata but did not rehash all payloads; separate restore and manifest checks are reported.",
+    "Dynamic fixture paths, backup IDs and trash IDs are represented by placeholders; exit codes and measured digests are unchanged.",
+    "Complete logs, account data, original world files and original backup archives are not published."
+  ]
+}

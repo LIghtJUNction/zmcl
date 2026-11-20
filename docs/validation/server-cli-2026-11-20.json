@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "suite": "official_server_install_and_eula_refusal",
+  "result": "passed",
+  "test_date_utc": "2026-11-20",
+  "started_utc": "2026-11-20T00:36:58.802000+00:00",
+  "finished_utc": "2026-11-20T00:37:02.639403+00:00",
+  "platform": "Linux-x86_64",
+  "provenance": {
+    "report": "acceptance.json",
+    "sha256": "15315d945afde2cb1c5fa488c3dd146e7daa6501a6b1c6e0aa46730911e2df6a",
+    "modified_utc": "2026-11-20T00:37:02.639624+00:00"
+  },
+  "source_reference": {
+    "commit": "033776287ab10aab90f46fd5b65309fecb9b8711",
+    "commit_time_utc": "2026-11-20T00:36:29Z",
+    "files": [
+      "src/server.rs",
+      "src/main.rs"
+    ]
+  },
+  "binary_at_execution": {
+    "sha256": "8139bab8416ec9720bc4c9e11765944755f85bbe778b5cf404863bd6fb3ba30c",
+    "source_commit": "033776287ab10aab90f46fd5b65309fecb9b8711",
+    "source_commit_evidence": "The report captured the binary SHA256; the coordinator separately verified this source commit."
+  },
+  "minecraft": "1.21.1",
+  "command_count": 6,
+  "expected_protection_count": 1,
+  "common_arguments": [
+    "--root",
+    "<PRIVATE_TEST_ROOT>"
+  ],
+  "commands": [
+    {
+      "arguments": [
+        "server",
+        "create",
+        "server-cli-check",
+        "--version",
+        "1.21.1"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "server",
+        "install",
+        "server-cli-check"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "server",
+        "status",
+        "server-cli-check"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "outcome": "success",
+      "process_status": {
+        "state": "stopped",
+        "running": false,
+        "verified": false,
+        "stop_supported": true
+      }
+    },
+    {
+      "arguments": [
+        "server",
+        "list"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "server",
+        "start",
+        "server-cli-check"
+      ],
+      "exit_code": 1,
+      "expected_success": false,
+      "outcome": "expected_protection",
+      "protection": "eula_not_accepted_start_refused"
+    },
+    {
+      "arguments": [
+        "server",
+        "status",
+        "server-cli-check"
+      ],
+      "exit_code": 0,
+      "expected_success": true,
+      "outcome": "success",
+      "process_status": {
+        "state": "stopped",
+        "running": false,
+        "verified": false,
+        "stop_supported": true
+      }
+    }
+  ],
+  "artifact": {
+    "name": "server.jar",
+    "source_url": "https://piston-data.mojang.com/v1/objects/59353fb40c36d304f2035d51e7d6e6baa98dc05c/server.jar",
+    "bytes": 51627615,
+    "sha1": "59353fb40c36d304f2035d51e7d6e6baa98dc05c",
+    "official_metadata_and_install_record_match": true
+  },
+  "java_major_requirement": 21,
+  "eula": {
+    "setting": false,
+    "accepted": false,
+    "file_bytes_unchanged": true,
+    "explicit_start_refusal": true
+  },
+  "server_started": false,
+  "process_check": {
+    "scope": "Java processes with the test server working directory and a server.jar argument",
+    "before": 0,
+    "after": 0
+  },
+  "checks": {
+    "status_and_list_match": true,
+    "independent_jar_sha1_and_size_recheck": "passed"
+  },
+  "reproduction_script": "../../scripts/test_server_cli.py",
+  "limits": [
+    "No Minecraft server was actually started, no successful stop was exercised, and no EULA acceptance was performed.",
+    "The zero counts describe matching processes for this private test server, not every Java process on the machine.",
+    "Artifact verification is not a cold-download performance benchmark.",
+    "Private paths, complete stdout/stderr, account information and the original server.jar are not published."
+  ]
+}

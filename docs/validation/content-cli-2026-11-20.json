@@ -1,0 +1,308 @@
+{
+  "schema_version": 1,
+  "suite": "content_cli",
+  "result": "passed",
+  "test_date_utc": "2026-11-20",
+  "date_basis": "UTC modification times of the preserved result files; per-command start timestamps were not recorded.",
+  "provenance": [
+    {
+      "report": "seed-result.json",
+      "sha256": "e2870268f7c97a4398015372c50687a2efcd071987965071507b0f990d8932bc",
+      "modified_utc": "2026-11-20T00:12:59.962811+00:00"
+    },
+    {
+      "report": "mod-checks.json",
+      "sha256": "0baf00e7ce55e6e470f0c4be5f39e4971c3f8950edf8b0e9d06e5c364daa369b",
+      "modified_utc": "2026-11-20T00:18:42.113178+00:00"
+    },
+    {
+      "report": "mod-summary.json",
+      "sha256": "6cc6844b1fce8cd0fbb1a313aeb133864f2124f9793501205aa5eaf3565d2509",
+      "modified_utc": "2026-11-20T00:18:42.113355+00:00"
+    },
+    {
+      "report": "pack-checks.json",
+      "sha256": "d0dc4f97d367b13d719461ca4ef1f3d4e5b9ec3246b600811baf272e371325ff",
+      "modified_utc": "2026-11-20T00:18:37.217825+00:00"
+    },
+    {
+      "report": "pack-summary.json",
+      "sha256": "e2b6d2593cc646f46bbb911fb864ea719839affa1df49385821c693dc7288129",
+      "modified_utc": "2026-11-20T00:18:37.273113+00:00"
+    }
+  ],
+  "source_reference": {
+    "commit": "0850a64203b51eb207c1f0318d7e459f97734cb0",
+    "commit_time_utc": "2026-11-20T00:12:34Z",
+    "files": [
+      "src/content.rs",
+      "src/content/management.rs",
+      "src/content/transaction.rs"
+    ],
+    "relationship": "Implementation reference; not a recorded binary build attestation."
+  },
+  "binary_at_execution": {
+    "sha256": null,
+    "source_commit": null,
+    "reason": "The original report did not record the binary digest or a build-to-commit attestation. No later binary was substituted."
+  },
+  "minecraft": "1.21.1",
+  "command_count": 16,
+  "expected_protection_count": 3,
+  "seed": {
+    "kind": "locally assembled mrpack containing one official Mod Menu release",
+    "artifact": {
+      "project_id": "mOgUt4GM",
+      "version_id": "v6Xx3fbU",
+      "version_number": "11.0.4",
+      "path": "mods/modmenu-11.0.4.jar",
+      "url": "https://cdn.modrinth.com/data/mOgUt4GM/versions/v6Xx3fbU/modmenu-11.0.4.jar",
+      "bytes": 973059,
+      "hashes": {
+        "sha1": "8af1b0b9ee18eab5cd5e5c97c497f0e473c49e9a",
+        "sha512": "45ea8f7e0749bc0eb98900f94486e323f153b199617fa43977b46472e4196ee5a6739f41a1e7f68e270f84a367df5f7f53c2a1f46145ad7d349ede4297895396"
+      }
+    }
+  },
+  "upgrade": {
+    "from_version_id": "v6Xx3fbU",
+    "to": {
+      "project_id": "mOgUt4GM",
+      "version_id": "6lgOkclV",
+      "path": "mods/modmenu-11.0.5.jar",
+      "url": "https://cdn.modrinth.com/data/mOgUt4GM/versions/6lgOkclV/modmenu-11.0.5.jar",
+      "bytes": 975846,
+      "hashes": {
+        "sha1": "2321d890a25b5985eba576d7cd8fe9a9c136e33d",
+        "sha512": "92e8e96267ff18d320903090f2ad9b32408a218919f5a0d578e232ad774c89d49a34a8271806652be7d6283f24e98432bc4af7f95855e78b843f9100d68696c7"
+      },
+      "version_number": "11.0.5"
+    },
+    "required_dependencies_installed": [
+      {
+        "project_id": "P7dR8mSH",
+        "version_id": "5SwzqWUu",
+        "path": "mods/fabric-api-0.116.18+1.21.1.jar",
+        "url": "https://cdn.modrinth.com/data/P7dR8mSH/versions/5SwzqWUu/fabric-api-0.116.18%2B1.21.1.jar",
+        "bytes": 2453884,
+        "hashes": {
+          "sha1": "584d303f646287ee6be059ecb2fc451255be9ee9",
+          "sha512": "9f721c253ae2e9823cb548e8ec132c9928f80a65184e9b8dcfc489a8d632df20cbfea1e65ff8a4333bdb295c41fbe2228b43e4d41c7355d42ed4637a785840a1"
+        }
+      },
+      {
+        "project_id": "eXts2L7r",
+        "version_id": "U5bhVym2",
+        "path": "mods/placeholder-api-2.4.2+1.21.jar",
+        "url": "https://cdn.modrinth.com/data/eXts2L7r/versions/U5bhVym2/placeholder-api-2.4.2%2B1.21.jar",
+        "bytes": 232325,
+        "hashes": {
+          "sha1": "aa1b9a49f9f190dfe4825c502b150817dd2998c3",
+          "sha512": "fc13d3a5c048dbaab86318edaf8b6c6b46ef9f1d367e8f063d19f5a9b0da66c5ae419d92c8c4608edc89a01eb44d91ffcf017fea73f39b222cbd85e82f70a233"
+        }
+      }
+    ]
+  },
+  "assertions": {
+    "dependency_count": 2,
+    "manual_file_preserved": true,
+    "required_remove_blocked": true,
+    "required_disable_blocked": true,
+    "enable_disable": true,
+    "update_all": true,
+    "recovered_simulated_interruption": "after-new-directory-swap",
+    "retained_post_interruption_file": true,
+    "legacy_journal_rejected_without_changes": true,
+    "retained_dependency_count": 2
+  },
+  "commands": [
+    {
+      "arguments": [
+        "pack",
+        "import",
+        "<LOCALLY_ASSEMBLED_SEED_MRPACK>",
+        "content-check"
+      ],
+      "argument_provenance": "Fixture workflow; the seed result records exit and duration, not argv.",
+      "exit_code": 0,
+      "duration_s": 1.671,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "mods",
+        "update",
+        "content-check",
+        "modmenu"
+      ],
+      "exit_code": 0,
+      "duration_s": 7.328,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "mods",
+        "remove",
+        "content-check",
+        "fabric-api"
+      ],
+      "exit_code": 1,
+      "duration_s": 0.108,
+      "outcome": "expected_protection",
+      "protection": "required_dependency_removal_refused"
+    },
+    {
+      "arguments": [
+        "mods",
+        "disable",
+        "content-check",
+        "fabric-api"
+      ],
+      "exit_code": 1,
+      "duration_s": 0.106,
+      "outcome": "expected_protection",
+      "protection": "required_dependency_disable_refused"
+    },
+    {
+      "arguments": [
+        "mods",
+        "disable",
+        "content-check",
+        "modmenu"
+      ],
+      "exit_code": 0,
+      "duration_s": 1.215,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "mods",
+        "enable",
+        "content-check",
+        "modmenu"
+      ],
+      "exit_code": 0,
+      "duration_s": 0.326,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "mods",
+        "update",
+        "content-check"
+      ],
+      "exit_code": 0,
+      "duration_s": 3.099,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "mods",
+        "recover",
+        "content-check"
+      ],
+      "exit_code": 0,
+      "duration_s": 0.003,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "mods",
+        "recover",
+        "content-check"
+      ],
+      "exit_code": 0,
+      "duration_s": 0.112,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "mods",
+        "recover",
+        "content-check"
+      ],
+      "exit_code": 1,
+      "duration_s": 0.179,
+      "outcome": "expected_protection",
+      "protection": "legacy_journal_without_directory_identity_refused"
+    },
+    {
+      "arguments": [
+        "mods",
+        "remove",
+        "content-check",
+        "modmenu"
+      ],
+      "exit_code": 0,
+      "duration_s": 0.354,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "mods",
+        "list",
+        "content-check"
+      ],
+      "exit_code": 0,
+      "duration_s": 0.003,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "pack",
+        "search",
+        "Simply Optimized Continued",
+        "--version",
+        "1.21.1"
+      ],
+      "exit_code": 0,
+      "duration_s": 0.504,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "pack",
+        "install",
+        "sop-continued",
+        "sop-check",
+        "--pack-version",
+        "TAU7qd8y",
+        "--jobs",
+        "2"
+      ],
+      "exit_code": 0,
+      "duration_s": 35.644,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "instance",
+        "show",
+        "sop-check"
+      ],
+      "exit_code": 0,
+      "duration_s": 0.002,
+      "outcome": "success"
+    },
+    {
+      "arguments": [
+        "launch",
+        "sop-check",
+        "--offline",
+        "<OFFLINE_TEST_PLAYER>",
+        "--dry-run"
+      ],
+      "exit_code": 0,
+      "duration_s": 0.081,
+      "outcome": "success"
+    }
+  ],
+  "online_pack_evidence": "modrinth-pack-2026-11-20.json",
+  "limits": [
+    "The seed is a local fixture. A separate official online modpack installation is recorded below.",
+    "Recovery exercised a simulated interruption after the new directory swap, including later-added manual data; it was not an actual machine power failure.",
+    "The legacy journal refusal preserved the test data; legacy data was not automatically migrated.",
+    "The online modpack was installed and a launch plan was generated; that pack's game process was not started.",
+    "Complete raw stdout, stderr, account arguments, private paths and raw downloaded binaries are omitted."
+  ]
+}

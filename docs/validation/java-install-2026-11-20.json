@@ -1,0 +1,108 @@
+{
+  "schema": 1,
+  "report_date": "2026-11-20",
+  "minecraft": "26.3",
+  "required_java": 25,
+  "before": [
+    {
+      "major": 21,
+      "release": "jdk-21.0.13.1+2",
+      "sha256": "18f44fab9065217f3ba61d0eef8a7b5f3c3713aa7293001b0d4ac10ede3850f0",
+      "source": "adoptium",
+      "selected": true
+    }
+  ],
+  "after": [
+    {
+      "major": 21,
+      "release": "jdk-21.0.13.1+2",
+      "sha256": "18f44fab9065217f3ba61d0eef8a7b5f3c3713aa7293001b0d4ac10ede3850f0",
+      "source": "adoptium",
+      "selected": true
+    },
+    {
+      "major": 25,
+      "release": "jdk-25.0.5.1+2",
+      "sha256": "2edef9e4f81ec5ee426d023336d4cfbd7b4644e99884e7a73a6a867b70b17acf",
+      "source": "adoptium",
+      "selected": true
+    }
+  ],
+  "steps": [
+    {
+      "command": [
+        "launch",
+        "forge-1_21_1",
+        "--offline",
+        "ZmclSmoke",
+        "--dry-run"
+      ],
+      "exit_code": 0,
+      "seconds": 0.091
+    },
+    {
+      "command": [
+        "launch",
+        "quilt-1_21_1",
+        "--offline",
+        "ZmclSmoke",
+        "--dry-run"
+      ],
+      "exit_code": 0,
+      "seconds": 0.037
+    },
+    {
+      "command": [
+        "java",
+        "list"
+      ],
+      "exit_code": 0,
+      "seconds": 0.002
+    },
+    {
+      "command": [
+        "instance",
+        "create",
+        "vanilla-26_3",
+        "--version",
+        "26.3",
+        "--memory",
+        "1024"
+      ],
+      "exit_code": 0,
+      "seconds": 0.005
+    },
+    {
+      "command": [
+        "install",
+        "vanilla-26_3",
+        "--jobs",
+        "2"
+      ],
+      "exit_code": 0,
+      "seconds": 346.062
+    },
+    {
+      "command": [
+        "launch",
+        "vanilla-26_3",
+        "--offline",
+        "ZmclSmoke",
+        "--dry-run"
+      ],
+      "exit_code": 0,
+      "seconds": 0.171
+    },
+    {
+      "command": [
+        "java",
+        "list"
+      ],
+      "exit_code": 0,
+      "seconds": 0.002
+    }
+  ],
+  "outcome": "Missing Java 25 was installed automatically during Minecraft installation; Java 21 already existed.",
+  "checksum_source": "Official Adoptium release metadata",
+  "scope": "Install plus launch plan. Actual 26.3 menu evidence is recorded separately."
+}

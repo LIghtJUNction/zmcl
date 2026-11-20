@@ -1,0 +1,169 @@
+{
+  "schema": 1,
+  "passed": true,
+  "archive": "dist/zmcl-0.1.0-linux-x86_64.tar.gz",
+  "sha256": "78cad44a02a57067a719062109c62eea50b773fc0ab6179266e129874b344e4b",
+  "bytes": 648490,
+  "binary_bytes": 1412176,
+  "binary_sha256": "8139bab8416ec9720bc4c9e11765944755f85bbe778b5cf404863bd6fb3ba30c",
+  "unpacked_bytes": 1453006,
+  "unpacked_metric": "Sum of regular-file content bytes; excludes archive headers and filesystem allocation.",
+  "file_count": 7,
+  "files": [
+    {
+      "path": "LICENSE",
+      "bytes": 1070,
+      "sha256": "97016fcf641f0ebb5c3fb6a0eda2e2bec82aecd443f3acd24a536499d5fa28a4"
+    },
+    {
+      "path": "README.md",
+      "bytes": 9311,
+      "sha256": "681c05c37996854ec6a0c6f5b08baba024b9075c172c7ae460836919d108d65a"
+    },
+    {
+      "path": "assets/zmcl.svg",
+      "bytes": 301,
+      "sha256": "c6053bfef9e54d4d5506fe2575508355cae50133f18dc3f9692e3970d13915a5"
+    },
+    {
+      "path": "docs/FEATURES.md",
+      "bytes": 23326,
+      "sha256": "e012f961ab08b136563fc2a21889283e4c92ad7546c8dbdc90713f4e84789894"
+    },
+    {
+      "path": "release.json",
+      "bytes": 3179,
+      "sha256": "4e7f93bdbecc8638cefb72381ebbd32190684f3ff6903c03000a018b1c6a25af"
+    },
+    {
+      "path": "scripts/install.py",
+      "bytes": 3643,
+      "sha256": "f92330b4e63ba1e3f6adda19423d03fa514e3b6a43f01cabfaf3fa5586bc7ed9"
+    },
+    {
+      "path": "zmcl",
+      "bytes": 1412176,
+      "sha256": "8139bab8416ec9720bc4c9e11765944755f85bbe778b5cf404863bd6fb3ba30c"
+    }
+  ],
+  "app_source_commit": "033776287ab10aab90f46fd5b65309fecb9b8711",
+  "packager": {
+    "path": "scripts/package.py",
+    "sha256": "133f6380ee3eca06d0aa6f261b5d0613c60ad4c8a4cb1f4d349927582d1c9b2b",
+    "git_head_at_packaging": "033776287ab10aab90f46fd5b65309fecb9b8711",
+    "working_tree_modified": true,
+    "identity_note": "The script digest identifies the executed packager; HEAD alone does not identify uncommitted script changes."
+  },
+  "platform": "linux-x86_64",
+  "checks": {
+    "archive_paths_confined": true,
+    "regular_files_only": true,
+    "file_sizes_and_sha256_match": true,
+    "checksum_sidecar_verified": true,
+    "source_documents_unchanged": true,
+    "markdown_link_rewrites": {
+      "README.md": 11,
+      "docs/FEATURES.md": 38
+    },
+    "no_relative_markdown_links_outside_code": true,
+    "no_game_java_cache_screenshots_or_logs_bundled": true,
+    "installation": {
+      "performed": true,
+      "gui_started": false,
+      "game_started": false,
+      "clean_install_uninstall": {
+        "passed": true,
+        "installed_regular_file_count": 4,
+        "installed_regular_file_bytes": 1413132,
+        "installed_files": [
+          {
+            "path": "bin/zmcl",
+            "bytes": 1412176,
+            "sha256": "8139bab8416ec9720bc4c9e11765944755f85bbe778b5cf404863bd6fb3ba30c"
+          },
+          {
+            "path": "share/icons/hicolor/scalable/apps/zmcl.svg",
+            "bytes": 301,
+            "sha256": "c6053bfef9e54d4d5506fe2575508355cae50133f18dc3f9692e3970d13915a5"
+          },
+          {
+            "path": "share/applications/zmcl.desktop",
+            "bytes": 254,
+            "sha256": "c73ae0e1d66789a4254c51fec4a8d3249fa3ffc653c9f42a17e1e7961dad1ee8"
+          },
+          {
+            "path": "share/zmcl/install.json",
+            "bytes": 401,
+            "sha256": "077b83fc6ff61d3e2ef890f089dbfa969bc0634d52d1c08753e4005745245b70"
+          }
+        ],
+        "prefix_character_count": 90,
+        "size_scope": "Binary, icon, desktop entry and install manifest; desktop size depends on the prefix.",
+        "simulated_game_data_preserved_inside_and_outside_prefix": true
+      },
+      "modified_file_protection": {
+        "passed": true,
+        "modified_file": "share/applications/zmcl.desktop",
+        "modified_file_preserved": true,
+        "install_manifest_retained": true,
+        "unchanged_binary_and_icon_removed": true,
+        "simulated_game_data_preserved": true
+      },
+      "commands": [
+        {
+          "operation": "install",
+          "exit_code": 0,
+          "expected_exit_code": 0,
+          "stdout": "<private-test>/clean prefix/bin/zmcl\n"
+        },
+        {
+          "operation": "installed-version",
+          "exit_code": 0,
+          "expected_exit_code": 0,
+          "stdout": "zmcl 0.1.0\n"
+        },
+        {
+          "operation": "clean-uninstall",
+          "exit_code": 0,
+          "expected_exit_code": 0,
+          "stdout": "Removed zmcl installation. Minecraft instances, saves and credentials are preserved.\n"
+        },
+        {
+          "operation": "install-for-modified-file",
+          "exit_code": 0,
+          "expected_exit_code": 0,
+          "stdout": "<private-test>/modified prefix/bin/zmcl\n"
+        },
+        {
+          "operation": "modified-file-uninstall-refusal",
+          "exit_code": 1,
+          "expected_exit_code": 1,
+          "stderr": "zmcl installer: Modified files preserved: share/applications/zmcl.desktop\n"
+        }
+      ],
+      "command_count": 5,
+      "expected_protection_failures": 1,
+      "private_test_prefixes_cleaned": true
+    }
+  },
+  "runtime_dependencies": {
+    "bundled_runtimes": [],
+    "linux_direct_elf_needed": [
+      "libGL.so.1",
+      "libX11.so.6",
+      "libc.so.6",
+      "libfontconfig.so.1",
+      "libfreetype.so.6",
+      "libgcc_s.so.1",
+      "libm.so.6"
+    ],
+    "native_gui": "Platform native window/OpenGL libraries; Linux uses X11 or XWayland, fonts and a graphics driver.",
+    "downloads": "System curl with HTTPS and its certificate store.",
+    "archive_metadata_and_process_helpers": "Python 3 standard library, started on demand.",
+    "horizon_signature_verification": "Optional system OpenSSL with Ed25519 verification support.",
+    "linux_account_secrets": "secret-tool and a desktop Secret Service for account credential operations.",
+    "minecraft": "A compatible system or separately downloaded managed Java runtime; game files are separate.",
+    "horizon": "Separately downloaded official Horizon launcher and its legitimate game preparation.",
+    "scope": "These dependencies and their files/processes are outside the launcher payload; only Linux x86_64 is accepted by this package-install test."
+  }
+}
