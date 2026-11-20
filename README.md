@@ -19,19 +19,19 @@ yay -S zmcl-bin
 
 ## 为什么体积可以小
 
-启动计划由 Rust `no_std + alloc` 核心生成，JSON 使用 `zconv`，命令行使用 `zclap`，界面使用 Project Z 的 `zui-native`。界面按事件重绘，空闲时等待事件。受管理文件依据上游提供的摘要和大小校验；不可变文件放进共享内容库，再通过硬链接或复制提供给实例。
+启动计划由 Rust `no_std + alloc` 核心生成，JSON 使用 `zconv`，命令行使用 `zclap`，主线界面使用 Project Z 的 `zgpui::native`。Linux 默认采用 CPU 栅格化和 X11 提交，不创建 OpenGL 上下文。界面按事件重绘，空闲时等待事件。受管理文件依据上游提供的摘要和大小校验；不可变文件放进共享内容库，再通过硬链接或复制提供给实例。
 
 重型操作使用按需退出的系统程序，未把整套浏览器运行时装进启动器。因此，“Rust 依赖都来自 Project Z”不等于没有系统依赖：curl、Python、图形库、Java 和可选 OpenSSL 仍需明确计算。游戏内存、Java 安装、游戏资源和 Horizon 官方发行包不属于 zmcl 本身的可执行文件。
 
-本轮 Linux GUI 主程序为 **1,412,176 字节（1.35 MiB）**。分发包、安装文件和内存使用分别测量，详见[性能报告](docs/PERFORMANCE.md)。GUI 的 `--exit-after-launch` 选项会在启动命令成功返回游戏 PID 后退出；已实际验证启动器退出后 Java 进程继续存活。命令行启动本身也无需保留常驻服务。
+已发布 v0.1.0 的 Linux GUI 主程序为 **1,412,176 字节（1.35 MiB）**。分发包、安装文件和内存使用分别测量，详见[性能报告](docs/PERFORMANCE.md)。GUI 的 `--exit-after-launch` 选项会在启动命令成功返回游戏 PID 后退出；已实际验证启动器退出后 Java 进程继续存活。命令行启动本身也无需保留常驻服务。
 
 性能对照使用固定 XMCL 0.73.1、完整进程树、重复样本，并同时记录 RSS、PSS、SwapPss 和宿主内存压力。软件渲染结果不能替代硬件 GPU 实测，现阶段功能范围也不同。
 
-目前 Cargo 包是 `zui-native`，Rust 导入名是 `zui`；`zgpui` 是另一个提供场景、布局和 Renderer 契约的 Project Z 库，当前未接入。库名与实际依赖关系见[架构说明](docs/ARCHITECTURE.md)。
+主线已接入统一后的 `zgpui` 0.1.1：实际窗口、输入和绘制调用来自 `zgpui::native`，启用 `native` 和 `linux-software`，不保留旧包别名。Library 的 Manage 入口提供世界、备份与资源管理，侧栏提供本地服务器管理。源码能力与当前 AUR 发行版本分别记录，详见[架构说明](docs/ARCHITECTURE.md)和[功能记录](docs/FEATURES.md)。
 
 ## 构建与运行
 
-需要 Git、固定的 Rust 1.100.0 工具链及 C 编译环境。Linux GUI 使用 X11/XWayland、OpenGL、FreeType 和 Fontconfig。Ubuntu/Debian 的开发包通常为 `libx11-dev libgl-dev libfreetype6-dev libfontconfig1-dev pkg-config`；系统发行版的运行时包名可能不同。
+需要 Git、固定的 Rust 1.100.0 工具链及 C 编译环境。当前 Linux GUI 使用 X11/XWayland、FreeType 和 Fontconfig。Ubuntu/Debian 的开发包通常为 `libx11-dev libfreetype6-dev libfontconfig1-dev pkg-config`；系统发行版的运行时包名可能不同。
 
 ```sh
 git clone --recurse-submodules https://github.com/LIghtJUNction/zmcl.git

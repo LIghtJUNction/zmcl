@@ -1,5 +1,15 @@
 # zmcl 开发与验收报告
 
+## 当前源码增量
+
+AUR `zmcl-bin 0.1.0-1` 已公开，并通过从公共仓库 fresh clone、构建、隔离 pacman 安装/重装/卸载验收，见[安装证据](validation/aur-install-2026-11-20.json)。新原生管理界面已在 [9206b836](https://github.com/LIghtJUNction/zmcl/commit/9206b8366324bdaf701c2890fcdafb2656f7d100) 提交；[六项窗口与文件往返](validation/gui-management-2026-11-20.json)包括世界导入/导出、备份确认恢复、保留未托管资源和服务器 EULA 拒绝。
+
+统一 zgpui 的[消费者验收](validation/zgpui-consumer-2026-11-20.json)另外记录实际 CPU 后端构建、no_std 核心、严格 Clippy 及相同原生管理流程。它是主线源码增量，不改变已发行 v0.1.0 包的身份，也不把功能验收当作低于 10 MiB 的证据。
+
+## v0.1.0 冻结验收
+
+以下编号章节保留 v0.1.0 的原始构建、游戏和内存结果。后续版本按独立记录追加，不覆盖旧样本。
+
 报告日期：2026-11-20（Asia/Taipei）。原始执行记录使用 UTC。
 代码基线：[`033776287ab10aab90f46fd5b65309fecb9b8711`](https://github.com/LIghtJUNction/zmcl/commit/033776287ab10aab90f46fd5b65309fecb9b8711)。
 产品范围：Linux x86_64 开发预览；XMCL 功能对照固定为 [v0.73.1](https://github.com/Voxelum/x-minecraft-launcher/releases/tag/v0.73.1)。
@@ -166,7 +176,7 @@ PSS 将共享页按使用者分摊，更适合比较完整应用；RSS 求和可
 
 启动计划核心是 `no_std + alloc`，OS、网络和进程操作留在应用层。没有引入第三方 Rust crates；实际使用的系统程序与图形库仍属于依赖。
 
-当前 `zui-native` 与 `zgpui` 是两个独立层。前者创建原生窗口并绘制控件，Rust 导入名为 `zui`；后者提供 `no_std` 场景、布局和 Renderer 契约，由宿主提供窗口与绘制能力。已向 Project Z 协调维护者核对，目前没有已发布的统一替代 API，因此没有通过只改包名来假装迁移。
+上述 v0.1.0 冻结验收使用原 zui-native 窗口库。当时 zgpui 仅提供场景/布局契约；该历史限制已由后续统一发布解决。主线现在接入 zgpui::native 与 Linux CPU 后端，实际源码、注册表身份和本消费者窗口验收见[当前依赖记录](DEPENDENCIES.md)；旧表中的 pin 与二进制仍保持 v0.1.0 的真实身份。
 
 zui 的正式源码 pin 已升级并通过本地构建、真实 GUI 和窗口属性验收：`WM_CLASS=zmcl/Zmcl`，UTF-8 标题正确，实际窗口和最小内容尺寸均为 1120×760。消费侧的版本、gitlink 和 Cargo.lock 已核对；路径依赖版本未变，所以 lock 文件无须伪造改动。聚合登记与闭环状态见[依赖传播记录](DEPENDENCIES.md)。
 

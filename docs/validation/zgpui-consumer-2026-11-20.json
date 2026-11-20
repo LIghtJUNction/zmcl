@@ -1,0 +1,139 @@
+{
+  "date": "2026-11-20",
+  "source_base": "9206b8366324bdaf701c2890fcdafb2656f7d100",
+  "consumer_changes": [
+    "Cargo.toml: zgpui path/exact 0.1.1 + native/linux-software",
+    "Cargo.lock",
+    "src/gui.rs: zgpui::native import"
+  ],
+  "zgpui_revision": "cb50f2fe554622fdc984ae7fec9bcd844f175d67",
+  "binary_sha256": "22d537b86932db35570b928db3c2ed4c61f01113c96ed5c6acd71b30b6de5de0",
+  "binary_bytes": 1436880,
+  "rust_results": [
+    "test result: ok. 63 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.52s",
+    "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s",
+    "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+  ],
+  "gates": [
+    {
+      "command": "cargo test --workspace --all-targets --locked --offline",
+      "exit_code": 0
+    },
+    {
+      "command": "cargo clippy --workspace --all-targets --locked --offline -- -D warnings",
+      "exit_code": 0
+    },
+    {
+      "command": "cargo check -p zmcl-core --target x86_64-unknown-none --locked --offline",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 src/gui/test_management.py --binary $BINARY",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 src/gui/manage_smoke.py --binary $BINARY --output $OUTPUT",
+      "exit_code": 0
+    }
+  ],
+  "native_window": {
+    "scope": "Native X11 clicks plus isolated file effects; no memory benchmark",
+    "binary_sha256": "22d537b86932db35570b928db3c2ed4c61f01113c96ed5c6acd71b30b6de5de0",
+    "window": [
+      1120,
+      760
+    ],
+    "cases": [
+      {
+        "case": "world import through native form",
+        "passed": true
+      },
+      {
+        "case": "GUI export and CLI ZIP import roundtrip",
+        "passed": true
+      },
+      {
+        "case": "GUI backup and confirmed restore with retained pre-restore snapshot",
+        "passed": true
+      },
+      {
+        "case": "resources page with retained unmanaged fixture",
+        "passed": true
+      },
+      {
+        "case": "server created in GUI without EULA acceptance",
+        "passed": true
+      },
+      {
+        "case": "synthetic installed server remains stopped with EULA false; inspect screenshot for visible error",
+        "passed": true
+      }
+    ],
+    "limits": [
+      "Synthetic Java save",
+      "No actual Minecraft server installed or started",
+      "No online resource download",
+      "Screenshots require visual inspection"
+    ],
+    "visual_review": "Worlds and EULA-refusal screenshots inspected; layout and messages intact."
+  },
+  "limits": [
+    "This is an isolated source consumer candidate, not an installed AUR 0.1.1 release.",
+    "No online resource install or real Minecraft server started.",
+    "These GUI checks do not establish a memory limit."
+  ],
+  "combined_main_validation": {
+    "source_base": "525ca9d7455f2212da81fcb2ad915a09a909913a",
+    "zgpui_revision": "cb50f2fe554622fdc984ae7fec9bcd844f175d67",
+    "binary_sha256": "99ea0d70ef3a01d8f501f9554b2b7c3f6edc03b9dbb8dc34816b66c6abe8c7cd",
+    "binary_bytes": 1438448,
+    "rust_results": [
+      "test result: ok. 66 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.32s",
+      "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ],
+    "gates": [
+      {
+        "command": "cargo fmt --all --check",
+        "exit_code": 0
+      },
+      {
+        "command": "cargo test --workspace --all-targets --locked --offline",
+        "exit_code": 0
+      },
+      {
+        "command": "cargo clippy --workspace --all-targets --locked --offline -- -D warnings",
+        "exit_code": 0
+      },
+      {
+        "command": "cargo check -p zmcl-core --target x86_64-unknown-none --locked --offline",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 -B scripts/test_package_metadata.py",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 -B scripts/test_bench_linux.py",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 -B scripts/test_install.py",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 site/check.py",
+        "exit_code": 0
+      },
+      {
+        "command": "cargo build --release --locked --offline",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 src/gui/test_management.py --binary $BINARY",
+        "exit_code": 0
+      }
+    ],
+    "scope": "CLI and installer updates integrated; native window acceptance above uses the earlier immutable GUI candidate. Full release acceptance will use its own final binary identity."
+  }
+}

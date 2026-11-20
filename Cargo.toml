@@ -1,6 +1,6 @@
 [workspace]
 members = ["crates/zmcl-core"]
-exclude = ["vendor/zconv", "vendor/zclap", "vendor/zui"]
+exclude = ["vendor/zconv", "vendor/zclap", "vendor/zgpui"]
 resolver = "3"
 
 [package]
@@ -14,12 +14,12 @@ repository = "https://github.com/LIghtJUNction/zmcl"
 
 [features]
 default = ["gui"]
-gui = ["dep:zui"]
+gui = ["dep:zgpui"]
 
 [dependencies]
 zmcl-core = { path = "crates/zmcl-core", version = "=0.1.0" }
 zclap = { path = "vendor/zclap", version = "=0.1.4" }
-zui = { package = "zui-native", path = "vendor/zui", version = "=0.1.0", optional = true }
+zgpui = { path = "vendor/zgpui", version = "=0.1.1", default-features = false, features = ["native", "linux-software"], optional = true }
 
 [profile.release]
 opt-level = "z"

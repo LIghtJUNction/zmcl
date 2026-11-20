@@ -158,6 +158,40 @@ def glibc_requirements(binary):
             "required_symbol_versions": versions}
 
 
+def native_gui_requirements(libraries):
+    """Describe the packaged renderer without imposing unused GPU dependencies."""
+    system = platform.system()
+    if system == "Linux":
+        if libraries is None:
+            return "Linux native GUI dependencies were not inspected."
+        has_x11 = any(name.startswith("libX11.so") for name in libraries)
+        has_opengl = any(
+            name.startswith(("libGL.so", "libOpenGL.so", "libGLX.so", "libEGL.so",
+                             "libGLESv1_CM.so", "libGLESv2.so"))
+            for name in libraries
+        )
+        if not has_x11 and not has_opengl:
+            return "No directly linked X11 or OpenGL GUI library detected in this Linux executable."
+        window_system = "X11 or XWayland" if has_x11 else "a native window system"
+        rendering = (
+            "OpenGL rendering and a graphics driver"
+            if has_opengl else
+            "CPU software rendering, with no direct OpenGL ELF dependency"
+        )
+        fonts = []
+        if any(name.startswith("libfreetype.so") for name in libraries):
+            fonts.append("FreeType")
+        if any(name.startswith("libfontconfig.so") for name in libraries):
+            fonts.append("Fontconfig")
+        font_note = " Font libraries: " + ", ".join(fonts) + "." if fonts else ""
+        return "Linux " + window_system + "; " + rendering + "." + font_note
+    if system == "Windows":
+        return "GUI-enabled Windows builds use native Win32 (User32/GDI32) and OpenGL system libraries."
+    if system == "Darwin":
+        return "GUI-enabled macOS builds use AppKit, CoreText, CoreGraphics, Foundation and OpenGL frameworks."
+    return "GUI-enabled builds use platform-native window and rendering libraries."
+
+
 def runtime_dependencies(libraries, glibc):
     return {
         "bundled_runtimes": [],
@@ -165,7 +199,7 @@ def runtime_dependencies(libraries, glibc):
         "linux_direct_elf_minimum_glibc": glibc["minimum_version"] if glibc else None,
         "linux_direct_elf_glibc_symbol_versions": glibc["required_symbol_versions"] if glibc else None,
         "linux_glibc_scope": "Highest GLIBC_* version required directly by this executable; this is not a complete distribution compatibility test. Shared libraries and external helpers have their own requirements.",
-        "native_gui": "Platform native window/OpenGL libraries; Linux uses X11 or XWayland, fonts and a graphics driver.",
+        "native_gui": native_gui_requirements(libraries),
         "downloads": "System curl with HTTPS and its certificate store.",
         "archive_metadata_and_process_helpers": "Python 3 standard library, started on demand.",
         "horizon_signature_verification": "Optional system OpenSSL with Ed25519 verification support.",

@@ -4,6 +4,6 @@
 [submodule "vendor/zclap"]
 	path = vendor/zclap
 	url = https://github.com/LIghtJUNction/zclap.git
-[submodule "vendor/zui"]
-	path = vendor/zui
-	url = https://github.com/LIghtJUNction/zui.git
+[submodule "vendor/zgpui"]
+	path = vendor/zgpui
+	url = https://github.com/LIghtJUNction/zgpui.git

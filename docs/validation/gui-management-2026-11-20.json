@@ -1,0 +1,42 @@
+{
+  "scope": "Native X11 clicks plus isolated file effects; no memory benchmark",
+  "binary_sha256": "7b812b78fa1c7162e5a8f10d8d1aab9ed30b99e5e168bb1be0ef7ceb54c250a3",
+  "window": [
+    1120,
+    760
+  ],
+  "cases": [
+    {
+      "case": "world import through native form",
+      "passed": true
+    },
+    {
+      "case": "GUI export and CLI ZIP import roundtrip",
+      "passed": true
+    },
+    {
+      "case": "GUI backup and confirmed restore with retained pre-restore snapshot",
+      "passed": true
+    },
+    {
+      "case": "resources page with retained unmanaged fixture",
+      "passed": true
+    },
+    {
+      "case": "server created in GUI without EULA acceptance",
+      "passed": true
+    },
+    {
+      "case": "synthetic installed server remains stopped with EULA false; inspect screenshot for visible error",
+      "passed": true
+    }
+  ],
+  "limits": [
+    "Synthetic Java save",
+    "No actual Minecraft server installed or started",
+    "No online resource download",
+    "Screenshots require visual inspection"
+  ],
+  "source_revision": "9206b8366324bdaf701c2890fcdafb2656f7d100",
+  "backend": "zui-native 0.1.0, prior to consumer migration; later CPU acceptance is separate"
+}

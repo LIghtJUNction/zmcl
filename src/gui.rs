@@ -7,8 +7,8 @@ use std::{
     thread,
     time::{Duration, Instant},
 };
+use zgpui::native::{ButtonStyle, Canvas, Event, Rect, Theme, Ui, Window};
 use zmcl_core::json::{Kind, Value, get_str, with_json};
-use zui::{ButtonStyle, Canvas, Event, Rect, Theme, Ui, Window};
 
 const BG: u32 = 0x111214ff;
 const SIDE: u32 = 0x151618ff;

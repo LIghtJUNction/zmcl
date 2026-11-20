@@ -34,7 +34,7 @@ Cargo.lock in dependency order. Test affected behavior and publish each source
 commit before advancing aggregate pins. A notification alone does not complete
 propagation: record the exact blocker, consumer, owner and reusable commit.
 
-This repository consumes zconv, zclap and zui-native from pinned submodules.
+This repository consumes zconv, zclap and zgpui from pinned submodules.
 Do not edit those vendored repositories to hide an upstream incompatibility.
 The launch-planning crate remains no_std + alloc and has no OS side effects.
 

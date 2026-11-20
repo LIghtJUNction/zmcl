@@ -11,12 +11,16 @@ name = "zconv"
 version = "0.4.0"
 
 [[package]]
+name = "zgpui"
+version = "0.1.1"
+
+[[package]]
 name = "zmcl"
 version = "0.1.0"
 dependencies = [
  "zclap",
+ "zgpui",
  "zmcl-core",
- "zui-native",
 ]
 
 [[package]]
@@ -25,7 +29,3 @@ version = "0.1.0"
 dependencies = [
  "zconv",
 ]
-
-[[package]]
-name = "zui-native"
-version = "0.1.0"
