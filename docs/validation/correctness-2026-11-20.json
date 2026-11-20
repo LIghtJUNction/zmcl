@@ -1,0 +1,249 @@
+{
+  "schema": "zmcl.correctness-validation.v1",
+  "date": "2026-11-20",
+  "timezone": "Asia/Taipei",
+  "repository": "https://github.com/LIghtJUNction/zmcl",
+  "source": {
+    "test_base": "7dc09fff213d659d99f98e61ebb2706654c0160b",
+    "publication_parent": "0dcfa63662a28bed61f1bed260104a2ccd2713cb",
+    "combined_commit": "a5693c0290ac9cc4311ed5242d48405b84294cf0",
+    "commits": [
+      {
+        "kind": "version_names",
+        "sha": "e5ef3f48095080183e8876ea5260596b8a503129"
+      },
+      {
+        "kind": "world_roundtrip",
+        "sha": "02ebb5af7425aa25f738c3af26c69c4c17bc97c3"
+      },
+      {
+        "kind": "exact_loader_profile",
+        "sha": "cde308cd8c760552c94bfa340671d60fdf2c30f6"
+      },
+      {
+        "kind": "failed_start_cleanup",
+        "sha": "a5693c0290ac9cc4311ed5242d48405b84294cf0"
+      }
+    ],
+    "files": {
+      "crates/zmcl-core/src/path.rs": {
+        "bytes": 5945,
+        "git_blob": "01292c255b8901d4b50a2dbc2c710e4f3320d64c"
+      },
+      "crates/zmcl-core/src/model.rs": {
+        "bytes": 28038,
+        "git_blob": "b591ca9b6930481e66d484ca205df21bc1dbd370"
+      },
+      "crates/zmcl-core/src/plan.rs": {
+        "bytes": 24592,
+        "git_blob": "cbff863aa5f5b3028339b1ce6f887e26fa9a54d2"
+      },
+      "src/app.rs": {
+        "bytes": 7575,
+        "git_blob": "a9cdda4c5f5bad51021cf526bbec90a81383a0e1"
+      },
+      "src/worlds/manage.py": {
+        "bytes": 34746,
+        "git_blob": "d265899ae8834edddafa007818d0f305904fe3da"
+      },
+      "src/worlds/test_manage.py": {
+        "bytes": 19879,
+        "git_blob": "23080f89d7c6d79198a80e0e4709ea83276ff779"
+      },
+      "src/runtime.rs": {
+        "bytes": 38490,
+        "git_blob": "b127e27cf6b5797562c936f7b8cf7a19584730e8"
+      },
+      "src/runtime/installer.py": {
+        "bytes": 4217,
+        "git_blob": "4d34554c4d9eeb7511363d572b1449d7313123ec"
+      },
+      "src/runtime/test_installer.py": {
+        "bytes": 8138,
+        "git_blob": "c192fe947f0f07d8409e5dc783d7ba8ef20ee11b"
+      },
+      "src/server/process.py": {
+        "bytes": 11120,
+        "git_blob": "712560b798eac1db9a42d9fce645603d333e875a"
+      },
+      "src/server/test_process.py": {
+        "bytes": 8755,
+        "git_blob": "7880b86f94733b9ce460295a438cdf42f5361c8d"
+      },
+      "scripts/test_version_names_cli.py": {
+        "bytes": 8318,
+        "git_blob": "b2c57cc410c9284f6a9824cc1dce3158349be121"
+      }
+    }
+  },
+  "environment": {
+    "os": "Linux",
+    "architecture": "x86_64",
+    "rustc": "1.100.0",
+    "primary_python": "3.14",
+    "additional_python": "3.12"
+  },
+  "checks": [
+    {
+      "name": "rust_tests",
+      "command": "cargo test --locked --workspace --all-targets",
+      "exit_code": 0,
+      "passed": 105,
+      "application": 83,
+      "core": 22
+    },
+    {
+      "name": "python_worlds",
+      "command": "python3 -m unittest discover -s src/worlds -v",
+      "exit_code": 0,
+      "passed": 22,
+      "versions": [
+        "3.14",
+        "3.12"
+      ]
+    },
+    {
+      "name": "python_installer",
+      "command": "python3 -m unittest discover -s src/runtime -v",
+      "exit_code": 0,
+      "passed": 11,
+      "versions": [
+        "3.14",
+        "3.12"
+      ]
+    },
+    {
+      "name": "python_server",
+      "command": "python3 -m unittest discover -s src/server -v",
+      "exit_code": 0,
+      "passed": 12,
+      "versions": [
+        "3.14",
+        "3.12"
+      ]
+    },
+    {
+      "name": "clippy",
+      "command": "cargo clippy --locked --workspace --all-targets -- -D warnings",
+      "exit_code": 0
+    },
+    {
+      "name": "build",
+      "command": "cargo build --locked",
+      "exit_code": 0
+    },
+    {
+      "name": "official_profile_planning",
+      "command": "cargo run --locked -p zmcl-core --example manifest_inspect -- OFFICIAL_PROFILE",
+      "exit_code": 0,
+      "results": [
+        {
+          "platform": "linux",
+          "downloads": 43,
+          "classpath": 34,
+          "natives": 7,
+          "argv": 27,
+          "java": 8
+        },
+        {
+          "platform": "windows",
+          "downloads": 43,
+          "classpath": 34,
+          "natives": 7,
+          "argv": 30,
+          "java": 8
+        },
+        {
+          "platform": "osx",
+          "downloads": 44,
+          "classpath": 35,
+          "natives": 7,
+          "argv": 28,
+          "java": 8
+        }
+      ]
+    }
+  ],
+  "official_profile": {
+    "id": "1.14 Pre-Release 1",
+    "url": "https://piston-meta.mojang.com/v1/packages/76dd36e6b4fb2db5e474dd3b44cd96f3f498433d/1.14%20Pre-Release%201.json",
+    "bytes": 21605,
+    "sha1": "76dd36e6b4fb2db5e474dd3b44cd96f3f498433d"
+  },
+  "official_installers": [
+    {
+      "loader": "forge",
+      "artifact_version": "1.21.1-52.1.20",
+      "url": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.21.1-52.1.20/forge-1.21.1-52.1.20-installer.jar",
+      "status": "passed",
+      "bytes": 9089841,
+      "sha1": "e8dad3b52d88cc33badf3597b9f5a502e53e89e4",
+      "sha256": "6b83521a70aaf5371af8c4c9f97d930d51ec4266ac6ec3bc975182fba2ef9f62",
+      "profile_id": "1.21.1-forge-52.1.20",
+      "minecraft": "1.21.1",
+      "profile_bytes": 24779
+    },
+    {
+      "loader": "neoforge",
+      "artifact_version": "21.1.267",
+      "url": "https://maven.neoforged.net/releases/net/neoforged/neoforge/21.1.267/neoforge-21.1.267-installer.jar",
+      "status": "passed",
+      "bytes": 6992416,
+      "sha1": "4565232f0bf231d0edfe512b949664dc5ff88fd8",
+      "sha256": "25bbe66e82205abeccdfd23bdac61e6a8e9ff1333885f3c9f31d392a5ec97e60",
+      "profile_id": "neoforge-21.1.267",
+      "minecraft": "1.21.1",
+      "profile_bytes": 21253
+    }
+  ],
+  "cli_regression": {
+    "script": "scripts/test_version_names_cli.py",
+    "script_sha256": "160a7f9ddf30527ee2e3a59e2947d94fe528ffaa3ee48bc317c3f8531d63a979",
+    "installed_baseline_version": "0.1.3",
+    "candidate": {
+      "ok": true,
+      "stage": "complete",
+      "binary_sha256": "c669d9cc18682a8f81a899af9c3d9558e92910fa1d03cc235e96863cc751174f",
+      "version_id": "1.14 Pre-Release 1",
+      "profile_sha1": "76dd36e6b4fb2db5e474dd3b44cd96f3f498433d",
+      "java_major": 8,
+      "platform": "linux",
+      "create_exit_code": 0,
+      "launch_exit_code": 0,
+      "classpath_entries": 34,
+      "java_version_probes": 1,
+      "java_game_invocations": 0,
+      "installed_metadata": "synthetic",
+      "game_downloaded": false,
+      "exit_code": 0
+    },
+    "installed_baseline": {
+      "ok": false,
+      "stage": "launch",
+      "binary_sha256": "02620a8ec4fac34e63fcbe483268149b2ed4032ac2d7bf42975ff6b19b72a1aa",
+      "version_id": "1.14 Pre-Release 1",
+      "profile_sha1": "76dd36e6b4fb2db5e474dd3b44cd96f3f498433d",
+      "java_major": 8,
+      "platform": "linux",
+      "create_exit_code": 0,
+      "launch_exit_code": 1,
+      "error": "launch CLI returned a nonzero exit code",
+      "exit_code": 1
+    }
+  },
+  "limits": {
+    "large_export_members_stored_above_bytes": 16777216,
+    "windows_macos_scope": "manifest parsing and launch-plan calculation only",
+    "installer_scope": "official JAR digest verification and profile extraction; no Java installer execution",
+    "gameplay": false,
+    "live_account_login": false,
+    "official_release_published": false
+  },
+  "publication_verification": {
+    "head": "a5693c0290ac9cc4311ed5242d48405b84294cf0",
+    "tree": "f3b6bf9bffe70642dda4e9ac0f68b2297e12ee41",
+    "verified_files": 12,
+    "source_matches_tests": true,
+    "whitespace_check": "passed"
+  }
+}
