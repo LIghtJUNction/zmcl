@@ -506,6 +506,70 @@ pub fn run_cli(args: Vec<String>) -> Result<()> {
 #[cfg(test)]
 mod config_tests {
     #[test]
+    fn invalid_version_changes_preserve_installed_configuration() {
+        let root = std::env::temp_dir().join(format!(
+            "zmcl-config-version-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let app = crate::App::new(Some(root.to_string_lossy().into_owned())).unwrap();
+        let mut instance = app
+            .create_instance("configured", "1.21.1", "vanilla", "")
+            .unwrap();
+        instance.installed = true;
+        app.write_instance(&instance).unwrap();
+        let path = app.dir("configured").unwrap().join("instance.json");
+        let original = std::fs::read(&path).unwrap();
+        let set_version = |version: &str| {
+            crate::run_cli(vec![
+                "--root".into(),
+                root.to_string_lossy().into_owned(),
+                "instance".into(),
+                "set".into(),
+                "configured".into(),
+                "--version".into(),
+                version.into(),
+            ])
+        };
+        for version in [
+            "",
+            "../bad",
+            "a/b",
+            "1.21\n1",
+            "1.21\0",
+            "版本",
+            &"a".repeat(129),
+        ] {
+            assert!(set_version(version).is_err(), "{version:?}");
+            assert_eq!(std::fs::read(&path).unwrap(), original);
+            assert!(app.read_instance("configured").unwrap().installed);
+            assert!(
+                app.create_instance("invalid", version, "vanilla", "")
+                    .is_err()
+            );
+            assert!(!app.dir("invalid").unwrap().exists());
+        }
+        // Official historical identifiers are not all SemVer: preserve spaces,
+        // snapshot names, old alpha/beta identifiers and underscores.
+        for version in [
+            "1.14 Pre-Release 1",
+            "24w14a",
+            "b1.7.3",
+            "a1.2.6",
+            "c0.30_01c",
+        ] {
+            set_version(version).unwrap();
+            let updated = app.read_instance("configured").unwrap();
+            assert_eq!(updated.version, version);
+            assert!(!updated.installed);
+        }
+        std::fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
     fn pending_content_transaction_blocks_configuration_without_writes() {
         let root = std::env::temp_dir().join(format!(
             "zmcl-config-{}-{}",

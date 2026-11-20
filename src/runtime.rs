@@ -683,12 +683,14 @@ pub fn launch(
         .spawn()
         .map_err(|e| format!("Cannot start Minecraft: {e}"))?;
     let pid = child.id();
+    let started = util::now();
     if let Err(error) = util::atomic_write(
         &dir.join("last-launch.json"),
         util::object(&[
             ("pid", pid.to_string()),
-            ("started", util::now().to_string()),
+            ("started", started.to_string()),
             ("log", quote(&logfile.to_string_lossy())),
+            ("exited", "false".into()),
         ])
         .as_bytes(),
     ) {
@@ -698,6 +700,29 @@ pub fn launch(
     }
     if wait {
         let status = child.wait().map_err(|e| e.to_string())?;
+        // Child::wait is the proof of exit on every supported platform. Save it
+        // before returning either success or a game error so later operations
+        // do not need platform-specific process discovery for this launch.
+        util::atomic_write(
+            &dir.join("last-launch.json"),
+            util::object(&[
+                ("pid", pid.to_string()),
+                ("started", started.to_string()),
+                ("log", quote(&logfile.to_string_lossy())),
+                ("exited", "true".into()),
+                ("exited_at", util::now().to_string()),
+                (
+                    "exit_code",
+                    status
+                        .code()
+                        .map_or_else(|| "null".into(), |code| code.to_string()),
+                ),
+            ])
+            .as_bytes(),
+        )
+        .map_err(|error| {
+            format!("Minecraft exited ({status}), but its exit record could not be saved: {error}")
+        })?;
         if !status.success() {
             return Err(format!(
                 "Minecraft exited with code {}; inspect {}",
@@ -712,6 +737,73 @@ pub fn launch(
         ("started", true.to_string()),
         ("waited", wait.to_string()),
     ]))
+}
+
+#[cfg(all(test, unix))]
+mod launch_tests {
+    use super::*;
+    use std::{os::unix::fs::PermissionsExt, time::SystemTime};
+
+    #[test]
+    fn waited_launch_records_success_and_failure_before_returning() {
+        let root = std::env::temp_dir().join(format!(
+            "zmcl-launch-exit-{}-{}",
+            std::process::id(),
+            SystemTime::now()
+                .duration_since(SystemTime::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let app = App::new(Some(root.to_string_lossy().into_owned())).unwrap();
+        let manifest = version_path(&app, "fixture").unwrap();
+        util::atomic_write(
+            &manifest,
+            br#"{"id":"fixture","mainClass":"fixture.Main","javaVersion":{"majorVersion":21},"arguments":{"game":["--username","${auth_player_name}"]}}"#,
+        )
+        .unwrap();
+        for exit_code in [0, 7] {
+            let id = format!("exit-{exit_code}");
+            let java = root.join(format!("fake-java-{exit_code}"));
+            fs::write(
+                &java,
+                format!(
+                    "#!/bin/sh\nif [ \"$1\" = \"-version\" ]; then\n  printf 'openjdk version \"21.0.0\"\\n' >&2\n  exit 0\nfi\nexit {exit_code}\n"
+                ),
+            )
+            .unwrap();
+            fs::set_permissions(&java, fs::Permissions::from_mode(0o700)).unwrap();
+            let mut instance = app.create_instance(&id, "fixture", "vanilla", "").unwrap();
+            instance.java = java.to_string_lossy().into_owned();
+            instance.installed = true;
+            app.write_instance(&instance).unwrap();
+
+            let result = launch(&app, &id, Some("Player"), None, false, true);
+            if exit_code == 0 {
+                assert!(result.is_ok(), "{result:?}");
+            } else {
+                assert!(result.unwrap_err().contains("Minecraft exited with code 7"));
+            }
+            let record = fs::read(app.dir(&id).unwrap().join("last-launch.json")).unwrap();
+            with_json(&record, |value| {
+                assert_eq!(value.get("exited").and_then(|v| v.as_bool()), Some(true));
+                assert_eq!(
+                    value.get("exit_code").and_then(|v| v.as_u64()),
+                    Some(exit_code)
+                );
+                let started = value.get("started").and_then(|v| v.as_u64()).unwrap();
+                let exited = value.get("exited_at").and_then(|v| v.as_u64()).unwrap();
+                assert!(started > 0 && exited >= started);
+                assert!(value.get("pid").and_then(|v| v.as_u64()).unwrap() > 0);
+                assert!(std::path::Path::new(&req_str(value, "log")?).is_file());
+                Ok(())
+            })
+            .unwrap();
+            // The persisted proof releases the same guard used by launch,
+            // configuration, world mutation, cloning and backup operations.
+            crate::worlds::assert_stopped(&app, &id).unwrap();
+        }
+        fs::remove_dir_all(root).unwrap();
+    }
 }
 
 #[cfg(test)]
