@@ -1,5 +1,9 @@
 # XMCL compatibility record
 
+## 0.1.3 management and distribution iteration
+
+[The 0.1.3 report](reports/2026-11-20-helper-memory.md) records source `9ef89bb92d46d324172d6ea8b13054c81434e178`, 97 Rust tests, 51 affected Python tests, real CLI file roundtrips, two six-flow native GUI observations, and another six-flow check of the AUR-installed binary. GitHub v0.1.3 and AUR 0.1.3-1 are published; normal host upgrade and public-index readback passed. Helpers load modules on demand, backup list entries release full archive indexes between inspections, and JSON output avoids a complete encoded duplicate. This reduces observed large-backup query peaks in the fixed paired fixture; the complete GUI below-10-MiB target remains unmet. No new Windows/macOS, real-account or game/server-launch acceptance is inferred, and the fixed XMCL baseline and feature gaps below remain unchanged.
+
 ## 0.1.2 iteration
 
 [The implementation and evidence report](reports/2026-11-20-gui-iteration.md) records application source `e86b5841532ef04cc74cea5585ae396150452408`, 97 Rust tests, strict Clippy, native creation/management fixtures and explicit Windows/macOS limits. Archive, metadata and Horizon helpers now share actual Python 3.8+ discovery, isolated UTF-8 execution and retry after a missing interpreter is installed. Windows background helpers suppress extra console windows while preserving output/error streams. Large-library and empty-window measurements identify their separate pre-release candidates; they are not relabelled as final 0.1.2 performance measurements.

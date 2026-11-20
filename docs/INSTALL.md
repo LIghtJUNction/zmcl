@@ -2,11 +2,9 @@
 
 ## Arch Linux / AUR
 
-[zmcl-bin](https://aur.archlinux.org/packages/zmcl-bin) 当前为 **0.1.2-1 开发预览**，安装官方 Linux x86_64 预编译程序、桌面入口和图标。AUR 配方已发布，源码提交为 `16b688237f8c54b47085a16279535db8f6c5c553`。
+[zmcl-bin](https://aur.archlinux.org/packages/zmcl-bin) 当前为 **0.1.3-1 开发预览**，安装官方 Linux x86_64 预编译程序、桌面入口和图标。公开 AUR master 为 `60c9ad8e1be8204c6a4e0024c83a4a5851ada0f5`。
 
-发布后的首次 RPC、yay 和 paru 查询返回了缓存中的 **0.1.1-1**。2026-11-20 **18:44（Asia/Taipei）**复验，current/legacy RPC、yay 和 paru 均返回 **0.1.2-1**，与公开 Git 配方一致。也可使用下方的 Git 克隆与 makepkg 入口。
-
-**0.1.2 的公共新克隆构建、正常升级和安装后窗口验收均已通过。** 开发机已安装 0.1.2-1，实际程序版本、大小和摘要与官方包一致。旧版安装回执继续保留原始身份。
+**公共 HTTPS 新克隆构建、正常系统升级和安装后六组原生 GUI 流程均已通过。** 本机已从 0.1.2-1 升级到 0.1.3-1，19 个受管文件、0 个改动，已安装程序版本、大小和摘要与官方包一致。首次 RPC、yay、paru 查询曾命中 0.1.2-1 缓存；2026-11-20 **19:46:59（Asia/Taipei）**复验均为 0.1.3-1。[完整回执](validation/aur-install-0.1.3-2026-11-20.json)
 
 ~~~sh
 yay -S zmcl-bin
@@ -31,7 +29,7 @@ sudo pacman -R zmcl-bin
 
 包管理器管理程序、桌面入口、图标、许可证和说明文件，不管理用户的 Minecraft 实例、存档和账号资料。0.1.0 的隔离安装、重装、卸载及合成存档保护检查保留在[历史记录](validation/aur-install-2026-11-20.json)；0.1.1 的升级及已安装窗口验收见文末历史记录。
 
-0.1.2 的创建界面支持筛选官方发行版、自动建议不重复的实例名，以及“创建并安装”或“仅创建”。本版使用 zgpui 0.1.5；功能、固定源码和平台验收边界见[本轮报告](reports/2026-11-20-gui-iteration.md)。
+0.1.3 保留了 0.1.2 的创建界面：筛选官方发行版、自动建议不重复的实例名，以及“创建并安装”或“仅创建”。本版使用 zgpui 0.1.5；功能、固定源码和平台验收边界见[0.1.3 报告](reports/2026-11-20-helper-memory.md)和[0.1.2 创建流程记录](reports/2026-11-20-gui-iteration.md)。
 
 ## 当前预览版的运行条件
 
@@ -49,23 +47,23 @@ sudo pacman -R zmcl-bin
 
 这些 ABI 下限来自已发布 ELF 的实际符号引用。AUR 配方声明相应依赖，附加功能组件列于 `optdepends`。完整版本、直接动态库、源码和文件身份保存在 `/usr/share/doc/zmcl/release.json`；本版直接 ELF 不依赖 OpenGL。源码在其他版本字体库上的兼容回退，不代表这个预编译包可忽略 Fontconfig 下限。
 
-**完整 GUI 低于 10 MiB 的目标仍未完成。** 本轮两组不同的固定预发行候选，分别观察到完整窗口重绘 CPU 时间中位数下降 44.53%，以及 2,000 个合成世界返回首页时 GUI PSS＋SwapPss 下降 23.05%。这些数值不是 0.1.2 最终发行二进制的新测量，也不代表操作进程树峰值下降。原 0.1.1 空库首页静置 RSS 约 9.55 MiB 的记录继续保留历史身份；详见[本轮报告](reports/2026-11-20-gui-iteration.md)与[完整测量记录](PERFORMANCE.md)。
+**完整 GUI 低于 10 MiB 的目标仍未完成。** 最终 0.1.3 管理流程的主进程 RSS 中位数为默认环境 11,316 KiB、明确指定系统 Python 时 11,020 KiB；完整相关树观测峰值 RSS/PSS 分别为 59,884/48,651 与 37,948/19,306 KiB。两种环境不能当成代码优化对照。大备份列表查询的局部下降、缺读、显示服务与观察成本见[本轮报告](reports/2026-11-20-helper-memory.md)和[性能记录](PERFORMANCE.md)。原 0.1.2 与 0.1.1 测量保留历史身份。
 
 ## 其他 Linux 系统
 
-从 [GitHub v0.1.2](https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.2) 下载 [Linux x86_64 归档](https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.2/zmcl-0.1.2-linux-x86_64.tar.gz)与 [SHA-256 校验文件](https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.2/zmcl-0.1.2-linux-x86_64.tar.gz.sha256)。归档为 **679,358 字节**，SHA-256：
+从 [GitHub v0.1.3](https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.3) 下载 [Linux x86_64 归档](https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.3/zmcl-0.1.3-linux-x86_64.tar.gz)与 [SHA-256 校验文件](https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.3/zmcl-0.1.3-linux-x86_64.tar.gz.sha256)。归档为 **679,517 字节**，SHA-256：
 
 ~~~text
-5cb7945cb5888d1ec02d84e55a4b91576161ddb6fe6c3a6be2644c8f058fb3c4
+b15024e99dd1275db15020ef26669f24aaad9026d948dd6683cacac5c7647e0e
 ~~~
 
-其中的主程序为 **1,473,144 字节**，SHA-256：
+主程序为 **1,473,752 字节**，SHA-256：
 
 ~~~text
-71bf4017072703a91359ea84e2493db218d9962456ece2060d0f2e42b3500c32
+02620a8ec4fac34e63fcbe483268149b2ed4032ac2d7bf42975ff6b19b72a1aa
 ~~~
 
-应用源码固定为 [e86b584](https://github.com/LIghtJUNction/zmcl/commit/e86b5841532ef04cc74cea5585ae396150452408)。发行包仅支持 Linux x86_64；Windows 完整 GUI 交叉构建已通过，应用原生运行仍待验收，macOS 应用构建和桌面流程也仍待验收。框架在其他平台的窗口探针通过，不等同于启动器应用的完整运行验收。
+应用源码固定为 [9ef89bb](https://github.com/LIghtJUNction/zmcl/commit/9ef89bb92d46d324172d6ea8b13054c81434e178)。发行包支持 Linux x86_64。0.1.2 的 Windows GNU 跨编译和 zgpui 原生平台探针保留其原身份；本轮没有新增 0.1.3 Windows/macOS 应用的构建、安装或窗口/游戏运行验收。
 
 校验并解包后，可使用其中的用户级安装器：
 
@@ -77,7 +75,13 @@ python3 scripts/install.py uninstall
 
 用户级安装默认写入 `~/.local`，AUR 安装使用 `/usr`，分别由各自的安装记录管理。已有用户级版本时，用 `command -v zmcl` 核对 shell 实际选择的程序。不满足预编译包条件时，可按 [README 的源码构建步骤](../README.md#构建与运行) 构建并在目标系统验证。
 
-## 本次 0.1.2 发行验收
+## 本次 0.1.3 发行验收
+
+[官方发行回执](validation/release-0.1.3-2026-11-20.json)记录草稿回下载、匿名公开下载、标签和 manifest 核验，以及用户级安装/卸载和修改文件保护。[AUR 回执](validation/aur-install-0.1.3-2026-11-20.json)记录作者包与公开新克隆包的各自身份。实际升级所用的新克隆包为 674,509 字节，SHA-256 `6c323e69cd82d51ebbb9b1524ba195f640ab0f04cf6c39aa88559a48f501cce2`。
+
+[安装后窗口验收](validation/installed-gui-0.1.3-2026-11-20.json)使用 /usr/bin/zmcl 完成六组真实窗口与文件效果检查，包括确认恢复时保留快照及服务器 EULA 拒绝。没有新增真实账号、在线游戏下载或开服验收。namcap 提示的 curl/Python 依赖由外部命令实际使用，继续保留；这些本机检查不是所有 Arch 环境的干净 chroot 证明。
+
+## 历史 0.1.2 发行验收
 
 [AUR 与安装回执](validation/aur-install-0.1.2-2026-11-20.json)记录公开配方 `16b6882`、独立来源校验、准备包和公共新克隆包的各自身份。公共新克隆重试包为674,238字节，SHA-256 `17f8b87cd028fe1204088de52474054f4c0f5d47f3d07e999ea9ee4b44821867`。首轮因宿主磁盘空间不足解包失败，清理后使用已验证的同一公开归档重试通过，失败日志保留。
 

@@ -1,5 +1,17 @@
 # zmcl 开发与验收报告
 
+## v0.1.3 源码、发行与安装验收
+
+[应用源码 9ef89bb](https://github.com/LIghtJUNction/zmcl/commit/9ef89bb92d46d324172d6ea8b13054c81434e178) 的构建输入经过逐文件 SHA-256 比对，与实际先行构建一致；没有倒写构建时的 HEAD。本版通过 97 项 Rust、51 项受影响 Python 测试、fmt、严格全目标全特性 Clippy、Linux release、5 项管理 CLI 检查和 21 条生命周期命令（其中 3 次为预期保护拒绝）。默认与系统 Python 条件各完成 6 组原生 GUI 流程。[门禁与来源证明](validation/helper-release-0.1.3-2026-11-20.json)
+
+[GitHub v0.1.3](https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.3) 已公开，草稿与匿名下载逐字节一致；归档 679,517 字节、主程序 1,473,752 字节。主程序 SHA-256 为 `02620a8ec4fac34e63fcbe483268149b2ed4032ac2d7bf42975ff6b19b72a1aa`。用户级安装、卸载、修改文件保护和合成存档保留通过。[发行回执](validation/release-0.1.3-2026-11-20.json)
+
+AUR 0.1.3-1 的公开 master 为 `60c9ad8e1be8204c6a4e0024c83a4a5851ada0f5`。公开新克隆构建后正常升级 0.1.2-1 → 0.1.3-1；安装前后 19 个受管文件、0 个改动，安装程序保持官方摘要。首次 RPC/yay/paru 查询仍为缓存旧值；2026-11-20 19:46:59（Asia/Taipei）复验均为 0.1.3-1。[AUR 与系统安装回执](validation/aur-install-0.1.3-2026-11-20.json)
+
+使用实际 `/usr/bin/zmcl` 再跑 6 组窗口流程全部通过：世界导入、ZIP 导出回导、备份/确认恢复、未托管资源保留、服务器创建、EULA 拒绝。恢复前快照和拒绝提示已经实际看图核对。[已安装窗口回执](validation/installed-gui-0.1.3-2026-11-20.json) · [截图、机制与性能分析](reports/2026-11-20-helper-memory.md)
+
+完整 GUI 低于 10 MiB 尚未完成；完整树缺读保持未知。本轮没有新增真实账号、在线游戏/服务器启动或 Windows/macOS 应用验收，旧版本证据保持原身份。日常测试没有触发远端 CI。
+
 ## v0.1.2 源码与发行验收
 
 应用源码 [e86b584](https://github.com/LIghtJUNction/zmcl/commit/e86b5841532ef04cc74cea5585ae396150452408) 已通过 **97 项 Rust 测试（78 应用 + 19 核心）**、fmt、严格 Clippy、Linux GUI release、Windows GNU 完整 GUI 跨编译，以及 Linux 原生窗口四组创建和六项管理流程。[脱敏验收记录](validation/gui-iteration-0.1.2-2026-11-20.json)逐文件证明冻结工作树与公开提交的运行源码等价，保留实际构建基线，不倒写构建身份。

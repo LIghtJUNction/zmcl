@@ -1,0 +1,1297 @@
+{
+  "schema_version": 1,
+  "source_format_reference": "e86b5841532ef04cc74cea5585ae396150452408",
+  "started_utc": "2026-11-20T11:11:41Z",
+  "platform": "Linux-7.3.4-arch1-1-x86_64-with-glibc2.44",
+  "controller_python": "3.14.10 (main, Nov  4 2026, 18:21:50) [GCC 16.2.1 20260810]",
+  "requested_sample_interval_seconds": 0.005,
+  "repeats": 3,
+  "timeout_seconds": 360.0,
+  "order": "Adjacent before/after pairs; alternate AB/BA by repeat",
+  "conditions": [
+    "Local CLI only: instance create, world list and backup list; no game, GUI or download is started.",
+    "The same temporary launcher root and fixtures serve both binaries and all repetitions; no caches are dropped.",
+    "CLI scope includes the main process, discovered descendants/session members and still-valid previously seen PID:starttime identities.",
+    "Controller, fixture construction and its payload verification are excluded from CLI totals; separate before/after controller snapshots are not controller peaks.",
+    "RSS sums can double-count shared pages; PSS apportions them. All units are KiB (1024 bytes). Swap and SwapPss remain visible.",
+    "Tree medians are null after any missing read; main medians require every main sample. Repetition summaries never discard null medians.",
+    "All sampled peaks are lower bounds. Per-executable peaks sum only processes present in the same sample, never different process maxima.",
+    "Sampling targets 5 ms, not a guaranteed cadence. Sampling/file-write overhead affects wall time; actual gaps and read durations are reported.",
+    "Executable identities are device:inode, separately from PID:starttime. Exec changes seen between samples are reported; short-lived processes, same-image re-exec or changes wholly between samples can be missed.",
+    "Backup listing validates manifests/ZIP structure but reports data_verified:false. Fixture payload SHA-256 verification happens before timing."
+  ],
+  "comparison": {
+    "world-list": {
+      "all_responses_equal": true,
+      "before": {
+        "runs": 3,
+        "all_valid": true,
+        "wall_seconds_median": 0.37704581501020584,
+        "median_of_run_tree_medians_kib": {
+          "rss_kib": null,
+          "pss_kib": null,
+          "swap_kib": null,
+          "swap_pss_kib": null
+        },
+        "tree_reads_complete": false,
+        "tree_observed_peak_kib": {
+          "rss_kib": 30660,
+          "pss_kib": 20219,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        }
+      },
+      "after": {
+        "runs": 3,
+        "all_valid": true,
+        "wall_seconds_median": 0.37435193799319677,
+        "median_of_run_tree_medians_kib": {
+          "rss_kib": null,
+          "pss_kib": null,
+          "swap_kib": null,
+          "swap_pss_kib": null
+        },
+        "tree_reads_complete": false,
+        "tree_observed_peak_kib": {
+          "rss_kib": 28876,
+          "pss_kib": 18404,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        }
+      }
+    },
+    "backup-list": {
+      "all_responses_equal": true,
+      "before": {
+        "runs": 3,
+        "all_valid": true,
+        "wall_seconds_median": 0.6487691259972053,
+        "median_of_run_tree_medians_kib": {
+          "rss_kib": null,
+          "pss_kib": null,
+          "swap_kib": null,
+          "swap_pss_kib": null
+        },
+        "tree_reads_complete": false,
+        "tree_observed_peak_kib": {
+          "rss_kib": 45692,
+          "pss_kib": 35099,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        }
+      },
+      "after": {
+        "runs": 3,
+        "all_valid": true,
+        "wall_seconds_median": 0.5224162630038336,
+        "median_of_run_tree_medians_kib": {
+          "rss_kib": null,
+          "pss_kib": null,
+          "swap_kib": null,
+          "swap_pss_kib": null
+        },
+        "tree_reads_complete": false,
+        "tree_observed_peak_kib": {
+          "rss_kib": 35368,
+          "pss_kib": 24824,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        }
+      }
+    }
+  },
+  "binaries_unchanged": true,
+  "temporary_root_removed": true,
+  "exitcode": 0,
+  "raw": {
+    "file": "list-query-comparison/report.json",
+    "bytes": 63711,
+    "sha256": "dcc3f094fe2c005b48ce4ba6e6c1057442c6555c34f00eaa8e00a649dd541e23"
+  },
+  "binary_versions": {
+    "before": {
+      "bytes": 1473336,
+      "sha256": "908f0582c07a7aeb8b452a410d45d0dd3bbb84e2e89a96993ff9ac6ed681b12f",
+      "sha256_after": "908f0582c07a7aeb8b452a410d45d0dd3bbb84e2e89a96993ff9ac6ed681b12f"
+    },
+    "after": {
+      "bytes": 1473752,
+      "sha256": "02620a8ec4fac34e63fcbe483268149b2ed4032ac2d7bf42975ff6b19b72a1aa",
+      "sha256_after": "02620a8ec4fac34e63fcbe483268149b2ed4032ac2d7bf42975ff6b19b72a1aa"
+    }
+  },
+  "source_identity": {
+    "before": "Exact published af14e2c0f9b3a39e5b5a8a70976d2d0721b4400f helper-import source",
+    "after": "Input-equivalent to public 9ef89bb92d46d324172d6ea8b13054c81434e178; 0.1.3"
+  },
+  "interpreter": {
+    "ZMCL_PYTHON": "/usr/bin/python3",
+    "controller_executable": "/usr/bin/python3"
+  },
+  "fixtures": {
+    "worlds": 2000,
+    "world_title_ascii_bytes": 160,
+    "world_level_dat_bytes": 357573,
+    "world_collection_sha256": "3984f440d9eb8d40cf2cfe9f755495fdf94292c108d18e3cd03c4e1aa05ea1e1",
+    "world_collection_hash_format": "sorted world id ASCII, NUL, compressed level.dat bytes",
+    "backups": [
+      {
+        "id": "fixture-01",
+        "bytes": 2285725,
+        "sha256": "1b2fb4c09ddcaaf080c9bae540167ef02e41c72153737855da4de28036ad3ff9",
+        "manifest_bytes": 1190160,
+        "manifest_sha256": "7ed72ad6b123059368100b246e0910333a1d3ecc53ba783c9439fefe5b72c537",
+        "files": 10000,
+        "file_bytes": 640000,
+        "maximum_compression_ratio": 1.8898718076972547,
+        "all_payload_sha256_verified": true
+      },
+      {
+        "id": "fixture-02",
+        "bytes": 2285470,
+        "sha256": "9ad6e6ad42c5f833583e3697a2b9255468eb3eb029ae1f14354f714250d98862",
+        "manifest_bytes": 1190160,
+        "manifest_sha256": "1907fed8b39a60127c5c33560fcd687b681444fbba392ebbf0ce4f8b2b2363c8",
+        "files": 10000,
+        "file_bytes": 640000,
+        "maximum_compression_ratio": 1.89052323919052,
+        "all_payload_sha256_verified": true
+      }
+    ],
+    "created": 1795173101,
+    "wall_seconds": 0.682101722995867
+  },
+  "observer_snapshots": {
+    "controller_before": {
+      "memory": {
+        "pid": 2938959,
+        "name": "python3",
+        "executable": "python3.14",
+        "executable_identity": "34:59891003",
+        "executable_deleted": false,
+        "rss_kib": 24852,
+        "pss_kib": 15080,
+        "swap_kib": 0,
+        "swap_pss_kib": 0
+      },
+      "unread_processes": []
+    },
+    "controller_after": {
+      "memory": {
+        "pid": 2938959,
+        "name": "python3",
+        "executable": "python3.14",
+        "executable_identity": "34:59891003",
+        "executable_deleted": false,
+        "rss_kib": 32752,
+        "pss_kib": 22946,
+        "swap_kib": 0,
+        "swap_pss_kib": 0
+      },
+      "unread_processes": []
+    },
+    "final": {
+      "memory": {
+        "pid": 2938959,
+        "name": "python3",
+        "executable": "python3.14",
+        "executable_identity": "34:59891003",
+        "executable_deleted": false,
+        "rss_kib": 32564,
+        "pss_kib": 22721,
+        "swap_kib": 0,
+        "swap_pss_kib": 0
+      },
+      "unread_processes": []
+    }
+  },
+  "script_sha256": "2cc6243243064b2fe3af8e7e8ac74e5f7fe9858b70ce2a89d46b0b70a919d1f0",
+  "sampler_sha256": "9a0614c63639308db2307c5e8be5ec6a7d602001817596b3f17a9ce91db09cbf",
+  "runs": [
+    {
+      "label": "world-list-01-before",
+      "operation": "world-list",
+      "exitcode": 0,
+      "timed_out": false,
+      "wall_seconds": 0.37190104500041343,
+      "response": {
+        "bytes": 1170002,
+        "sha256": "f9aefc8661c4fb6d0bb5f01aa5f14fab08dbb24cfb6b69943ad124811f13253d",
+        "json_count": 2000,
+        "canonical_json_sha256": "46812d8741d7608cfe7c0b548bb623a2957b682e404b60ee8d43828fe2551cc3",
+        "expected_response": true
+      },
+      "valid": true,
+      "memory": {
+        "sample_count": 74,
+        "tree_reads_complete": false,
+        "samples_with_unread_processes": 8,
+        "unread_process_reads": 8,
+        "tree_median_kib": {
+          "rss_kib": null,
+          "pss_kib": null,
+          "swap_kib": null,
+          "swap_pss_kib": null
+        },
+        "tree_observed_peak_kib": {
+          "rss_kib": 30660,
+          "pss_kib": 20219,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "main_median_kib": {
+          "rss_kib": 5256.0,
+          "pss_kib": 2532.0,
+          "swap_kib": 0.0,
+          "swap_pss_kib": 0.0
+        },
+        "main_observed_peak_kib": {
+          "rss_kib": 6724,
+          "pss_kib": 3828,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "observed_peak_processes": 2,
+        "observed_executables": [
+          {
+            "executable": "af14-imports-zmcl",
+            "executable_identity": "68:185600928",
+            "process_identities": [
+              "2938998:10886840"
+            ],
+            "process_names": [
+              "af14-imports-zm"
+            ],
+            "sample_count": 74,
+            "peak_processes": 1,
+            "observed_peak_kib": {
+              "rss_kib": 6724,
+              "pss_kib": 3828,
+              "swap_kib": 0,
+              "swap_pss_kib": 0
+            }
+          },
+          {
+            "executable": "python3.14",
+            "executable_identity": "34:59891003",
+            "process_identities": [
+              "2938999:10886840",
+              "2939000:10886841"
+            ],
+            "process_names": [
+              "python3"
+            ],
+            "sample_count": 64,
+            "peak_processes": 1,
+            "observed_peak_kib": {
+              "rss_kib": 25072,
+              "pss_kib": 17355,
+              "swap_kib": 0,
+              "swap_pss_kib": 0
+            }
+          }
+        ],
+        "observed_image_transitions": [],
+        "actual_interval_seconds_median": 0.004981992999091744,
+        "actual_interval_seconds_max": 0.006605570000829175,
+        "sample_read_seconds_max": 0.004199588001938537
+      },
+      "samples_sha256": "528f8cb06d1ec7bc6c0f9e4287b68a139ddfaa52af4f10f22216d29031f533c7"
+    },
+    {
+      "label": "world-list-01-after",
+      "operation": "world-list",
+      "exitcode": 0,
+      "timed_out": false,
+      "wall_seconds": 0.37435193799319677,
+      "response": {
+        "bytes": 1170002,
+        "sha256": "f9aefc8661c4fb6d0bb5f01aa5f14fab08dbb24cfb6b69943ad124811f13253d",
+        "json_count": 2000,
+        "canonical_json_sha256": "46812d8741d7608cfe7c0b548bb623a2957b682e404b60ee8d43828fe2551cc3",
+        "expected_response": true
+      },
+      "valid": true,
+      "memory": {
+        "sample_count": 74,
+        "tree_reads_complete": false,
+        "samples_with_unread_processes": 4,
+        "unread_process_reads": 4,
+        "tree_median_kib": {
+          "rss_kib": null,
+          "pss_kib": null,
+          "swap_kib": null,
+          "swap_pss_kib": null
+        },
+        "tree_observed_peak_kib": {
+          "rss_kib": 28788,
+          "pss_kib": 18277,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "main_median_kib": {
+          "rss_kib": 5252.0,
+          "pss_kib": 2458.0,
+          "swap_kib": 0.0,
+          "swap_pss_kib": 0.0
+        },
+        "main_observed_peak_kib": {
+          "rss_kib": 6712,
+          "pss_kib": 3747,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "observed_peak_processes": 2,
+        "observed_executables": [
+          {
+            "executable": "final-zmcl",
+            "executable_identity": "68:185604344",
+            "process_identities": [
+              "2939024:10886878"
+            ],
+            "process_names": [
+              "final-zmcl"
+            ],
+            "sample_count": 74,
+            "peak_processes": 1,
+            "observed_peak_kib": {
+              "rss_kib": 6712,
+              "pss_kib": 3747,
+              "swap_kib": 0,
+              "swap_pss_kib": 0
+            }
+          },
+          {
+            "executable": "python3.14",
+            "executable_identity": "34:59891003",
+            "process_identities": [
+              "2939026:10886879",
+              "2939033:10886880"
+            ],
+            "process_names": [
+              "python3"
+            ],
+            "sample_count": 68,
+            "peak_processes": 1,
+            "observed_peak_kib": {
+              "rss_kib": 22448,
+              "pss_kib": 14730,
+              "swap_kib": 0,
+              "swap_pss_kib": 0
+            }
+          }
+        ],
+        "observed_image_transitions": [],
+        "actual_interval_seconds_median": 0.004973782997694798,
+        "actual_interval_seconds_max": 0.008262033996288665,
+        "sample_read_seconds_max": 0.0060700020112562925
+      },
+      "samples_sha256": "63c5ae5df08b174cff19fd6940c8a740e4c070c04a90586c74ebd294c153a9de"
+    },
+    {
+      "label": "backup-list-01-before",
+      "operation": "backup-list",
+      "exitcode": 0,
+      "timed_out": false,
+      "wall_seconds": 0.6487691259972053,
+      "response": {
+        "bytes": 482,
+        "sha256": "c952310357f583dbe4d5cda07856efe66fd09290bcd86eb1c602777e8ca404b2",
+        "json_count": 2,
+        "canonical_json_sha256": "c1e409d1a26b5dffd1b4c5a8c2b7165e729374ace8c4a4b0b0be7078351a26cc",
+        "expected_response": true
+      },
+      "valid": true,
+      "memory": {
+        "sample_count": 129,
+        "tree_reads_complete": false,
+        "samples_with_unread_processes": 12,
+        "unread_process_reads": 12,
+        "tree_median_kib": {
+          "rss_kib": null,
+          "pss_kib": null,
+          "swap_kib": null,
+          "swap_pss_kib": null
+        },
+        "tree_observed_peak_kib": {
+          "rss_kib": 45468,
+          "pss_kib": 35030,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "main_median_kib": {
+          "rss_kib": null,
+          "pss_kib": null,
+          "swap_kib": null,
+          "swap_pss_kib": null
+        },
+        "main_observed_peak_kib": {
+          "rss_kib": 5408,
+          "pss_kib": 2531,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "observed_peak_processes": 2,
+        "observed_executables": [
+          {
+            "executable": "af14-imports-zmcl",
+            "executable_identity": "68:185600928",
+            "process_identities": [
+              "2939279:10886917"
+            ],
+            "process_names": [
+              "af14-imports-zm"
+            ],
+            "sample_count": 128,
+            "peak_processes": 1,
+            "observed_peak_kib": {
+              "rss_kib": 5408,
+              "pss_kib": 2531,
+              "swap_kib": 0,
+              "swap_pss_kib": 0
+            }
+          },
+          {
+            "executable": "python3.14",
+            "executable_identity": "34:59891003",
+            "process_identities": [
+              "2939296:10886930",
+              "2939297:10886931"
+            ],
+            "process_names": [
+              "python3"
+            ],
+            "sample_count": 91,
+            "peak_processes": 1,
+            "observed_peak_kib": {
+              "rss_kib": 40252,
+              "pss_kib": 32518,
+              "swap_kib": 0,
+              "swap_pss_kib": 0
+            }
+          }
+        ],
+        "observed_image_transitions": [],
+        "actual_interval_seconds_median": 0.004993062502762768,
+        "actual_interval_seconds_max": 0.008342217988683842,
+        "sample_read_seconds_max": 0.006263404997298494
+      },
+      "samples_sha256": "7b30478237472e13818d3a4cd1ef5dd962cd593b859e04b618f80fa6bcf3b8f0"
+    },
+    {
+      "label": "backup-list-01-after",
+      "operation": "backup-list",
+      "exitcode": 0,
+      "timed_out": false,
+      "wall_seconds": 0.4724078879953595,
+      "response": {
+        "bytes": 482,
+        "sha256": "c952310357f583dbe4d5cda07856efe66fd09290bcd86eb1c602777e8ca404b2",
+        "json_count": 2,
+        "canonical_json_sha256": "c1e409d1a26b5dffd1b4c5a8c2b7165e729374ace8c4a4b0b0be7078351a26cc",
+        "expected_response": true
+      },
+      "valid": true,
+      "memory": {
+        "sample_count": 94,
+        "tree_reads_complete": false,
+        "samples_with_unread_processes": 2,
+        "unread_process_reads": 2,
+        "tree_median_kib": {
+          "rss_kib": null,
+          "pss_kib": null,
+          "swap_kib": null,
+          "swap_pss_kib": null
+        },
+        "tree_observed_peak_kib": {
+          "rss_kib": 35312,
+          "pss_kib": 24819,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "main_median_kib": {
+          "rss_kib": null,
+          "pss_kib": null,
+          "swap_kib": null,
+          "swap_pss_kib": null
+        },
+        "main_observed_peak_kib": {
+          "rss_kib": 5496,
+          "pss_kib": 2565,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "observed_peak_processes": 2,
+        "observed_executables": [
+          {
+            "executable": "final-zmcl",
+            "executable_identity": "68:185604344",
+            "process_identities": [
+              "2939338:10886982"
+            ],
+            "process_names": [
+              "final-zmcl"
+            ],
+            "sample_count": 93,
+            "peak_processes": 1,
+            "observed_peak_kib": {
+              "rss_kib": 5496,
+              "pss_kib": 2565,
+              "swap_kib": 0,
+              "swap_pss_kib": 0
+            }
+          },
+          {
+            "executable": "python3.14",
+            "executable_identity": "34:59891003",
+            "process_identities": [
+              "2939339:10886982",
+              "2939340:10886983"
+            ],
+            "process_names": [
+              "python3"
+            ],
+            "sample_count": 91,
+            "peak_processes": 1,
+            "observed_peak_kib": {
+              "rss_kib": 30008,
+              "pss_kib": 22273,
+              "swap_kib": 0,
+              "swap_pss_kib": 0
+            }
+          }
+        ],
+        "observed_image_transitions": [],
+        "actual_interval_seconds_median": 0.005021816992666572,
+        "actual_interval_seconds_max": 0.007500430991058238,
+        "sample_read_seconds_max": 0.005117402994073927
+      },
+      "samples_sha256": "295a0803bcf8aba8bcda6763e0a97d0c87dd43bc586b06317a8ed664c2b5640e"
+    },
+    {
+      "label": "world-list-02-after",
+      "operation": "world-list",
+      "exitcode": 0,
+      "timed_out": false,
+      "wall_seconds": 0.3718995710078161,
+      "response": {
+        "bytes": 1170002,
+        "sha256": "f9aefc8661c4fb6d0bb5f01aa5f14fab08dbb24cfb6b69943ad124811f13253d",
+        "json_count": 2000,
+        "canonical_json_sha256": "46812d8741d7608cfe7c0b548bb623a2957b682e404b60ee8d43828fe2551cc3",
+        "expected_response": true
+      },
+      "valid": true,
+      "memory": {
+        "sample_count": 74,
+        "tree_reads_complete": false,
+        "samples_with_unread_processes": 6,
+        "unread_process_reads": 6,
+        "tree_median_kib": {
+          "rss_kib": null,
+          "pss_kib": null,
+          "swap_kib": null,
+          "swap_pss_kib": null
+        },
+        "tree_observed_peak_kib": {
+          "rss_kib": 28872,
+          "pss_kib": 18355,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "main_median_kib": {
+          "rss_kib": null,
+          "pss_kib": null,
+          "swap_kib": null,
+          "swap_pss_kib": null
+        },
+        "main_observed_peak_kib": {
+          "rss_kib": 6892,
+          "pss_kib": 3913,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "observed_peak_processes": 2,
+        "observed_executables": [
+          {
+            "executable": "final-zmcl",
+            "executable_identity": "68:185604344",
+            "process_identities": [
+              "2939349:10887029"
+            ],
+            "process_names": [
+              "final-zmcl"
+            ],
+            "sample_count": 73,
+            "peak_processes": 1,
+            "observed_peak_kib": {
+              "rss_kib": 6892,
+              "pss_kib": 3913,
+              "swap_kib": 0,
+              "swap_pss_kib": 0
+            }
+          },
+          {
+            "executable": "python3.14",
+            "executable_identity": "34:59891003",
+            "process_identities": [
+              "2939350:10887030",
+              "2939351:10887031"
+            ],
+            "process_names": [
+              "python3"
+            ],
+            "sample_count": 67,
+            "peak_processes": 1,
+            "observed_peak_kib": {
+              "rss_kib": 22472,
+              "pss_kib": 14765,
+              "swap_kib": 0,
+              "swap_pss_kib": 0
+            }
+          }
+        ],
+        "observed_image_transitions": [],
+        "actual_interval_seconds_median": 0.004987613006960601,
+        "actual_interval_seconds_max": 0.00586994799959939,
+        "sample_read_seconds_max": 0.00367194099817425
+      },
+      "samples_sha256": "dc09bee9840ea4dd1b25098e43d97ee2ebf8ecb7e2c95ab73595cefc9156a42e"
+    },
+    {
+      "label": "world-list-02-before",
+      "operation": "world-list",
+      "exitcode": 0,
+      "timed_out": false,
+      "wall_seconds": 0.37704581501020584,
+      "response": {
+        "bytes": 1170002,
+        "sha256": "f9aefc8661c4fb6d0bb5f01aa5f14fab08dbb24cfb6b69943ad124811f13253d",
+        "json_count": 2000,
+        "canonical_json_sha256": "46812d8741d7608cfe7c0b548bb623a2957b682e404b60ee8d43828fe2551cc3",
+        "expected_response": true
+      },
+      "valid": true,
+      "memory": {
+        "sample_count": 75,
+        "tree_reads_complete": false,
+        "samples_with_unread_processes": 6,
+        "unread_process_reads": 6,
+        "tree_median_kib": {
+          "rss_kib": null,
+          "pss_kib": null,
+          "swap_kib": null,
+          "swap_pss_kib": null
+        },
+        "tree_observed_peak_kib": {
+          "rss_kib": 28616,
+          "pss_kib": 18186,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "main_median_kib": {
+          "rss_kib": null,
+          "pss_kib": null,
+          "swap_kib": null,
+          "swap_pss_kib": null
+        },
+        "main_observed_peak_kib": {
+          "rss_kib": 6836,
+          "pss_kib": 3940,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "observed_peak_processes": 2,
+        "observed_executables": [
+          {
+            "executable": "af14-imports-zmcl",
+            "executable_identity": "68:185600928",
+            "process_identities": [
+              "2939402:10887067"
+            ],
+            "process_names": [
+              "af14-imports-zm"
+            ],
+            "sample_count": 74,
+            "peak_processes": 1,
+            "observed_peak_kib": {
+              "rss_kib": 6836,
+              "pss_kib": 3940,
+              "swap_kib": 0,
+              "swap_pss_kib": 0
+            }
+          },
+          {
+            "executable": "python3.14",
+            "executable_identity": "34:59891003",
+            "process_identities": [
+              "2939404:10887068",
+              "2939405:10887069"
+            ],
+            "process_names": [
+              "python3"
+            ],
+            "sample_count": 67,
+            "peak_processes": 1,
+            "observed_peak_kib": {
+              "rss_kib": 23244,
+              "pss_kib": 15538,
+              "swap_kib": 0,
+              "swap_pss_kib": 0
+            }
+          }
+        ],
+        "observed_image_transitions": [],
+        "actual_interval_seconds_median": 0.0049863710009958595,
+        "actual_interval_seconds_max": 0.006923077002284117,
+        "sample_read_seconds_max": 0.004712153997388668
+      },
+      "samples_sha256": "5a5216fac8bd9798e51e008cee1c372905b232289bcc4c8fd9d1a99e13fb65cc"
+    },
+    {
+      "label": "backup-list-02-after",
+      "operation": "backup-list",
+      "exitcode": 0,
+      "timed_out": false,
+      "wall_seconds": 0.5750563040055567,
+      "response": {
+        "bytes": 482,
+        "sha256": "c952310357f583dbe4d5cda07856efe66fd09290bcd86eb1c602777e8ca404b2",
+        "json_count": 2,
+        "canonical_json_sha256": "c1e409d1a26b5dffd1b4c5a8c2b7165e729374ace8c4a4b0b0be7078351a26cc",
+        "expected_response": true
+      },
+      "valid": true,
+      "memory": {
+        "sample_count": 114,
+        "tree_reads_complete": false,
+        "samples_with_unread_processes": 3,
+        "unread_process_reads": 3,
+        "tree_median_kib": {
+          "rss_kib": null,
+          "pss_kib": null,
+          "swap_kib": null,
+          "swap_pss_kib": null
+        },
+        "tree_observed_peak_kib": {
+          "rss_kib": 35368,
+          "pss_kib": 24824,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "main_median_kib": {
+          "rss_kib": 5340.0,
+          "pss_kib": 2528.0,
+          "swap_kib": 0.0,
+          "swap_pss_kib": 0.0
+        },
+        "main_observed_peak_kib": {
+          "rss_kib": 5532,
+          "pss_kib": 2550,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "observed_peak_processes": 2,
+        "observed_executables": [
+          {
+            "executable": "final-zmcl",
+            "executable_identity": "68:185604344",
+            "process_identities": [
+              "2939420:10887106"
+            ],
+            "process_names": [
+              "final-zmcl"
+            ],
+            "sample_count": 114,
+            "peak_processes": 1,
+            "observed_peak_kib": {
+              "rss_kib": 5532,
+              "pss_kib": 2550,
+              "swap_kib": 0,
+              "swap_pss_kib": 0
+            }
+          },
+          {
+            "executable": "python3.14",
+            "executable_identity": "34:59891003",
+            "process_identities": [
+              "2939421:10887107",
+              "2939423:10887108"
+            ],
+            "process_names": [
+              "python3"
+            ],
+            "sample_count": 109,
+            "peak_processes": 1,
+            "observed_peak_kib": {
+              "rss_kib": 30028,
+              "pss_kib": 22296,
+              "swap_kib": 0,
+              "swap_pss_kib": 0
+            }
+          }
+        ],
+        "observed_image_transitions": [],
+        "actual_interval_seconds_median": 0.00499652000144124,
+        "actual_interval_seconds_max": 0.008700924998265691,
+        "sample_read_seconds_max": 0.0073766870045801625
+      },
+      "samples_sha256": "b9f55076a2ef935992155b1eb9ab7f0da64d8bf90e98b563fda62db5e7fdb4c6"
+    },
+    {
+      "label": "backup-list-02-before",
+      "operation": "backup-list",
+      "exitcode": 0,
+      "timed_out": false,
+      "wall_seconds": 0.9373424090008484,
+      "response": {
+        "bytes": 482,
+        "sha256": "c952310357f583dbe4d5cda07856efe66fd09290bcd86eb1c602777e8ca404b2",
+        "json_count": 2,
+        "canonical_json_sha256": "c1e409d1a26b5dffd1b4c5a8c2b7165e729374ace8c4a4b0b0be7078351a26cc",
+        "expected_response": true
+      },
+      "valid": true,
+      "memory": {
+        "sample_count": 121,
+        "tree_reads_complete": false,
+        "samples_with_unread_processes": 5,
+        "unread_process_reads": 5,
+        "tree_median_kib": {
+          "rss_kib": null,
+          "pss_kib": null,
+          "swap_kib": null,
+          "swap_pss_kib": null
+        },
+        "tree_observed_peak_kib": {
+          "rss_kib": 45500,
+          "pss_kib": 35033,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "main_median_kib": {
+          "rss_kib": null,
+          "pss_kib": null,
+          "swap_kib": null,
+          "swap_pss_kib": null
+        },
+        "main_observed_peak_kib": {
+          "rss_kib": 5496,
+          "pss_kib": 2541,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "observed_peak_processes": 2,
+        "observed_executables": [
+          {
+            "executable": "af14-imports-zmcl",
+            "executable_identity": "68:185600928",
+            "process_identities": [
+              "2939678:10887164"
+            ],
+            "process_names": [
+              "af14-imports-zm"
+            ],
+            "sample_count": 120,
+            "peak_processes": 1,
+            "observed_peak_kib": {
+              "rss_kib": 5496,
+              "pss_kib": 2541,
+              "swap_kib": 0,
+              "swap_pss_kib": 0
+            }
+          },
+          {
+            "executable": "python3.14",
+            "executable_identity": "34:59891003",
+            "process_identities": [
+              "2939679:10887164",
+              "2939682:10887166"
+            ],
+            "process_names": [
+              "python3"
+            ],
+            "sample_count": 115,
+            "peak_processes": 1,
+            "observed_peak_kib": {
+              "rss_kib": 40196,
+              "pss_kib": 32511,
+              "swap_kib": 0,
+              "swap_pss_kib": 0
+            }
+          }
+        ],
+        "observed_image_transitions": [],
+        "actual_interval_seconds_median": 0.005024935999244917,
+        "actual_interval_seconds_max": 0.03896692399575841,
+        "sample_read_seconds_max": 0.03849193399946671
+      },
+      "samples_sha256": "cb6f8af27e3f4a0a482f1e2b0e82a3b04422242959281da02a4cd378f4c76c9c"
+    },
+    {
+      "label": "world-list-03-before",
+      "operation": "world-list",
+      "exitcode": 0,
+      "timed_out": false,
+      "wall_seconds": 0.7201963439874817,
+      "response": {
+        "bytes": 1170002,
+        "sha256": "f9aefc8661c4fb6d0bb5f01aa5f14fab08dbb24cfb6b69943ad124811f13253d",
+        "json_count": 2000,
+        "canonical_json_sha256": "46812d8741d7608cfe7c0b548bb623a2957b682e404b60ee8d43828fe2551cc3",
+        "expected_response": true
+      },
+      "valid": true,
+      "memory": {
+        "sample_count": 105,
+        "tree_reads_complete": false,
+        "samples_with_unread_processes": 9,
+        "unread_process_reads": 9,
+        "tree_median_kib": {
+          "rss_kib": null,
+          "pss_kib": null,
+          "swap_kib": null,
+          "swap_pss_kib": null
+        },
+        "tree_observed_peak_kib": {
+          "rss_kib": 29304,
+          "pss_kib": 18792,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "main_median_kib": {
+          "rss_kib": null,
+          "pss_kib": null,
+          "swap_kib": null,
+          "swap_pss_kib": null
+        },
+        "main_observed_peak_kib": {
+          "rss_kib": 6844,
+          "pss_kib": 3881,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "observed_peak_processes": 2,
+        "observed_executables": [
+          {
+            "executable": "af14-imports-zmcl",
+            "executable_identity": "68:185600928",
+            "process_identities": [
+              "2939977:10887259"
+            ],
+            "process_names": [
+              "af14-imports-zm"
+            ],
+            "sample_count": 104,
+            "peak_processes": 1,
+            "observed_peak_kib": {
+              "rss_kib": 6844,
+              "pss_kib": 3881,
+              "swap_kib": 0,
+              "swap_pss_kib": 0
+            }
+          },
+          {
+            "executable": "python3.14",
+            "executable_identity": "34:59891003",
+            "process_identities": [
+              "2939978:10887260",
+              "2939988:10887265"
+            ],
+            "process_names": [
+              "python3"
+            ],
+            "sample_count": 95,
+            "peak_processes": 1,
+            "observed_peak_kib": {
+              "rss_kib": 22752,
+              "pss_kib": 15030,
+              "swap_kib": 0,
+              "swap_pss_kib": 0
+            }
+          }
+        ],
+        "observed_image_transitions": [],
+        "actual_interval_seconds_median": 0.005114148007123731,
+        "actual_interval_seconds_max": 0.0159510140074417,
+        "sample_read_seconds_max": 0.015802345995325595
+      },
+      "samples_sha256": "67ddfcbaec47c81310f0c85649957a88c66cf4aa69e68623413d4303b3c150be"
+    },
+    {
+      "label": "world-list-03-after",
+      "operation": "world-list",
+      "exitcode": 0,
+      "timed_out": false,
+      "wall_seconds": 0.6778618529933738,
+      "response": {
+        "bytes": 1170002,
+        "sha256": "f9aefc8661c4fb6d0bb5f01aa5f14fab08dbb24cfb6b69943ad124811f13253d",
+        "json_count": 2000,
+        "canonical_json_sha256": "46812d8741d7608cfe7c0b548bb623a2957b682e404b60ee8d43828fe2551cc3",
+        "expected_response": true
+      },
+      "valid": true,
+      "memory": {
+        "sample_count": 135,
+        "tree_reads_complete": false,
+        "samples_with_unread_processes": 3,
+        "unread_process_reads": 3,
+        "tree_median_kib": {
+          "rss_kib": null,
+          "pss_kib": null,
+          "swap_kib": null,
+          "swap_pss_kib": null
+        },
+        "tree_observed_peak_kib": {
+          "rss_kib": 28876,
+          "pss_kib": 18404,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "main_median_kib": {
+          "rss_kib": 5240,
+          "pss_kib": 2487,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "main_observed_peak_kib": {
+          "rss_kib": 6704,
+          "pss_kib": 3780,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "observed_peak_processes": 2,
+        "observed_executables": [
+          {
+            "executable": "final-zmcl",
+            "executable_identity": "68:185604344",
+            "process_identities": [
+              "2940040:10887332"
+            ],
+            "process_names": [
+              "final-zmcl"
+            ],
+            "sample_count": 135,
+            "peak_processes": 1,
+            "observed_peak_kib": {
+              "rss_kib": 6704,
+              "pss_kib": 3780,
+              "swap_kib": 0,
+              "swap_pss_kib": 0
+            }
+          },
+          {
+            "executable": "python3.14",
+            "executable_identity": "34:59891003",
+            "process_identities": [
+              "2940261:10887363",
+              "2940270:10887364"
+            ],
+            "process_names": [
+              "python3"
+            ],
+            "sample_count": 69,
+            "peak_processes": 1,
+            "observed_peak_kib": {
+              "rss_kib": 22428,
+              "pss_kib": 14708,
+              "swap_kib": 0,
+              "swap_pss_kib": 0
+            }
+          }
+        ],
+        "observed_image_transitions": [],
+        "actual_interval_seconds_median": 0.004982464495697059,
+        "actual_interval_seconds_max": 0.007324529986362904,
+        "sample_read_seconds_max": 0.005243770996457897
+      },
+      "samples_sha256": "a94d8c5659fd343bb92dd0754f1c14d4bff0d288aa675ee8b0474402c1477388"
+    },
+    {
+      "label": "backup-list-03-before",
+      "operation": "backup-list",
+      "exitcode": 0,
+      "timed_out": false,
+      "wall_seconds": 0.4735397490003379,
+      "response": {
+        "bytes": 482,
+        "sha256": "c952310357f583dbe4d5cda07856efe66fd09290bcd86eb1c602777e8ca404b2",
+        "json_count": 2,
+        "canonical_json_sha256": "c1e409d1a26b5dffd1b4c5a8c2b7165e729374ace8c4a4b0b0be7078351a26cc",
+        "expected_response": true
+      },
+      "valid": true,
+      "memory": {
+        "sample_count": 94,
+        "tree_reads_complete": false,
+        "samples_with_unread_processes": 3,
+        "unread_process_reads": 3,
+        "tree_median_kib": {
+          "rss_kib": null,
+          "pss_kib": null,
+          "swap_kib": null,
+          "swap_pss_kib": null
+        },
+        "tree_observed_peak_kib": {
+          "rss_kib": 45692,
+          "pss_kib": 35099,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "main_median_kib": {
+          "rss_kib": null,
+          "pss_kib": null,
+          "swap_kib": null,
+          "swap_pss_kib": null
+        },
+        "main_observed_peak_kib": {
+          "rss_kib": 5652,
+          "pss_kib": 2654,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "observed_peak_processes": 2,
+        "observed_executables": [
+          {
+            "executable": "af14-imports-zmcl",
+            "executable_identity": "68:185600928",
+            "process_identities": [
+              "2940382:10887401"
+            ],
+            "process_names": [
+              "af14-imports-zm"
+            ],
+            "sample_count": 93,
+            "peak_processes": 1,
+            "observed_peak_kib": {
+              "rss_kib": 5652,
+              "pss_kib": 2654,
+              "swap_kib": 0,
+              "swap_pss_kib": 0
+            }
+          },
+          {
+            "executable": "python3.14",
+            "executable_identity": "34:59891003",
+            "process_identities": [
+              "2940383:10887401",
+              "2940384:10887402"
+            ],
+            "process_names": [
+              "python3"
+            ],
+            "sample_count": 90,
+            "peak_processes": 1,
+            "observed_peak_kib": {
+              "rss_kib": 40232,
+              "pss_kib": 32465,
+              "swap_kib": 0,
+              "swap_pss_kib": 0
+            }
+          }
+        ],
+        "observed_image_transitions": [],
+        "actual_interval_seconds_median": 0.004994226997951046,
+        "actual_interval_seconds_max": 0.00802632499835454,
+        "sample_read_seconds_max": 0.005315927002811804
+      },
+      "samples_sha256": "d7df8ad7110a0d9b6e9948b9cd141e1a22dd8b86b8d4a548998252b5325aa8a9"
+    },
+    {
+      "label": "backup-list-03-after",
+      "operation": "backup-list",
+      "exitcode": 0,
+      "timed_out": false,
+      "wall_seconds": 0.5224162630038336,
+      "response": {
+        "bytes": 482,
+        "sha256": "c952310357f583dbe4d5cda07856efe66fd09290bcd86eb1c602777e8ca404b2",
+        "json_count": 2,
+        "canonical_json_sha256": "c1e409d1a26b5dffd1b4c5a8c2b7165e729374ace8c4a4b0b0be7078351a26cc",
+        "expected_response": true
+      },
+      "valid": true,
+      "memory": {
+        "sample_count": 104,
+        "tree_reads_complete": false,
+        "samples_with_unread_processes": 12,
+        "unread_process_reads": 12,
+        "tree_median_kib": {
+          "rss_kib": null,
+          "pss_kib": null,
+          "swap_kib": null,
+          "swap_pss_kib": null
+        },
+        "tree_observed_peak_kib": {
+          "rss_kib": 35352,
+          "pss_kib": 24805,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "main_median_kib": {
+          "rss_kib": null,
+          "pss_kib": null,
+          "swap_kib": null,
+          "swap_pss_kib": null
+        },
+        "main_observed_peak_kib": {
+          "rss_kib": 5528,
+          "pss_kib": 2538,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "observed_peak_processes": 2,
+        "observed_executables": [
+          {
+            "executable": "final-zmcl",
+            "executable_identity": "68:185604344",
+            "process_identities": [
+              "2940436:10887448"
+            ],
+            "process_names": [
+              "final-zmcl"
+            ],
+            "sample_count": 103,
+            "peak_processes": 1,
+            "observed_peak_kib": {
+              "rss_kib": 5528,
+              "pss_kib": 2538,
+              "swap_kib": 0,
+              "swap_pss_kib": 0
+            }
+          },
+          {
+            "executable": "python3.14",
+            "executable_identity": "34:59891003",
+            "process_identities": [
+              "2940439:10887449",
+              "2940440:10887450"
+            ],
+            "process_names": [
+              "python3"
+            ],
+            "sample_count": 91,
+            "peak_processes": 1,
+            "observed_peak_kib": {
+              "rss_kib": 30016,
+              "pss_kib": 22286,
+              "swap_kib": 0,
+              "swap_pss_kib": 0
+            }
+          }
+        ],
+        "observed_image_transitions": [],
+        "actual_interval_seconds_median": 0.004974030001903884,
+        "actual_interval_seconds_max": 0.006525114004034549,
+        "sample_read_seconds_max": 0.004529222002020106
+      },
+      "samples_sha256": "17f789775e1b7617e6454c67e0ba25faf3cb5fdb8413050e3d61c614f7e13b13"
+    }
+  ],
+  "claim_limits": [
+    "Three adjacent AB/BA pairs, no cache flush. All canonical responses agree.",
+    "Each backup listing pair has a lower observed RSS/PSS peak after the patch. World-list values overlap across repeats; no consistent world-list peak reduction is claimed.",
+    "Observed peaks are lower bounds; none of the 12 runs has complete-tree reads throughout. Do not turn null medians into zero or use timing as a throughput guarantee."
+  ]
+}

@@ -23,13 +23,15 @@ AUR 安装 GitHub 发布的 Linux x86_64 预编译程序，附带桌面入口与
 
 重型操作使用按需退出的系统程序，未把整套浏览器运行时装进启动器。因此，“Rust 依赖都来自 Project Z”不等于没有系统依赖：curl、Python、图形库、Java 和可选 OpenSSL 仍需明确计算。游戏内存、Java 安装、游戏资源和 Horizon 官方发行包不属于 zmcl 本身的可执行文件。
 
-已发布 v0.1.2 的 Linux GUI 主程序为 **1,473,144 字节（1.40 MiB）**。分发包、安装文件和内存使用分别测量，详见[性能报告](docs/PERFORMANCE.md)。GUI 的 `--exit-after-launch` 选项会在启动命令成功返回游戏 PID 后退出；已实际验证启动器退出后 Java 进程继续存活。命令行启动本身也无需保留常驻服务。
+已发布 v0.1.3 的 Linux GUI 主程序为 **1,473,752 字节（1.41 MiB）**。分发包、安装文件和内存使用分别测量，详见[性能报告](docs/PERFORMANCE.md)。GUI 的 `--exit-after-launch` 选项会在启动命令成功返回游戏 PID 后退出；已实际验证启动器退出后 Java 进程继续存活。命令行启动本身也无需保留常驻服务。
 
 性能对照使用固定 XMCL 0.73.1、完整进程树、重复样本，并同时记录 RSS、PSS、SwapPss 和宿主内存压力。软件渲染结果不能替代硬件 GPU 实测，现阶段功能范围也不同。
 
 主线已接入正式发布的 `zgpui` 0.1.5：实际窗口、输入和绘制调用来自 `zgpui::native`，启用 `native` 和 `linux-software`，不保留旧包别名。Library 的 Manage 入口提供世界、备份与资源管理，侧栏提供本地服务器管理。新建实例支持异步官方版本选择、自动避开重名、五种加载器和默认创建后安装。隐藏 Activity 不再为每段日志触发重绘，离开管理页会释放其列表内容与容量。九个页面标题已通过 `zi18n` 借用静态英文，完整多语言仍待后续。
 
-本轮限定测试中，空库重绘 CPU 时间中位数下降 **44.5%**；2000 个世界的两对交错测试中，返回 Library 后 GUI 的 PSS+SwapPss 下降 **23.0%**，RSS 下降 **14.5%**。两项来自不同冻结候选，不能相加，也不代表最终发行二进制在所有状态的结果。完整进程树、显示服务与换页边界见[本轮报告](docs/reports/2026-11-20-gui-iteration.md)。源码能力与当前 AUR 发行版本分别记录，详见[架构说明](docs/ARCHITECTURE.md)和[功能记录](docs/FEATURES.md)。
+0.1.2 迭代的限定测试中，空库重绘 CPU 时间中位数下降 **44.5%**；2000 个世界的两对交错测试中，返回 Library 后 GUI 的 PSS+SwapPss 下降 **23.0%**，RSS 下降 **14.5%**。两项来自不同冻结候选，不能相加，也不代表最终发行二进制在所有状态的结果。完整进程树、显示服务与换页边界见[本轮报告](docs/reports/2026-11-20-gui-iteration.md)。源码能力与当前 AUR 发行版本分别记录，详见[架构说明](docs/ARCHITECTURE.md)和[功能记录](docs/FEATURES.md)。
+
+0.1.3 继续减少管理助手的临时分配。在相同系统 Python、两份各含 10000 个文件的备份夹具中，对比已经完成按需导入的上一候选，三轮完整 CLI 树的最大观测 RSS 为 45,692 → 35,368 KiB、PSS 为 35,099 → 24,824 KiB。最终 GUI 管理全程的完整树观测峰值仍为默认环境 RSS/PSS 59,884/48,651 KiB，明确指定系统 Python 时为 37,948/19,306 KiB；后者是环境条件变化。缺读、主进程、显示服务和观察成本均保留，**完整 GUI 低于 10 MiB 仍未完成**。[0.1.3 报告与安装证据](docs/reports/2026-11-20-helper-memory.md)
 
 ## 构建与运行
 
@@ -146,6 +148,7 @@ zmcl horizon launch INSTALL_ID
 
 - [架构和边界](docs/ARCHITECTURE.md)
 - [XMCL 功能对照与验收记录](docs/FEATURES.md)
+- [0.1.3 AUR、管理助手内存与安装后验收](docs/reports/2026-11-20-helper-memory.md)
 - [0.1.2 GUI、跨平台与性能迭代](docs/reports/2026-11-20-gui-iteration.md)
 - [实际安装、启动与恢复验收](docs/VALIDATION.md)
 - [资源占用及测量方法](docs/PERFORMANCE.md)

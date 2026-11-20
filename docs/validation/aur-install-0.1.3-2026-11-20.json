@@ -1,0 +1,275 @@
+{
+  "schema_version": 1,
+  "passed": true,
+  "publication": {
+    "passed": true,
+    "version": "0.1.3-1",
+    "commit": "60c9ad8e1be8204c6a4e0024c83a4a5851ada0f5",
+    "parent": "16b688237f8c54b47085a16279535db8f6c5c553",
+    "readback": "60c9ad8e1be8204c6a4e0024c83a4a5851ada0f5",
+    "github_recipe_commit": "7dc09fff213d659d99f98e61ebb2706654c0160b",
+    "recipe_files": {
+      "PKGBUILD": "019407d04d951efd74ee1d25ae2c0c94fd1b96841dd1e19a5d740ea18454cc47",
+      ".SRCINFO": "398df4a19a7390e03a3d6f3c2a1922a4c50a0e138bd246fa7a858caa9a5fc222",
+      "zmcl.desktop": "62d26944cd3c4aaaf2dd68668332527883b02bca734c893b510996ba19589082"
+    },
+    "published_at_utc": "2026-11-20T11:38:24Z"
+  },
+  "author_build": {
+    "passed": true,
+    "version": "0.1.3-1",
+    "aur_baseline": "16b688237f8c54b47085a16279535db8f6c5c553",
+    "package": {
+      "name": "zmcl-bin-0.1.3-1-x86_64.pkg.tar.zst",
+      "bytes": 674505,
+      "sha256": "3f8a6571629cd6ea24d88ebe9e4182f3ff812686bc3dcfd1f6dc62185d1f18a1"
+    },
+    "recipe_files": {
+      "PKGBUILD": "019407d04d951efd74ee1d25ae2c0c94fd1b96841dd1e19a5d740ea18454cc47",
+      ".SRCINFO": "398df4a19a7390e03a3d6f3c2a1922a4c50a0e138bd246fa7a858caa9a5fc222",
+      "zmcl.desktop": "62d26944cd3c4aaaf2dd68668332527883b02bca734c893b510996ba19589082"
+    },
+    "steps": [
+      {
+        "step": "clone-author",
+        "exit_code": 0,
+        "expected_exit_code": 0,
+        "seconds": 3.6891350420046365
+      },
+      {
+        "step": "aur-baseline",
+        "exit_code": 0,
+        "expected_exit_code": 0,
+        "seconds": 0.0019049760012421757
+      },
+      {
+        "step": "aur-clean",
+        "exit_code": 0,
+        "expected_exit_code": 0,
+        "seconds": 0.0019116110051982105
+      },
+      {
+        "step": "srcinfo",
+        "exit_code": 0,
+        "expected_exit_code": 0,
+        "seconds": 0.8290081550076138
+      },
+      {
+        "step": "verify-source",
+        "exit_code": 0,
+        "expected_exit_code": 0,
+        "seconds": 2.1503713659913046
+      },
+      {
+        "step": "build",
+        "exit_code": 0,
+        "expected_exit_code": 0,
+        "seconds": 3.4879303250054363
+      },
+      {
+        "step": "namcap-recipe",
+        "exit_code": 0,
+        "expected_exit_code": 0,
+        "seconds": 0.2832848279940663
+      },
+      {
+        "step": "namcap-package",
+        "exit_code": 0,
+        "expected_exit_code": 0,
+        "seconds": 1.2663010440010112
+      },
+      {
+        "step": "desktop",
+        "exit_code": 0,
+        "expected_exit_code": 0,
+        "seconds": 0.004110662994207814
+      },
+      {
+        "step": "layout",
+        "exit_code": 0,
+        "expected_exit_code": 0,
+        "seconds": 0.1024097830086248
+      }
+    ],
+    "checked_at_utc": "2026-11-20T11:35:19Z",
+    "scope": "Native makepkg on the existing Arch host; not a clean chroot"
+  },
+  "public_fresh_build_and_host": {
+    "passed": true,
+    "fresh_public_commit": "60c9ad8e1be8204c6a4e0024c83a4a5851ada0f5",
+    "package": {
+      "name": "zmcl-bin-0.1.3-1-x86_64.pkg.tar.zst",
+      "bytes": 674509,
+      "sha256": "6c323e69cd82d51ebbb9b1524ba195f640ab0f04cf6c39aa88559a48f501cce2"
+    },
+    "before": "zmcl-bin 0.1.2-1",
+    "after": "zmcl-bin 0.1.3-1",
+    "action": "normal single-package upgrade",
+    "pacman_before": "zmcl-bin: 19 total files, 0 altered files\n",
+    "pacman_after": "zmcl-bin: 19 total files, 0 altered files\n",
+    "installed_binary": {
+      "path": "/usr/bin/zmcl",
+      "version": "zmcl 0.1.3",
+      "bytes": 1473752,
+      "sha256": "02620a8ec4fac34e63fcbe483268149b2ed4032ac2d7bf42975ff6b19b72a1aa"
+    },
+    "queries_first": {
+      "rpc-current": {
+        "exit_code": 0,
+        "stdout": "{\"resultcount\":1,\"results\":[{\"Conflicts\":[\"zmcl\"],\"Depends\":[\"glibc\\u003e=2.39\",\"libgcc\",\"libx11\",\"freetype2\",\"fontconfig\\u003e=2.17.0\",\"hicolor-icon-theme\",\"curl\",\"python\\u003e=3.8\"],\"Description\":\"A small native Minecraft launcher built on Project Z (development preview)\",\"FirstSubmitted\":1795153454,\"ID\":2359279,\"Keywords\":[],\"LastModified\":1795170499,\"License\":[\"MIT\"],\"Maintainer\":\"lightjunction\",\"Name\":\"zmcl-bin\",\"NumVotes\":0,\"OptDepends\":[\"libsecret\",\"java-runtime\",\"openssl\",\"xorg-xwayland\",\"ttf-font\"],\"OutOfDate\":null,\"PackageBase\":\"zmcl-bin\",\"PackageBaseID\":252845,\"Popularity\":0,\"Provides\":[\"zmcl=0.1.2\"],\"Submitter\":\"lightjunction\",\"URL\":\"https://github.com/LIghtJUNction/zmcl\",\"URLPath\":\"/cgit/aur.git/snapshot/zmcl-bin.tar.gz\",\"Version\":\"0.1.2-1\"}],\"type\":\"multiinfo\",\"version\":5}",
+        "stderr": "  % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current\n                                 Dload  Upload  Total   Spent   Left   Speed\n\n  0      0   0      0   0      0      0      0                              0\n100    797   0    797   0      0    707      0           00:01              0\n100    797   0    797   0      0    707      0           00:01              0\n100    797   0    797   0      0    707      0           00:01              0\n"
+      },
+      "yay-info": {
+        "exit_code": 0,
+        "stdout": "Repository                    : aur\nName                          : zmcl-bin\nVersion                       : 0.1.2-1\nDescription                   : A small native Minecraft launcher built on Project Z (development preview)\nURL                           : https://github.com/LIghtJUNction/zmcl\nLicenses                      : MIT\nGroups                        : None\nProvides                      : zmcl=0.1.2\nDepends On                    : glibc>=2.39  libgcc  libx11  freetype2\n                                fontconfig>=2.17.0  hicolor-icon-theme  curl\n                                python>=3.8\nOptional Deps                 : libsecret  java-runtime  openssl  xorg-xwayland\n                                ttf-font\nMake Deps                     : None\nCheck Deps                    : None\nConflicts With                : zmcl\nReplaces                      : None\nAUR URL                       : https://aur.archlinux.org/packages/zmcl-bin\nFirst Submitted               : Fri 20 Nov 2026 01:44:14 PM CST\nKeywords                      : None\nLast Modified                 : Fri 20 Nov 2026 06:28:19 PM CST\nMaintainer                    : lightjunction\nPopularity                    : 0.000000\nVotes                         : 0\nOut-of-date                   : No\n\n",
+        "stderr": ""
+      },
+      "paru-info": {
+        "exit_code": 0,
+        "stdout": "Repository      : aur\nName            : zmcl-bin\nVersion         : 0.1.2-1\nDescription     : A small native Minecraft launcher built on Project Z (development preview)\nURL             : https://github.com/LIghtJUNction/zmcl\nAUR URL         : https://aur.archlinux.org/packages/zmcl-bin\nGroups          : None\nLicenses        : MIT\nProvides        : zmcl=0.1.2\nDepends On      : glibc>=2.39  libgcc  libx11  freetype2  fontconfig>=2.17.0  hicolor-icon-theme  curl  python>=3.8\nMake Deps       : None\nCheck Deps      : None\nOptional Deps   : libsecret  java-runtime  openssl  xorg-xwayland  ttf-font\nConflicts With  : zmcl\nMaintainer      : lightjunction\nVotes           : 0\nPopularity      : 0\nFirst Submitted : Fri, 20 Nov 2026 13:44:14\nLast Modified   : Fri, 20 Nov 2026 18:28:19\nOut Of Date     : No\n\n",
+        "stderr": ""
+      }
+    },
+    "steps": [
+      {
+        "step": "clone-public",
+        "exit_code": 0,
+        "seconds": 2.116601390996948
+      },
+      {
+        "step": "fresh-head",
+        "exit_code": 0,
+        "seconds": 0.002218517998699099
+      },
+      {
+        "step": "fresh-verify-source",
+        "exit_code": 0,
+        "seconds": 1.7903932990011526
+      },
+      {
+        "step": "fresh-build",
+        "exit_code": 0,
+        "seconds": 3.2201241229922744
+      },
+      {
+        "step": "fresh-layout",
+        "exit_code": 0,
+        "seconds": 0.08916583200334571
+      },
+      {
+        "step": "pacman-version-before",
+        "exit_code": 0,
+        "seconds": 0.010854670996195637
+      },
+      {
+        "step": "pacman-files-before",
+        "exit_code": 0,
+        "seconds": 0.01613896299386397
+      },
+      {
+        "step": "host-upgrade",
+        "exit_code": 0,
+        "seconds": 0.5574921090010321
+      },
+      {
+        "step": "pacman-version-after",
+        "exit_code": 0,
+        "seconds": 0.010412210001959465
+      },
+      {
+        "step": "pacman-files-after",
+        "exit_code": 0,
+        "seconds": 0.01418406299490016
+      },
+      {
+        "step": "installed-version",
+        "exit_code": 0,
+        "seconds": 0.0020894789922749624
+      },
+      {
+        "step": "rpc-current",
+        "exit_code": 0,
+        "seconds": 1.1337910309957806
+      },
+      {
+        "step": "yay-info",
+        "exit_code": 0,
+        "seconds": 1.509048136009369
+      },
+      {
+        "step": "paru-info",
+        "exit_code": 0,
+        "seconds": 1.451406677995692
+      }
+    ],
+    "checked_at_utc": "2026-11-20T11:41:21Z",
+    "scope": "Public HTTPS fresh clone and ordinary makepkg on the existing host, then normal pacman upgrade; not a clean-chroot or all-distribution compatibility proof."
+  },
+  "queries_final": {
+    "checked_at_utc": "2026-11-20T11:46:59Z",
+    "queries": {
+      "rpc-current": {
+        "exit_code": 0,
+        "stdout": "{\"resultcount\":1,\"results\":[{\"Conflicts\":[\"zmcl\"],\"Depends\":[\"glibc\\u003e=2.39\",\"libgcc\",\"libx11\",\"freetype2\",\"fontconfig\\u003e=2.17.0\",\"hicolor-icon-theme\",\"curl\",\"python\\u003e=3.8\"],\"Description\":\"A small native Minecraft launcher built on Project Z (development preview)\",\"FirstSubmitted\":1795153454,\"ID\":2359408,\"Keywords\":[],\"LastModified\":1795174699,\"License\":[\"MIT\"],\"Maintainer\":\"lightjunction\",\"Name\":\"zmcl-bin\",\"NumVotes\":0,\"OptDepends\":[\"libsecret\",\"java-runtime\",\"openssl\",\"xorg-xwayland\",\"ttf-font\"],\"OutOfDate\":null,\"PackageBase\":\"zmcl-bin\",\"PackageBaseID\":252845,\"Popularity\":0,\"Provides\":[\"zmcl=0.1.3\"],\"Submitter\":\"lightjunction\",\"URL\":\"https://github.com/LIghtJUNction/zmcl\",\"URLPath\":\"/cgit/aur.git/snapshot/zmcl-bin.tar.gz\",\"Version\":\"0.1.3-1\"}],\"type\":\"multiinfo\",\"version\":5}",
+        "stderr": "  % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current\n                                 Dload  Upload  Total   Spent   Left   Speed\n\n  0      0   0      0   0      0      0      0                              0\n100    797   0    797   0      0    596      0           00:01              0\n100    797   0    797   0      0    596      0           00:01              0\n100    797   0    797   0      0    596      0           00:01              0\n"
+      },
+      "yay-info": {
+        "exit_code": 0,
+        "stdout": "软件库                        : aur\n名称                          : zmcl-bin\n版本                          : 0.1.3-1\n描述                          : A small native Minecraft launcher built on Project Z (development preview)\nURL                           : https://github.com/LIghtJUNction/zmcl\n许可证                        : MIT\n组                            : 没有\n提供                          : zmcl=0.1.3\n依赖以下包                    : glibc>=2.39  libgcc  libx11  freetype2\n                                fontconfig>=2.17.0  hicolor-icon-theme  curl\n                                python>=3.8\n可选依赖                      : libsecret  java-runtime  openssl  xorg-xwayland\n                                ttf-font\n构建依赖                      : 没有\n检查依赖                      : 没有\n与它冲突                      : zmcl\n替换                          : 没有\nAUR URL                       : https://aur.archlinux.org/packages/zmcl-bin\n首次提交                      : Fri 20 Nov 2026 01:44:14 PM CST\n关键字                        : 没有\n最后修改                      : Fri 20 Nov 2026 07:38:19 PM CST\n维护者                        : lightjunction\n受欢迎度                      : 0.000000\n得票                          : 0\n过时                          : No\n\n",
+        "stderr": ""
+      },
+      "paru-info": {
+        "exit_code": 0,
+        "stdout": "软件库    : aur\n名字      : zmcl-bin\n版本      : 0.1.3-1\n描述      : A small native Minecraft launcher built on Project Z (development preview)\nURL       : https://github.com/LIghtJUNction/zmcl\nAUR URL   : https://aur.archlinux.org/packages/zmcl-bin\n组        : 无\n许可证    : MIT\n提供      : zmcl=0.1.3\n依赖于    : glibc>=2.39  libgcc  libx11  freetype2  fontconfig>=2.17.0  hicolor-icon-theme  curl  python>=3.8\n生成依赖  : 无\n检查依赖  : 无\n可选依赖  : libsecret  java-runtime  openssl  xorg-xwayland  ttf-font\n冲突于    : zmcl\n维护者    : lightjunction\n得票      : 0\n受欢迎度  : 0\n首次提交  : Fri, 20 Nov 2026 13:44:14\n最后修改  : Fri, 20 Nov 2026 19:38:19\n过期      : 否\n\n",
+        "stderr": ""
+      }
+    }
+  },
+  "namcap": {
+    "recipe": "",
+    "package": "zmcl-bin W: Dependency included, but may not be needed ('curl')\nzmcl-bin W: Dependency included, but may not be needed ('python')\n",
+    "assessment": "curl and Python are called at runtime; retain both dependencies despite static-lint may-not-be-needed warnings."
+  },
+  "author_layout": {
+    "schema": 1,
+    "passed": true,
+    "package": "zmcl-bin-0.1.3-1-x86_64.pkg.tar.zst",
+    "package_sha256": "3f8a6571629cd6ea24d88ebe9e4182f3ff812686bc3dcfd1f6dc62185d1f18a1",
+    "pkgver": "0.1.3-1",
+    "arch": "x86_64",
+    "binary_bytes": 1473752,
+    "binary_sha256": "02620a8ec4fac34e63fcbe483268149b2ed4032ac2d7bf42975ff6b19b72a1aa",
+    "app_source_commit": "9ef89bb92d46d324172d6ea8b13054c81434e178",
+    "payload_file_count": 7,
+    "checks": {
+      "exact_package_file_set": true,
+      "regular_payload_files": true,
+      "official_binary_sha256_preserved": true,
+      "installed_layout_version_executed": true,
+      "desktop_entry_valid": true,
+      "runtime_libraries_resolved_on_test_host": true
+    },
+    "scope": "Extracted installed filesystem layout in a temporary directory; executed its binary and validated the desktop file. This check does not modify the host pacman database or start the GUI."
+  },
+  "fresh_layout": {
+    "schema": 1,
+    "passed": true,
+    "package": "zmcl-bin-0.1.3-1-x86_64.pkg.tar.zst",
+    "package_sha256": "6c323e69cd82d51ebbb9b1524ba195f640ab0f04cf6c39aa88559a48f501cce2",
+    "pkgver": "0.1.3-1",
+    "arch": "x86_64",
+    "binary_bytes": 1473752,
+    "binary_sha256": "02620a8ec4fac34e63fcbe483268149b2ed4032ac2d7bf42975ff6b19b72a1aa",
+    "app_source_commit": "9ef89bb92d46d324172d6ea8b13054c81434e178",
+    "payload_file_count": 7,
+    "checks": {
+      "exact_package_file_set": true,
+      "regular_payload_files": true,
+      "official_binary_sha256_preserved": true,
+      "installed_layout_version_executed": true,
+      "desktop_entry_valid": true,
+      "runtime_libraries_resolved_on_test_host": true
+    },
+    "scope": "Extracted installed filesystem layout in a temporary directory; executed its binary and validated the desktop file. This check does not modify the host pacman database or start the GUI."
+  }
+}

@@ -1,0 +1,1236 @@
+{
+  "schema_version": 1,
+  "units": "KiB (1024 bytes)",
+  "public_final_source": "9ef89bb92d46d324172d6ea8b13054c81434e178",
+  "complete_gui_below_10_mib": false,
+  "runs": [
+    {
+      "label": "baseline-default",
+      "raw": {
+        "file": "baseline-default/memory.json",
+        "bytes": 10139150,
+        "sha256": "fce9a3cffff01a072d31b6cfeccdd7af14e15b5e892ea95d701f34a884796c03"
+      },
+      "binary_sha256": "71bf4017072703a91359ea84e2493db218d9962456ece2060d0f2e42b3500c32",
+      "binary_sha256_after": "71bf4017072703a91359ea84e2493db218d9962456ece2060d0f2e42b3500c32",
+      "recorded_at_utc": "2026-11-20T10:39:52Z",
+      "summary": {
+        "samples": 2932,
+        "main": {
+          "all_samples_complete": true,
+          "complete_samples": 2932,
+          "rss_median_kib": 11420.0,
+          "rss_sampled_peak_kib": 15968,
+          "pss_median_kib": 5467.5,
+          "pss_sampled_peak_kib": 8859,
+          "swap_median_kib": 0.0,
+          "swap_sampled_peak_kib": 0,
+          "swap_pss_median_kib": 0.0,
+          "swap_pss_sampled_peak_kib": 0,
+          "pss_plus_swap_pss_median_kib": 5467.5,
+          "pss_plus_swap_pss_sampled_peak_kib": 8859
+        },
+        "tree": {
+          "all_samples_complete": false,
+          "complete_samples": 2789,
+          "rss_median_kib": null,
+          "rss_sampled_peak_kib": 60548,
+          "pss_median_kib": null,
+          "pss_sampled_peak_kib": 47202,
+          "swap_median_kib": null,
+          "swap_sampled_peak_kib": 0,
+          "swap_pss_median_kib": null,
+          "swap_pss_sampled_peak_kib": 0,
+          "pss_plus_swap_pss_median_kib": null,
+          "pss_plus_swap_pss_sampled_peak_kib": 47202
+        },
+        "display_server": {
+          "all_samples_complete": true,
+          "complete_samples": 2932,
+          "rss_median_kib": 38820.0,
+          "rss_sampled_peak_kib": 38820,
+          "pss_median_kib": 19551.0,
+          "pss_sampled_peak_kib": 19949,
+          "swap_median_kib": 0.0,
+          "swap_sampled_peak_kib": 0,
+          "swap_pss_median_kib": 0.0,
+          "swap_pss_sampled_peak_kib": 0,
+          "pss_plus_swap_pss_median_kib": 19551.0,
+          "pss_plus_swap_pss_sampled_peak_kib": 19949
+        },
+        "display_server_median_delta_kib": {
+          "rss_kib": 1032.0,
+          "pss_kib": 586.0,
+          "swap_kib": 0.0,
+          "swap_pss_kib": 0.0
+        }
+      },
+      "conditions": {
+        "sample_sleep_seconds": 0.005,
+        "display": "Owned Xvfb 1280x900x24",
+        "window": [
+          1120,
+          760
+        ],
+        "warmup": "Existing idle waits; startup and all six flows sampled",
+        "cpu_clock_ticks_per_second": 100,
+        "os_caches_flushed": false,
+        "LIBGL_ALWAYS_SOFTWARE": "1"
+      },
+      "status": "needs_review",
+      "functional_complete": true,
+      "functional_cases": [
+        {
+          "case": "world import through native form",
+          "passed": true
+        },
+        {
+          "case": "GUI export and CLI ZIP import roundtrip",
+          "passed": true
+        },
+        {
+          "case": "GUI backup and confirmed restore with retained pre-restore snapshot",
+          "passed": true
+        },
+        {
+          "case": "resources page with retained unmanaged fixture",
+          "passed": true
+        },
+        {
+          "case": "server created in GUI without EULA acceptance",
+          "passed": true
+        },
+        {
+          "case": "synthetic installed server remains stopped with EULA false; inspect screenshot for visible error",
+          "passed": true
+        }
+      ],
+      "sampling_error": null,
+      "sampling_thread_cpu_seconds": 12.284650056999991,
+      "actual_interval_seconds_median": 0.009157876993413083,
+      "actual_interval_seconds_max": 0.01788030100578908,
+      "display_before": {
+        "rss_kib": 37788,
+        "pss_kib": 18965,
+        "swap_kib": 0,
+        "swap_pss_kib": 0
+      },
+      "maximum_individual_image_observation_by_basename": {
+        "baseline-zmcl": {
+          "image_records": 13,
+          "rss_kib": 15968,
+          "pss_kib": 8859,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "mise": {
+          "image_records": 11,
+          "rss_kib": 43828,
+          "pss_kib": 41055,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "python3.14": {
+          "image_records": 18,
+          "rss_kib": 21804,
+          "pss_kib": 11248,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        }
+      },
+      "image_scope": "Maxima below are individual process images and may be from different samples; do not sum them into a tree peak."
+    },
+    {
+      "label": "baseline-system",
+      "raw": {
+        "file": "baseline-system/memory.json",
+        "bytes": 8764631,
+        "sha256": "0a1b389d50f9ed179544453897d20d120be5f73b2d55bfff7827f99b76ab2c0a"
+      },
+      "binary_sha256": "71bf4017072703a91359ea84e2493db218d9962456ece2060d0f2e42b3500c32",
+      "binary_sha256_after": "71bf4017072703a91359ea84e2493db218d9962456ece2060d0f2e42b3500c32",
+      "recorded_at_utc": "2026-11-20T10:40:18Z",
+      "summary": {
+        "samples": 2574,
+        "main": {
+          "all_samples_complete": true,
+          "complete_samples": 2574,
+          "rss_median_kib": 11260.0,
+          "rss_sampled_peak_kib": 14588,
+          "pss_median_kib": 5330.0,
+          "pss_sampled_peak_kib": 8659,
+          "swap_median_kib": 0.0,
+          "swap_sampled_peak_kib": 0,
+          "swap_pss_median_kib": 0.0,
+          "swap_pss_sampled_peak_kib": 0,
+          "pss_plus_swap_pss_median_kib": 5330.0,
+          "pss_plus_swap_pss_sampled_peak_kib": 8659
+        },
+        "tree": {
+          "all_samples_complete": false,
+          "complete_samples": 2438,
+          "rss_median_kib": null,
+          "rss_sampled_peak_kib": 38480,
+          "pss_median_kib": null,
+          "pss_sampled_peak_kib": 17267,
+          "swap_median_kib": null,
+          "swap_sampled_peak_kib": 0,
+          "swap_pss_median_kib": null,
+          "swap_pss_sampled_peak_kib": 0,
+          "pss_plus_swap_pss_median_kib": null,
+          "pss_plus_swap_pss_sampled_peak_kib": 17267
+        },
+        "display_server": {
+          "all_samples_complete": true,
+          "complete_samples": 2574,
+          "rss_median_kib": 38892.0,
+          "rss_sampled_peak_kib": 39036,
+          "pss_median_kib": 19877.0,
+          "pss_sampled_peak_kib": 20141,
+          "swap_median_kib": 0.0,
+          "swap_sampled_peak_kib": 0,
+          "swap_pss_median_kib": 0.0,
+          "swap_pss_sampled_peak_kib": 0,
+          "pss_plus_swap_pss_median_kib": 19877.0,
+          "pss_plus_swap_pss_sampled_peak_kib": 20141
+        },
+        "display_server_median_delta_kib": {
+          "rss_kib": 864.0,
+          "pss_kib": 716.0,
+          "swap_kib": 0.0,
+          "swap_pss_kib": 0.0
+        }
+      },
+      "conditions": {
+        "sample_sleep_seconds": 0.005,
+        "display": "Owned Xvfb 1280x900x24",
+        "window": [
+          1120,
+          760
+        ],
+        "warmup": "Existing idle waits; startup and all six flows sampled",
+        "cpu_clock_ticks_per_second": 100,
+        "os_caches_flushed": false,
+        "LIBGL_ALWAYS_SOFTWARE": "1"
+      },
+      "status": "needs_review",
+      "functional_complete": true,
+      "functional_cases": [
+        {
+          "case": "world import through native form",
+          "passed": true
+        },
+        {
+          "case": "GUI export and CLI ZIP import roundtrip",
+          "passed": true
+        },
+        {
+          "case": "GUI backup and confirmed restore with retained pre-restore snapshot",
+          "passed": true
+        },
+        {
+          "case": "resources page with retained unmanaged fixture",
+          "passed": true
+        },
+        {
+          "case": "server created in GUI without EULA acceptance",
+          "passed": true
+        },
+        {
+          "case": "synthetic installed server remains stopped with EULA false; inspect screenshot for visible error",
+          "passed": true
+        }
+      ],
+      "sampling_error": null,
+      "sampling_thread_cpu_seconds": 11.961170263999966,
+      "actual_interval_seconds_median": 0.009553914002026431,
+      "actual_interval_seconds_max": 0.03586391100543551,
+      "display_before": {
+        "rss_kib": 38028,
+        "pss_kib": 19161,
+        "swap_kib": 0,
+        "swap_pss_kib": 0
+      },
+      "maximum_individual_image_observation_by_basename": {
+        "baseline-zmcl": {
+          "image_records": 15,
+          "rss_kib": 14588,
+          "pss_kib": 8659,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "python3.14": {
+          "image_records": 20,
+          "rss_kib": 21704,
+          "pss_kib": 10988,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        }
+      },
+      "image_scope": "Maxima below are individual process images and may be from different samples; do not sum them into a tree peak."
+    },
+    {
+      "label": "imports-default",
+      "raw": {
+        "file": "imports-default/memory.json",
+        "bytes": 8578369,
+        "sha256": "51295ef6c1f6553df0d0c3df2cd15bfe6ad2a18df92c59260e7e8668293ecce3"
+      },
+      "binary_sha256": "638ac8a59c854c3241496aeb28a2c2bb0f9a879f1392a9766b08b119b7e1edf4",
+      "binary_sha256_after": "638ac8a59c854c3241496aeb28a2c2bb0f9a879f1392a9766b08b119b7e1edf4",
+      "recorded_at_utc": "2026-11-20T10:52:57Z",
+      "summary": {
+        "samples": 2512,
+        "main": {
+          "all_samples_complete": true,
+          "complete_samples": 2512,
+          "rss_median_kib": 11272.0,
+          "rss_sampled_peak_kib": 14644,
+          "pss_median_kib": 6106.0,
+          "pss_sampled_peak_kib": 9520,
+          "swap_median_kib": 0.0,
+          "swap_sampled_peak_kib": 0,
+          "swap_pss_median_kib": 0.0,
+          "swap_pss_sampled_peak_kib": 0,
+          "pss_plus_swap_pss_median_kib": 6106.0,
+          "pss_plus_swap_pss_sampled_peak_kib": 9520
+        },
+        "tree": {
+          "all_samples_complete": false,
+          "complete_samples": 2384,
+          "rss_median_kib": null,
+          "rss_sampled_peak_kib": 60220,
+          "pss_median_kib": null,
+          "pss_sampled_peak_kib": 47876,
+          "swap_median_kib": null,
+          "swap_sampled_peak_kib": 0,
+          "swap_pss_median_kib": null,
+          "swap_pss_sampled_peak_kib": 0,
+          "pss_plus_swap_pss_median_kib": null,
+          "pss_plus_swap_pss_sampled_peak_kib": 47876
+        },
+        "display_server": {
+          "all_samples_complete": true,
+          "complete_samples": 2512,
+          "rss_median_kib": 37904.0,
+          "rss_sampled_peak_kib": 39064,
+          "pss_median_kib": 31502.0,
+          "pss_sampled_peak_kib": 32730,
+          "swap_median_kib": 0.0,
+          "swap_sampled_peak_kib": 0,
+          "swap_pss_median_kib": 0.0,
+          "swap_pss_sampled_peak_kib": 0,
+          "pss_plus_swap_pss_median_kib": 31502.0,
+          "pss_plus_swap_pss_sampled_peak_kib": 32730
+        },
+        "display_server_median_delta_kib": {
+          "rss_kib": -76.0,
+          "pss_kib": -463.0,
+          "swap_kib": 0.0,
+          "swap_pss_kib": 0.0
+        }
+      },
+      "conditions": {
+        "sample_sleep_seconds": 0.005,
+        "display": "Owned Xvfb 1280x900x24",
+        "window": [
+          1120,
+          760
+        ],
+        "warmup": "Existing idle waits; startup and all six flows sampled",
+        "cpu_clock_ticks_per_second": 100,
+        "os_caches_flushed": false,
+        "LIBGL_ALWAYS_SOFTWARE": "1"
+      },
+      "status": "needs_review",
+      "functional_complete": true,
+      "functional_cases": [
+        {
+          "case": "world import through native form",
+          "passed": true
+        },
+        {
+          "case": "GUI export and CLI ZIP import roundtrip",
+          "passed": true
+        },
+        {
+          "case": "GUI backup and confirmed restore with retained pre-restore snapshot",
+          "passed": true
+        },
+        {
+          "case": "resources page with retained unmanaged fixture",
+          "passed": true
+        },
+        {
+          "case": "server created in GUI without EULA acceptance",
+          "passed": true
+        },
+        {
+          "case": "synthetic installed server remains stopped with EULA false; inspect screenshot for visible error",
+          "passed": true
+        }
+      ],
+      "sampling_error": null,
+      "sampling_thread_cpu_seconds": 13.148638830000047,
+      "actual_interval_seconds_median": 0.009659092000219971,
+      "actual_interval_seconds_max": 0.040899671002989635,
+      "display_before": {
+        "rss_kib": 37980,
+        "pss_kib": 31965,
+        "swap_kib": 0,
+        "swap_pss_kib": 0
+      },
+      "maximum_individual_image_observation_by_basename": {
+        "imports-zmcl": {
+          "image_records": 15,
+          "rss_kib": 14644,
+          "pss_kib": 9520,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "mise": {
+          "image_records": 11,
+          "rss_kib": 43500,
+          "pss_kib": 40758,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "python3.14": {
+          "image_records": 19,
+          "rss_kib": 21688,
+          "pss_kib": 11168,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        }
+      },
+      "image_scope": "Maxima below are individual process images and may be from different samples; do not sum them into a tree peak."
+    },
+    {
+      "label": "imports-system",
+      "raw": {
+        "file": "imports-system/memory.json",
+        "bytes": 8600155,
+        "sha256": "64017b9772487b9b0b5df2b3835ef891de06df569894a99d6919f264b74ac3f6"
+      },
+      "binary_sha256": "638ac8a59c854c3241496aeb28a2c2bb0f9a879f1392a9766b08b119b7e1edf4",
+      "binary_sha256_after": "638ac8a59c854c3241496aeb28a2c2bb0f9a879f1392a9766b08b119b7e1edf4",
+      "recorded_at_utc": "2026-11-20T10:53:22Z",
+      "summary": {
+        "samples": 2532,
+        "main": {
+          "all_samples_complete": true,
+          "complete_samples": 2532,
+          "rss_median_kib": 11200.0,
+          "rss_sampled_peak_kib": 17272,
+          "pss_median_kib": 6104.0,
+          "pss_sampled_peak_kib": 9438,
+          "swap_median_kib": 0.0,
+          "swap_sampled_peak_kib": 0,
+          "swap_pss_median_kib": 0.0,
+          "swap_pss_sampled_peak_kib": 0,
+          "pss_plus_swap_pss_median_kib": 6104.0,
+          "pss_plus_swap_pss_sampled_peak_kib": 9438
+        },
+        "tree": {
+          "all_samples_complete": false,
+          "complete_samples": 2396,
+          "rss_median_kib": null,
+          "rss_sampled_peak_kib": 38092,
+          "pss_median_kib": null,
+          "pss_sampled_peak_kib": 17920,
+          "swap_median_kib": null,
+          "swap_sampled_peak_kib": 0,
+          "swap_pss_median_kib": null,
+          "swap_pss_sampled_peak_kib": 0,
+          "pss_plus_swap_pss_median_kib": null,
+          "pss_plus_swap_pss_sampled_peak_kib": 17920
+        },
+        "display_server": {
+          "all_samples_complete": true,
+          "complete_samples": 2532,
+          "rss_median_kib": 39100.0,
+          "rss_sampled_peak_kib": 39556,
+          "pss_median_kib": 32455.0,
+          "pss_sampled_peak_kib": 32743,
+          "swap_median_kib": 0.0,
+          "swap_sampled_peak_kib": 0,
+          "swap_pss_median_kib": 0.0,
+          "swap_pss_sampled_peak_kib": 0,
+          "pss_plus_swap_pss_median_kib": 32455.0,
+          "pss_plus_swap_pss_sampled_peak_kib": 32743
+        },
+        "display_server_median_delta_kib": {
+          "rss_kib": 1044.0,
+          "pss_kib": 607.0,
+          "swap_kib": 0.0,
+          "swap_pss_kib": 0.0
+        }
+      },
+      "conditions": {
+        "sample_sleep_seconds": 0.005,
+        "display": "Owned Xvfb 1280x900x24",
+        "window": [
+          1120,
+          760
+        ],
+        "warmup": "Existing idle waits; startup and all six flows sampled",
+        "cpu_clock_ticks_per_second": 100,
+        "os_caches_flushed": false,
+        "LIBGL_ALWAYS_SOFTWARE": "1"
+      },
+      "status": "needs_review",
+      "functional_complete": true,
+      "functional_cases": [
+        {
+          "case": "world import through native form",
+          "passed": true
+        },
+        {
+          "case": "GUI export and CLI ZIP import roundtrip",
+          "passed": true
+        },
+        {
+          "case": "GUI backup and confirmed restore with retained pre-restore snapshot",
+          "passed": true
+        },
+        {
+          "case": "resources page with retained unmanaged fixture",
+          "passed": true
+        },
+        {
+          "case": "server created in GUI without EULA acceptance",
+          "passed": true
+        },
+        {
+          "case": "synthetic installed server remains stopped with EULA false; inspect screenshot for visible error",
+          "passed": true
+        }
+      ],
+      "sampling_error": null,
+      "sampling_thread_cpu_seconds": 11.10016592299997,
+      "actual_interval_seconds_median": 0.009347914994577877,
+      "actual_interval_seconds_max": 0.01752128399675712,
+      "display_before": {
+        "rss_kib": 38056,
+        "pss_kib": 31848,
+        "swap_kib": 0,
+        "swap_pss_kib": 0
+      },
+      "maximum_individual_image_observation_by_basename": {
+        "imports-zmcl": {
+          "image_records": 14,
+          "rss_kib": 17272,
+          "pss_kib": 9438,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "python3.14": {
+          "image_records": 20,
+          "rss_kib": 21508,
+          "pss_kib": 10810,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        }
+      },
+      "image_scope": "Maxima below are individual process images and may be from different samples; do not sum them into a tree peak."
+    },
+    {
+      "label": "final-default",
+      "raw": {
+        "file": "final-default/memory.json",
+        "bytes": 9605805,
+        "sha256": "703e74f97cbcb615f1618ef007198d6764c36573e00a2124644b6a76efd44e87"
+      },
+      "binary_sha256": "02620a8ec4fac34e63fcbe483268149b2ed4032ac2d7bf42975ff6b19b72a1aa",
+      "binary_sha256_after": "02620a8ec4fac34e63fcbe483268149b2ed4032ac2d7bf42975ff6b19b72a1aa",
+      "recorded_at_utc": "2026-11-20T11:13:25Z",
+      "summary": {
+        "samples": 2820,
+        "main": {
+          "all_samples_complete": true,
+          "complete_samples": 2820,
+          "rss_median_kib": 11316.0,
+          "rss_sampled_peak_kib": 17780,
+          "pss_median_kib": 7300.0,
+          "pss_sampled_peak_kib": 13326,
+          "swap_median_kib": 0.0,
+          "swap_sampled_peak_kib": 0,
+          "swap_pss_median_kib": 0.0,
+          "swap_pss_sampled_peak_kib": 0,
+          "pss_plus_swap_pss_median_kib": 7300.0,
+          "pss_plus_swap_pss_sampled_peak_kib": 13326
+        },
+        "tree": {
+          "all_samples_complete": false,
+          "complete_samples": 2704,
+          "rss_median_kib": null,
+          "rss_sampled_peak_kib": 59884,
+          "pss_median_kib": null,
+          "pss_sampled_peak_kib": 48651,
+          "swap_median_kib": null,
+          "swap_sampled_peak_kib": 0,
+          "swap_pss_median_kib": null,
+          "swap_pss_sampled_peak_kib": 0,
+          "pss_plus_swap_pss_median_kib": null,
+          "pss_plus_swap_pss_sampled_peak_kib": 48651
+        },
+        "display_server": {
+          "all_samples_complete": true,
+          "complete_samples": 2820,
+          "rss_median_kib": 38992.0,
+          "rss_sampled_peak_kib": 39008,
+          "pss_median_kib": 32746.0,
+          "pss_sampled_peak_kib": 33434,
+          "swap_median_kib": 0.0,
+          "swap_sampled_peak_kib": 0,
+          "swap_pss_median_kib": 0.0,
+          "swap_pss_sampled_peak_kib": 0,
+          "pss_plus_swap_pss_median_kib": 32746.0,
+          "pss_plus_swap_pss_sampled_peak_kib": 33434
+        },
+        "display_server_median_delta_kib": {
+          "rss_kib": 924.0,
+          "pss_kib": -149.0,
+          "swap_kib": 0.0,
+          "swap_pss_kib": 0.0
+        }
+      },
+      "conditions": {
+        "sample_sleep_seconds": 0.005,
+        "display": "Owned Xvfb 1280x900x24",
+        "window": [
+          1120,
+          760
+        ],
+        "warmup": "Existing idle waits; startup and all six flows sampled",
+        "cpu_clock_ticks_per_second": 100,
+        "os_caches_flushed": false,
+        "LIBGL_ALWAYS_SOFTWARE": "1"
+      },
+      "status": "needs_review",
+      "functional_complete": true,
+      "functional_cases": [
+        {
+          "case": "world import through native form",
+          "passed": true
+        },
+        {
+          "case": "GUI export and CLI ZIP import roundtrip",
+          "passed": true
+        },
+        {
+          "case": "GUI backup and confirmed restore with retained pre-restore snapshot",
+          "passed": true
+        },
+        {
+          "case": "resources page with retained unmanaged fixture",
+          "passed": true
+        },
+        {
+          "case": "server created in GUI without EULA acceptance",
+          "passed": true
+        },
+        {
+          "case": "synthetic installed server remains stopped with EULA false; inspect screenshot for visible error",
+          "passed": true
+        }
+      ],
+      "sampling_error": null,
+      "sampling_thread_cpu_seconds": 9.833732653000013,
+      "actual_interval_seconds_median": 0.008239872986450791,
+      "actual_interval_seconds_max": 0.035583895005402155,
+      "display_before": {
+        "rss_kib": 38068,
+        "pss_kib": 32895,
+        "swap_kib": 0,
+        "swap_pss_kib": 0
+      },
+      "maximum_individual_image_observation_by_basename": {
+        "final-zmcl": {
+          "image_records": 14,
+          "rss_kib": 17780,
+          "pss_kib": 13326,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "mise": {
+          "image_records": 11,
+          "rss_kib": 43088,
+          "pss_kib": 40377,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "python3.14": {
+          "image_records": 21,
+          "rss_kib": 21660,
+          "pss_kib": 11468,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        }
+      },
+      "image_scope": "Maxima below are individual process images and may be from different samples; do not sum them into a tree peak.",
+      "phases": {
+        "startup": {
+          "samples": 217,
+          "main": {
+            "all_samples_complete": true,
+            "complete_samples": 217,
+            "rss_median_kib": 10044,
+            "rss_sampled_peak_kib": 17780,
+            "pss_median_kib": 6031,
+            "pss_sampled_peak_kib": 13326,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          },
+          "tree": {
+            "all_samples_complete": false,
+            "complete_samples": 197,
+            "rss_median_kib": null,
+            "rss_sampled_peak_kib": 17780,
+            "pss_median_kib": null,
+            "pss_sampled_peak_kib": 13326,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          }
+        },
+        "world_import": {
+          "samples": 553,
+          "main": {
+            "all_samples_complete": true,
+            "complete_samples": 553,
+            "rss_median_kib": 11236,
+            "rss_sampled_peak_kib": 14564,
+            "pss_median_kib": 7215,
+            "pss_sampled_peak_kib": 10543,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          },
+          "tree": {
+            "all_samples_complete": false,
+            "complete_samples": 541,
+            "rss_median_kib": null,
+            "rss_sampled_peak_kib": 59280,
+            "pss_median_kib": null,
+            "pss_sampled_peak_kib": 48075,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          }
+        },
+        "world_export_roundtrip": {
+          "samples": 381,
+          "main": {
+            "all_samples_complete": true,
+            "complete_samples": 381,
+            "rss_median_kib": 11312,
+            "rss_sampled_peak_kib": 14636,
+            "pss_median_kib": 7288,
+            "pss_sampled_peak_kib": 10633,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          },
+          "tree": {
+            "all_samples_complete": false,
+            "complete_samples": 375,
+            "rss_median_kib": null,
+            "rss_sampled_peak_kib": 59884,
+            "pss_median_kib": null,
+            "pss_sampled_peak_kib": 48651,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          }
+        },
+        "backup_restore": {
+          "samples": 697,
+          "main": {
+            "all_samples_complete": true,
+            "complete_samples": 697,
+            "rss_median_kib": 11316,
+            "rss_sampled_peak_kib": 14644,
+            "pss_median_kib": 7301,
+            "pss_sampled_peak_kib": 10631,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          },
+          "tree": {
+            "all_samples_complete": false,
+            "complete_samples": 666,
+            "rss_median_kib": null,
+            "rss_sampled_peak_kib": 59172,
+            "pss_median_kib": null,
+            "pss_sampled_peak_kib": 48045,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          }
+        },
+        "resources": {
+          "samples": 177,
+          "main": {
+            "all_samples_complete": true,
+            "complete_samples": 177,
+            "rss_median_kib": 11324,
+            "rss_sampled_peak_kib": 14652,
+            "pss_median_kib": 7303,
+            "pss_sampled_peak_kib": 10634,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          },
+          "tree": {
+            "all_samples_complete": false,
+            "complete_samples": 166,
+            "rss_median_kib": null,
+            "rss_sampled_peak_kib": 15552,
+            "pss_median_kib": null,
+            "pss_sampled_peak_kib": 10634,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          }
+        },
+        "server_create": {
+          "samples": 433,
+          "main": {
+            "all_samples_complete": true,
+            "complete_samples": 433,
+            "rss_median_kib": 11324,
+            "rss_sampled_peak_kib": 14652,
+            "pss_median_kib": 7308,
+            "pss_sampled_peak_kib": 10358,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          },
+          "tree": {
+            "all_samples_complete": false,
+            "complete_samples": 415,
+            "rss_median_kib": null,
+            "rss_sampled_peak_kib": 56680,
+            "pss_median_kib": null,
+            "pss_sampled_peak_kib": 45599,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          }
+        },
+        "server_eula_rejection": {
+          "samples": 362,
+          "main": {
+            "all_samples_complete": true,
+            "complete_samples": 362,
+            "rss_median_kib": 11324.0,
+            "rss_sampled_peak_kib": 14652,
+            "pss_median_kib": 7303.5,
+            "pss_sampled_peak_kib": 10635,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          },
+          "tree": {
+            "all_samples_complete": false,
+            "complete_samples": 344,
+            "rss_median_kib": null,
+            "rss_sampled_peak_kib": 56152,
+            "pss_median_kib": null,
+            "pss_sampled_peak_kib": 44889,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          }
+        }
+      },
+      "screenshots": [
+        {
+          "file": "final-default/01-library.png",
+          "bytes": 36475,
+          "sha256": "7ca87b918c5cd6914fd292a0e37790213b4d1eb9e5ae19a37c6830ca4dcac8da"
+        },
+        {
+          "file": "final-default/02-worlds-empty.png",
+          "bytes": 32548,
+          "sha256": "ecabfae612c9d91a5b182a8504ba0830c1e052f7967902671261e2fabf00e1a3"
+        },
+        {
+          "file": "final-default/03-world-import.png",
+          "bytes": 44404,
+          "sha256": "07ce1cd60b605d4c58ba22690e7b0c23e0aa7d3ab0fc12e9b72f8bcb4bdcbb23"
+        },
+        {
+          "file": "final-default/04-worlds-imported.png",
+          "bytes": 38463,
+          "sha256": "da21e7e4748f8911bb1ae69796732a6e011672461742d437ef68663fc49f7709"
+        },
+        {
+          "file": "final-default/05-restore-confirmation.png",
+          "bytes": 44537,
+          "sha256": "895fda53c8f16f188dbd89ae4879295b6a7e9fba1504f129d87bc30354fc2919"
+        },
+        {
+          "file": "final-default/06-backups-restored.png",
+          "bytes": 45817,
+          "sha256": "38657249cd5b854b2cc25b0a4d00b149bb2b91a4a10c5f83aec1e3a66970f81b"
+        },
+        {
+          "file": "final-default/07-resources-unmanaged.png",
+          "bytes": 41255,
+          "sha256": "7a288dd229c91c75b75e07ee7039392fbb28d53b6426bbba7bdaaca7f51c729e"
+        },
+        {
+          "file": "final-default/08-server-created.png",
+          "bytes": 36040,
+          "sha256": "544faf338b356cbecaa2b2efc5f8b1f601dc6052a43cad6226ee1da09e0e0cd9"
+        },
+        {
+          "file": "final-default/09-server-eula-rejection.png",
+          "bytes": 39129,
+          "sha256": "5070c6f2b4eb03a39c57c54d405878afbc252edc2bfd61ac933279c2abb2fdea"
+        }
+      ]
+    },
+    {
+      "label": "final-system",
+      "raw": {
+        "file": "final-system/memory.json",
+        "bytes": 9366499,
+        "sha256": "ba57f9868c17ac8d88590b432be9f0c6a31b57b6a76b4c970993eb064cebf2ea"
+      },
+      "binary_sha256": "02620a8ec4fac34e63fcbe483268149b2ed4032ac2d7bf42975ff6b19b72a1aa",
+      "binary_sha256_after": "02620a8ec4fac34e63fcbe483268149b2ed4032ac2d7bf42975ff6b19b72a1aa",
+      "recorded_at_utc": "2026-11-20T11:13:49Z",
+      "summary": {
+        "samples": 2767,
+        "main": {
+          "all_samples_complete": true,
+          "complete_samples": 2767,
+          "rss_median_kib": 11020,
+          "rss_sampled_peak_kib": 17040,
+          "pss_median_kib": 6783,
+          "pss_sampled_peak_kib": 12528,
+          "swap_median_kib": 0,
+          "swap_sampled_peak_kib": 0,
+          "swap_pss_median_kib": 0,
+          "swap_pss_sampled_peak_kib": 0,
+          "pss_plus_swap_pss_median_kib": 6783,
+          "pss_plus_swap_pss_sampled_peak_kib": 12528
+        },
+        "tree": {
+          "all_samples_complete": false,
+          "complete_samples": 2635,
+          "rss_median_kib": null,
+          "rss_sampled_peak_kib": 37948,
+          "pss_median_kib": null,
+          "pss_sampled_peak_kib": 19306,
+          "swap_median_kib": null,
+          "swap_sampled_peak_kib": 0,
+          "swap_pss_median_kib": null,
+          "swap_pss_sampled_peak_kib": 0,
+          "pss_plus_swap_pss_median_kib": null,
+          "pss_plus_swap_pss_sampled_peak_kib": 19306
+        },
+        "display_server": {
+          "all_samples_complete": true,
+          "complete_samples": 2767,
+          "rss_median_kib": 38732,
+          "rss_sampled_peak_kib": 38844,
+          "pss_median_kib": 32496,
+          "pss_sampled_peak_kib": 32621,
+          "swap_median_kib": 0,
+          "swap_sampled_peak_kib": 0,
+          "swap_pss_median_kib": 0,
+          "swap_pss_sampled_peak_kib": 0,
+          "pss_plus_swap_pss_median_kib": 32496,
+          "pss_plus_swap_pss_sampled_peak_kib": 32621
+        },
+        "display_server_median_delta_kib": {
+          "rss_kib": 652,
+          "pss_kib": 284,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        }
+      },
+      "conditions": {
+        "sample_sleep_seconds": 0.005,
+        "display": "Owned Xvfb 1280x900x24",
+        "window": [
+          1120,
+          760
+        ],
+        "warmup": "Existing idle waits; startup and all six flows sampled",
+        "cpu_clock_ticks_per_second": 100,
+        "os_caches_flushed": false,
+        "LIBGL_ALWAYS_SOFTWARE": "1"
+      },
+      "status": "needs_review",
+      "functional_complete": true,
+      "functional_cases": [
+        {
+          "case": "world import through native form",
+          "passed": true
+        },
+        {
+          "case": "GUI export and CLI ZIP import roundtrip",
+          "passed": true
+        },
+        {
+          "case": "GUI backup and confirmed restore with retained pre-restore snapshot",
+          "passed": true
+        },
+        {
+          "case": "resources page with retained unmanaged fixture",
+          "passed": true
+        },
+        {
+          "case": "server created in GUI without EULA acceptance",
+          "passed": true
+        },
+        {
+          "case": "synthetic installed server remains stopped with EULA false; inspect screenshot for visible error",
+          "passed": true
+        }
+      ],
+      "sampling_error": null,
+      "sampling_thread_cpu_seconds": 9.305650801999981,
+      "actual_interval_seconds_median": 0.008181306497135665,
+      "actual_interval_seconds_max": 0.03549308500078041,
+      "display_before": {
+        "rss_kib": 38080,
+        "pss_kib": 32212,
+        "swap_kib": 0,
+        "swap_pss_kib": 0
+      },
+      "maximum_individual_image_observation_by_basename": {
+        "final-zmcl": {
+          "image_records": 14,
+          "rss_kib": 17040,
+          "pss_kib": 12528,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        },
+        "python3.14": {
+          "image_records": 22,
+          "rss_kib": 21672,
+          "pss_kib": 11498,
+          "swap_kib": 0,
+          "swap_pss_kib": 0
+        }
+      },
+      "image_scope": "Maxima below are individual process images and may be from different samples; do not sum them into a tree peak.",
+      "phases": {
+        "startup": {
+          "samples": 217,
+          "main": {
+            "all_samples_complete": true,
+            "complete_samples": 217,
+            "rss_median_kib": 9828,
+            "rss_sampled_peak_kib": 17040,
+            "pss_median_kib": 5774,
+            "pss_sampled_peak_kib": 12528,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          },
+          "tree": {
+            "all_samples_complete": false,
+            "complete_samples": 203,
+            "rss_median_kib": null,
+            "rss_sampled_peak_kib": 17040,
+            "pss_median_kib": null,
+            "pss_sampled_peak_kib": 12528,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          }
+        },
+        "world_import": {
+          "samples": 562,
+          "main": {
+            "all_samples_complete": true,
+            "complete_samples": 562,
+            "rss_median_kib": 10992.0,
+            "rss_sampled_peak_kib": 14316,
+            "pss_median_kib": 6574.5,
+            "pss_sampled_peak_kib": 10265,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          },
+          "tree": {
+            "all_samples_complete": false,
+            "complete_samples": 544,
+            "rss_median_kib": null,
+            "rss_sampled_peak_kib": 33988,
+            "pss_median_kib": null,
+            "pss_sampled_peak_kib": 17479,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          }
+        },
+        "world_export_roundtrip": {
+          "samples": 374,
+          "main": {
+            "all_samples_complete": true,
+            "complete_samples": 374,
+            "rss_median_kib": 11020.0,
+            "rss_sampled_peak_kib": 14344,
+            "pss_median_kib": 6806.0,
+            "pss_sampled_peak_kib": 10128,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          },
+          "tree": {
+            "all_samples_complete": false,
+            "complete_samples": 360,
+            "rss_median_kib": null,
+            "rss_sampled_peak_kib": 37948,
+            "pss_median_kib": null,
+            "pss_sampled_peak_kib": 19306,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          }
+        },
+        "backup_restore": {
+          "samples": 652,
+          "main": {
+            "all_samples_complete": true,
+            "complete_samples": 652,
+            "rss_median_kib": 11020.0,
+            "rss_sampled_peak_kib": 14348,
+            "pss_median_kib": 6806.0,
+            "pss_sampled_peak_kib": 10134,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          },
+          "tree": {
+            "all_samples_complete": false,
+            "complete_samples": 620,
+            "rss_median_kib": null,
+            "rss_sampled_peak_kib": 37200,
+            "pss_median_kib": null,
+            "pss_sampled_peak_kib": 18446,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          }
+        },
+        "resources": {
+          "samples": 193,
+          "main": {
+            "all_samples_complete": true,
+            "complete_samples": 193,
+            "rss_median_kib": 11024,
+            "rss_sampled_peak_kib": 14352,
+            "pss_median_kib": 6810,
+            "pss_sampled_peak_kib": 9848,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          },
+          "tree": {
+            "all_samples_complete": false,
+            "complete_samples": 181,
+            "rss_median_kib": null,
+            "rss_sampled_peak_kib": 16708,
+            "pss_median_kib": null,
+            "pss_sampled_peak_kib": 10269,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          }
+        },
+        "server_create": {
+          "samples": 470,
+          "main": {
+            "all_samples_complete": true,
+            "complete_samples": 470,
+            "rss_median_kib": 11024.0,
+            "rss_sampled_peak_kib": 14352,
+            "pss_median_kib": 6486.5,
+            "pss_sampled_peak_kib": 10099,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          },
+          "tree": {
+            "all_samples_complete": false,
+            "complete_samples": 447,
+            "rss_median_kib": null,
+            "rss_sampled_peak_kib": 29204,
+            "pss_median_kib": null,
+            "pss_sampled_peak_kib": 13269,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          }
+        },
+        "server_eula_rejection": {
+          "samples": 299,
+          "main": {
+            "all_samples_complete": true,
+            "complete_samples": 299,
+            "rss_median_kib": 10884,
+            "rss_sampled_peak_kib": 14352,
+            "pss_median_kib": 6268,
+            "pss_sampled_peak_kib": 9880,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          },
+          "tree": {
+            "all_samples_complete": false,
+            "complete_samples": 280,
+            "rss_median_kib": null,
+            "rss_sampled_peak_kib": 27656,
+            "pss_median_kib": null,
+            "pss_sampled_peak_kib": 12574,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_sampled_peak_kib": 0
+          }
+        }
+      },
+      "screenshots": [
+        {
+          "file": "final-system/01-library.png",
+          "bytes": 36475,
+          "sha256": "7ca87b918c5cd6914fd292a0e37790213b4d1eb9e5ae19a37c6830ca4dcac8da"
+        },
+        {
+          "file": "final-system/02-worlds-empty.png",
+          "bytes": 32548,
+          "sha256": "ecabfae612c9d91a5b182a8504ba0830c1e052f7967902671261e2fabf00e1a3"
+        },
+        {
+          "file": "final-system/03-world-import.png",
+          "bytes": 44441,
+          "sha256": "9354feecb85d5c8f5b3522762781fd6b9b93581b6ab7cbf96f297cc2f569fd30"
+        },
+        {
+          "file": "final-system/04-worlds-imported.png",
+          "bytes": 38463,
+          "sha256": "da21e7e4748f8911bb1ae69796732a6e011672461742d437ef68663fc49f7709"
+        },
+        {
+          "file": "final-system/05-restore-confirmation.png",
+          "bytes": 44703,
+          "sha256": "dff9f62d9bd7aa9570003aa791dc0da0b0d518fda7002b946789b2959453c536"
+        },
+        {
+          "file": "final-system/06-backups-restored.png",
+          "bytes": 46113,
+          "sha256": "4e7f49db813d672cb9920588e5160c748baa541e52960be35e6a19d98068040e"
+        },
+        {
+          "file": "final-system/07-resources-unmanaged.png",
+          "bytes": 41255,
+          "sha256": "7a288dd229c91c75b75e07ee7039392fbb28d53b6426bbba7bdaaca7f51c729e"
+        },
+        {
+          "file": "final-system/08-server-created.png",
+          "bytes": 36040,
+          "sha256": "544faf338b356cbecaa2b2efc5f8b1f601dc6052a43cad6226ee1da09e0e0cd9"
+        },
+        {
+          "file": "final-system/09-server-eula-rejection.png",
+          "bytes": 39129,
+          "sha256": "5070c6f2b4eb03a39c57c54d405878afbc252edc2bfd61ac933279c2abb2fdea"
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Peaks are observations and lower bounds. Complete-tree medians are null if any sampled related process was unreadable. Unknown memory is not zero.",
+    "GUI scope includes its spawned CLI, Python and observed runtime shim images. Xvfb is separate; controller, xdotool, ImageMagick and fixture-side CLI work are not deployed application processes.",
+    "Controller memory was not independently measured in these GUI runs; the memory-sampling thread CPU is reported.",
+    "Default PATH selects a mise python3 shim; explicit /usr/bin/python3 is a separate environment condition, not a code change.",
+    "Shared development host; no deliberate concurrent build from this owner, no OS cache flush, no per-sample host memory-pressure capture.",
+    "RSS double-counts shared mappings across processes; PSS apportions shared pages and can vary when other processes share them."
+  ],
+  "identity_notes": {
+    "baseline": "Official 0.1.2/e86b584 binary, SHA256 71bf4017072703a91359ea84e2493db218d9962456ece2060d0f2e42b3500c32",
+    "imports": "First diagnostic prototype from 6d47399 + three helper patches, SHA256 638ac8a59c854c3241496aeb28a2c2bb0f9a879f1392a9766b08b119b7e1edf4. Two import-failure ordering fixes were made before af14e2c publication; do not relabel this prototype as af14e2c.",
+    "final": "Exact 0.1.3 binary, input hashes equivalent to public 9ef89bb."
+  }
+}
