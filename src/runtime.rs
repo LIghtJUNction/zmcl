@@ -5,7 +5,7 @@ use crate::{
 use std::{
     collections::{BTreeMap, BTreeSet},
     fs::{self, File},
-    path::PathBuf,
+    path::{Path, PathBuf},
     process::{Command, Stdio},
 };
 use zmcl_core::{
@@ -408,6 +408,7 @@ fn install_forge(
         None,
         None,
     )?;
+    let expected_id = installer_profile_id(&installer, &instance.version)?;
     let profiles = app.shared().join("launcher_profiles.json");
     if !profiles.exists() {
         util::atomic_write(&profiles, b"{\"profiles\":{}}")?;
@@ -432,31 +433,74 @@ fn install_forge(
             base.java_major.unwrap_or(8)
         ));
     }
-    let mut candidates = Vec::new();
-    for entry in fs::read_dir(app.shared().join("versions")).map_err(|e| e.to_string())? {
-        let entry = entry.map_err(|e| e.to_string())?;
-        if !entry.file_type().map_err(|e| e.to_string())?.is_dir() {
-            continue;
-        }
-        let id = entry.file_name().to_string_lossy().into_owned();
-        if !id.contains(&instance.loader_version) {
-            continue;
-        }
-        let path = version_path(app, &id)?;
-        if let Ok(bytes) = util::read_limited(&path, 16 * 1024 * 1024)
-            && let Ok(version) = Version::parse(&bytes)
-            && version.inherits_from.as_deref() == Some(&instance.version)
-        {
-            candidates.push((id, bytes, version));
-        }
-    }
-    candidates.sort_by(|a, b| a.0.cmp(&b.0));
-    let (_, bytes, child) = candidates
-        .pop()
-        .ok_or("Loader installer did not produce a compatible version")?;
+    let (bytes, child) = installed_loader_profile(app, &expected_id, &instance.version)?;
     util::atomic_write(&app.dir(&instance.id)?.join("loader.json"), &bytes)?;
     model::merge(base, child)
 }
+
+fn installer_metadata(installer: &Path, member: &str) -> Result<Vec<u8>> {
+    let member = member.strip_prefix('/').unwrap_or(member);
+    zmcl_core::path::validate_relative(member)?;
+    let output = util::python_command()?
+        .args(["-c", include_str!("runtime/installer.py")])
+        .arg(installer)
+        .arg(member)
+        .stdin(Stdio::null())
+        .output()
+        .map_err(|e| format!("Cannot inspect loader installer metadata: {e}"))?;
+    if !output.status.success() {
+        return Err(format!(
+            "Cannot inspect loader installer metadata: {}",
+            String::from_utf8_lossy(&output.stderr)
+                .chars()
+                .take(1500)
+                .collect::<String>()
+        ));
+    }
+    if output.stdout.len() > 16 * 1024 * 1024 {
+        return Err("Loader installer metadata exceeds the 16 MiB limit".into());
+    }
+    Ok(output.stdout)
+}
+
+fn installer_profile_id(installer: &Path, minecraft: &str) -> Result<String> {
+    let profile = installer_metadata(installer, "install_profile.json")?;
+    // Parse both formats through the same bounded JSON parser as generated
+    // versions. In particular, duplicate members must never be discarded by a
+    // helper before this validation. Modern installers name a JAR resource;
+    // older Forge installers embed that resource as versionInfo.
+    let bytes = with_json(&profile, |value| {
+        if value.get("json").is_some() {
+            installer_metadata(installer, &req_str(value, "json")?)
+        } else {
+            let version = value
+                .get("versionInfo")
+                .ok_or("Loader installer has no version metadata")?;
+            Ok(zmcl_core::json::raw(version).into_bytes())
+        }
+    })?;
+    let expected = Version::parse(&bytes)?;
+    zmcl_core::path::validate_version_id(&expected.id)?;
+    if expected.inherits_from.as_deref() != Some(minecraft) {
+        return Err("Loader installer does not target the selected Minecraft version".into());
+    }
+    Ok(expected.id)
+}
+
+fn installed_loader_profile(
+    app: &App,
+    expected_id: &str,
+    minecraft: &str,
+) -> Result<(Vec<u8>, Version)> {
+    zmcl_core::path::validate_version_id(expected_id)?;
+    let bytes = util::read_limited(&version_path(app, expected_id)?, 16 * 1024 * 1024)?;
+    let child = Version::parse(&bytes)?;
+    if child.id != expected_id || child.inherits_from.as_deref() != Some(minecraft) {
+        return Err("Installed loader profile does not match the verified installer".into());
+    }
+    Ok((bytes, child))
+}
+
 pub fn java_major(path: &str) -> Result<u32> {
     let output = util::background_command(path)
         .arg("-version")
@@ -803,6 +847,149 @@ mod launch_tests {
             crate::worlds::assert_stopped(&app, &id).unwrap();
         }
         fs::remove_dir_all(root).unwrap();
+    }
+}
+
+#[cfg(test)]
+mod installer_tests {
+    use super::*;
+    use std::{
+        sync::atomic::{AtomicU64, Ordering},
+        time::{SystemTime, UNIX_EPOCH},
+    };
+
+    fn fixture() -> App {
+        static SEQUENCE: AtomicU64 = AtomicU64::new(0);
+        let root = std::env::temp_dir().join(format!(
+            "zmcl-installer-{}-{}-{}",
+            std::process::id(),
+            SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_nanos(),
+            SEQUENCE.fetch_add(1, Ordering::Relaxed)
+        ));
+        App::new(Some(root.to_string_lossy().into_owned())).unwrap()
+    }
+
+    fn profile(id: &str, minecraft: &str) -> Vec<u8> {
+        util::object(&[
+            ("id", quote(id)),
+            ("inheritsFrom", quote(minecraft)),
+            ("mainClass", quote("fixture.Main")),
+        ])
+        .into_bytes()
+    }
+
+    fn installer(app: &App, install_profile: &str, version: &str) -> PathBuf {
+        let jar = app.root.join("fixture-installer.jar");
+        let script = concat!(
+            "import sys,zipfile\n",
+            "with zipfile.ZipFile(sys.argv[1], 'w', zipfile.ZIP_DEFLATED) as jar:\n",
+            "    jar.writestr('install_profile.json', sys.argv[2])\n",
+            "    if sys.argv[3]: jar.writestr('version.json', sys.argv[3])\n",
+        );
+        let status = util::python_command()
+            .unwrap()
+            .args(["-c", script])
+            .arg(&jar)
+            .arg(install_profile)
+            .arg(version)
+            .status()
+            .unwrap();
+        assert!(status.success());
+        jar
+    }
+
+    #[test]
+    fn exact_profile_selection_ignores_similar_forge_and_neoforge_versions() {
+        let app = fixture();
+        for (expected, sibling) in [
+            ("1.21.1-forge-52.1.2", "1.21.1-forge-52.1.20"),
+            ("neoforge-21.1.2", "neoforge-21.1.20"),
+            ("1.21.1 Forge Preview", "1.21.1 Forge Preview previous"),
+        ] {
+            let expected_bytes = profile(expected, "1.21.1");
+            util::atomic_write(&version_path(&app, expected).unwrap(), &expected_bytes).unwrap();
+            util::atomic_write(
+                &version_path(&app, sibling).unwrap(),
+                &profile(sibling, "1.21.1"),
+            )
+            .unwrap();
+            let (bytes, selected) = installed_loader_profile(&app, expected, "1.21.1").unwrap();
+            assert_eq!(selected.id, expected);
+            assert_eq!(bytes, expected_bytes);
+            fs::remove_file(version_path(&app, expected).unwrap()).unwrap();
+            assert!(installed_loader_profile(&app, expected, "1.21.1").is_err());
+        }
+        fs::remove_dir_all(app.root).unwrap();
+    }
+
+    #[test]
+    fn installed_profile_must_match_both_expected_identity_and_parent() {
+        let app = fixture();
+        let expected = "1.21.1-forge-52.1.2";
+        for bytes in [
+            profile("1.21.1-forge-52.1.20", "1.21.1"),
+            profile(expected, "1.21"),
+            br#"{"id":"1.21.1-forge-52.1.2"}"#.to_vec(),
+            br#"{"id":"1.21.1-forge-52.1.2","id":"other","inheritsFrom":"1.21.1"}"#.to_vec(),
+        ] {
+            util::atomic_write(&version_path(&app, expected).unwrap(), &bytes).unwrap();
+            assert!(installed_loader_profile(&app, expected, "1.21.1").is_err());
+        }
+        for id in ["../outside", "a/b", "NUL", ""] {
+            assert!(installed_loader_profile(&app, id, "1.21.1").is_err());
+        }
+        fs::remove_dir_all(app.root).unwrap();
+    }
+
+    #[test]
+    fn verified_installer_metadata_supplies_modern_and_legacy_profile_identity() {
+        let app = fixture();
+        let expected = "1.21.1-forge-52.1.2";
+        let version = String::from_utf8(profile(expected, "1.21.1")).unwrap();
+        for metadata in [r#"{"json":"/version.json"}"#, r#"{"json":"version.json"}"#] {
+            let jar = installer(&app, metadata, &version);
+            assert_eq!(installer_profile_id(&jar, "1.21.1").unwrap(), expected);
+            assert!(installer_profile_id(&jar, "1.21").is_err());
+        }
+        let metadata = format!("{{\"versionInfo\":{version}}}");
+        let jar = installer(&app, &metadata, "");
+        assert_eq!(installer_profile_id(&jar, "1.21.1").unwrap(), expected);
+        let portable_id = "1.21.1 Forge Preview";
+        let version = String::from_utf8(profile(portable_id, "1.21.1")).unwrap();
+        let jar = installer(&app, r#"{"json":"/version.json"}"#, &version);
+        assert_eq!(installer_profile_id(&jar, "1.21.1").unwrap(), portable_id);
+        fs::remove_dir_all(app.root).unwrap();
+    }
+
+    #[test]
+    fn installer_metadata_rejects_ambiguous_json_and_unsafe_or_missing_resources() {
+        let app = fixture();
+        let version = String::from_utf8(profile("1.21.1-forge-52.1.2", "1.21.1")).unwrap();
+        for metadata in [
+            r#"{}"#,
+            r#"{"versionInfo":null}"#,
+            r#"{"json":null}"#,
+            r#"{"json":"/missing.json"}"#,
+            r#"{"json":"../version.json"}"#,
+            r#"{"json":"//version.json"}"#,
+            r#"{"json":"/version.json","\u006ason":"/other.json"}"#,
+            r#"{"versionInfo":{"id":"a","id":"b","inheritsFrom":"1.21.1"}}"#,
+        ] {
+            let jar = installer(&app, metadata, &version);
+            assert!(installer_profile_id(&jar, "1.21.1").is_err(), "{metadata}");
+        }
+        for version in [
+            r#"{"id":"1.21.1-forge-52.1.2","id":"other","inheritsFrom":"1.21.1"}"#,
+            r#"{"id":"../outside","inheritsFrom":"1.21.1"}"#,
+            r#"{"id":"1.21.1-forge-52.1.2","inheritsFrom":"1.21"}"#,
+        ] {
+            let jar = installer(&app, r#"{"json":"/version.json"}"#, version);
+            assert!(installer_profile_id(&jar, "1.21.1").is_err(), "{version}");
+        }
+        fs::remove_dir_all(app.root).unwrap();
     }
 }
 
