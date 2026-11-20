@@ -2,11 +2,11 @@
   "schema": 1,
   "passed": true,
   "archive": "dist/zmcl-0.1.0-linux-x86_64.tar.gz",
-  "sha256": "78cad44a02a57067a719062109c62eea50b773fc0ab6179266e129874b344e4b",
-  "bytes": 648490,
+  "sha256": "304f7a0e3c2ed5dd84ecc98093715793b3f5eb4cb484449b8342b619116d9ea5",
+  "bytes": 648849,
   "binary_bytes": 1412176,
   "binary_sha256": "8139bab8416ec9720bc4c9e11765944755f85bbe778b5cf404863bd6fb3ba30c",
-  "unpacked_bytes": 1453006,
+  "unpacked_bytes": 1453865,
   "unpacked_metric": "Sum of regular-file content bytes; excludes archive headers and filesystem allocation.",
   "file_count": 7,
   "files": [
@@ -17,8 +17,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 9311,
-      "sha256": "681c05c37996854ec6a0c6f5b08baba024b9075c172c7ae460836919d108d65a"
+      "bytes": 9591,
+      "sha256": "efbd9c9c7edda560b461de8be034262f3034ae588c9599992e611cbf5f46c0b0"
     },
     {
       "path": "assets/zmcl.svg",
@@ -32,8 +32,8 @@
     },
     {
       "path": "release.json",
-      "bytes": 3179,
-      "sha256": "4e7f93bdbecc8638cefb72381ebbd32190684f3ff6903c03000a018b1c6a25af"
+      "bytes": 3758,
+      "sha256": "887137f237bdac1996ac20ac4e49ddc1b5920484be5ac76a59540862f3dbcf15"
     },
     {
       "path": "scripts/install.py",
@@ -49,9 +49,9 @@
   "app_source_commit": "033776287ab10aab90f46fd5b65309fecb9b8711",
   "packager": {
     "path": "scripts/package.py",
-    "sha256": "133f6380ee3eca06d0aa6f261b5d0613c60ad4c8a4cb1f4d349927582d1c9b2b",
-    "git_head_at_packaging": "033776287ab10aab90f46fd5b65309fecb9b8711",
-    "working_tree_modified": true,
+    "sha256": "547b936c8cabe04604addcbd6e0f99dae3cca3e3ef7206c5adbba83a3be3d0f8",
+    "git_head_at_packaging": "a8f72474c4f5289ea881226299ae7706b8024b59",
+    "working_tree_modified": false,
     "identity_note": "The script digest identifies the executed packager; HEAD alone does not identify uncommitted script changes."
   },
   "platform": "linux-x86_64",
@@ -89,12 +89,12 @@
           {
             "path": "share/applications/zmcl.desktop",
             "bytes": 254,
-            "sha256": "c73ae0e1d66789a4254c51fec4a8d3249fa3ffc653c9f42a17e1e7961dad1ee8"
+            "sha256": "1813d1647842d65b286a3bfb73d2feb9b7589b624177bf42f01b6917aa94e73b"
           },
           {
             "path": "share/zmcl/install.json",
             "bytes": 401,
-            "sha256": "077b83fc6ff61d3e2ef890f089dbfa969bc0634d52d1c08753e4005745245b70"
+            "sha256": "a519efa37d4a97842794265ea4025169e61b539b7dbc937c164cf8b554c885d7"
           }
         ],
         "prefix_character_count": 90,
@@ -157,6 +157,29 @@
       "libgcc_s.so.1",
       "libm.so.6"
     ],
+    "linux_direct_elf_minimum_glibc": "2.43",
+    "linux_direct_elf_glibc_symbol_versions": [
+      "2.2.5",
+      "2.3",
+      "2.3.4",
+      "2.4",
+      "2.9",
+      "2.14",
+      "2.15",
+      "2.16",
+      "2.17",
+      "2.18",
+      "2.27",
+      "2.28",
+      "2.29",
+      "2.30",
+      "2.32",
+      "2.33",
+      "2.34",
+      "2.39",
+      "2.43"
+    ],
+    "linux_glibc_scope": "Highest GLIBC_* version required directly by this executable; this is not a complete distribution compatibility test. Shared libraries and external helpers have their own requirements.",
     "native_gui": "Platform native window/OpenGL libraries; Linux uses X11 or XWayland, fonts and a graphics driver.",
     "downloads": "System curl with HTTPS and its certificate store.",
     "archive_metadata_and_process_helpers": "Python 3 standard library, started on demand.",

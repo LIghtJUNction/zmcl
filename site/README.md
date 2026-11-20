@@ -29,6 +29,8 @@ Edit data.json without rebuilding the site. schema_version is currently 1.
 
 The current data describes source 033776287ab10aab90f46fd5b65309fecb9b8711 (ELF SHA-256 8139bab8416ec9720bc4c9e11765944755f85bbe778b5cf404863bd6fb3ba30c) and official XMCL 0.73.1, measured on 2026-11-20 with the same schema 4 script, three trials and eleven samples per trial. Exact raw records and derived summaries are under docs/measurements/. The screenshot is from the final zmcl trial. Shared-host memory pressure differed between application batches; the page discloses available memory, swapped pages and different default home content. Hardware GPU, installation peak and physical game storage remain unmeasured. Earlier records are historical and do not supply the displayed final values.
 
+The Linux x86_64 prerelease package is 648,849 bytes (tar.gz); its seven regular files total 1,453,865 logical bytes. It was packaged from clean commit a8f72474c4f5289ea881226299ae7706b8024b59 and preserves the measured application binary. The prebuilt ELF directly requires glibc 2.43; this is not a blanket Linux compatibility claim. The download URL is the explicit /releases/tag/v0.1.0 prerelease page, not /releases/latest. Exact package hashes and file manifests are linked from docs/validation/package-install-2026-11-20.json.
+
 ## Publish
 
 Use GitHub Pages with GitHub Actions and upload site/ as the Pages artifact. The publishing workflow belongs to the repository maintainer, outside this directory. The standard sequence is checkout → check → upload-pages-artifact (path: site) → deploy-pages. No Jekyll or asset build step is required.

@@ -54,9 +54,13 @@ zmcl 三轮观察窗内的 CPU ticks 都没有增加。内核 CPU 计数频率�
 | 项目 | zmcl | XMCL 0.73.1 |
 | --- | ---: | ---: |
 | 主程序 ELF（bytes） | 1,412,176 | 224,836,856 |
-| 压缩发行包（bytes） | 待最终打包记录 | 85,934,576 |
-| 展开后的常规文件合计（bytes） | 待最终打包记录 | 293,657,164 |
-| 展开后的常规文件数 | 待最终打包记录 | 23 |
+| 压缩发行包（bytes） | 648,849（tar.gz） | 85,934,576（tar.xz） |
+| 展开后的常规文件合计（bytes） | 1,453,865 | 293,657,164 |
+| 展开后的常规文件数 | 7 | 23 |
+
+zmcl 的 [v0.1.0 Linux x86_64 开发预览](https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.0) 包含七个常规文件：主程序、README、功能文档、许可证、图标、安装器和 release.json。648,849 bytes 是最终 tar.gz 的实际大小；1,453,865 bytes 是七个文件的内容字节之和，不包括归档头或文件系统分配。压缩方法及两款产品包含的内容不同，本页不由发行包体积推导等功能节省比例。[清单与安装验收](validation/package-install-2026-11-20.json)
+
+**当前预编译包要求 Linux x86_64、glibc 2.43 或更新。** 2.43 是此 ELF 直接引用的最高 GLIBC 符号版本，不是所有 Linux 发行版都兼容的证明；系统图形、字体库和外部工具还有自己的要求。其它环境可按[源码构建说明](../README.md)构建，并自行验证运行依赖。该分发包的内容与安装验收只覆盖 Linux x86_64。
 
 zmcl 是动态链接的原生程序；系统图形、字体与其它动态库不包含在 ELF 数字中。上表也不包含 Java、Minecraft、mods、账号配置、下载缓存、构建目录或实例数据。展开文件合计没有按设备号与 inode 去重，不等于实际物理磁盘块占用。[XMCL 官方包记录](measurements/2026-11-19-xmcl-package.json)
 
@@ -110,6 +114,8 @@ RSS 表示驻留页；PSS 对共享页按共享进程数分摊。SwapPss 记录�
 | --- | --- |
 | zmcl 版本 / 源码 | 0.1.0 / 033776287ab10aab90f46fd5b65309fecb9b8711 |
 | zmcl ELF SHA-256 | 8139bab8416ec9720bc4c9e11765944755f85bbe778b5cf404863bd6fb3ba30c |
+| zmcl tar.gz SHA-256 | 304f7a0e3c2ed5dd84ecc98093715793b3f5eb4cb484449b8342b619116d9ea5 |
+| 干净打包提交 | a8f72474c4f5289ea881226299ae7706b8024b59；working_tree_modified=false |
 | zmcl 原生 UI 依赖 | zui-native，zui commit 5e37fcfb791eec9ac523fc19373e95d0a513112f |
 | XMCL 官方发行版 | [v0.73.1](https://github.com/Voxelum/x-minecraft-launcher/releases/tag/v0.73.1) |
 | XMCL ELF SHA-256 | 34c11d2cbb5bf342cc701a10d205b2b34db37adf1d5d68c73174aeccf69fa7cd |
@@ -123,6 +129,7 @@ RSS 表示驻留页；PSS 对共享页按共享进程数分摊。SwapPss 记录�
 | [zmcl 原始记录](measurements/2026-11-20-zmcl-0337762.json) | f24e3421ff01122c56778350767d5d47a5c3374647450ddba39a2afa78b37f95 |
 | [XMCL 原始记录](measurements/2026-11-20-xmcl-0.73.1.json) | d4e8c12f0ffcd7b317e9f285ca6717c200bce9ec312ad4864f37903629647973 |
 | [最终汇总 JSON](measurements/2026-11-20-comparison.json) | 包含逐样本合计后的范围、轮内中位数和轮间中位数 |
+| [最终分发包与安装验收](validation/package-install-2026-11-20.json) | 4e374decd2c396a0af9f2585440110c0eeeb52de8f882c764c1efb6dd99ac01d |
 | [zmcl 默认首页](measurements/2026-11-20-zmcl-empty.jpg) | 本次第一轮 1024×720 实际截图 |
 | [XMCL 默认首页](measurements/2026-11-20-xmcl-empty.jpg) | 本次第一轮 1024×720 实际截图 |
 

@@ -5,7 +5,17 @@
     "repository": "https://github.com/LIghtJUNction/zmcl",
     "baseline": "v0.73.1",
     "updated": "2026-11-20",
-    "stage": "development"
+    "stage": "development",
+    "release": {
+      "version": "0.1.0",
+      "type": "prerelease",
+      "url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.0",
+      "platform": "linux-x86_64",
+      "minimum_direct_elf_glibc": "2.43",
+      "archive_bytes": 648849,
+      "archive_sha256": "304f7a0e3c2ed5dd84ecc98093715793b3f5eb4cb484449b8342b619116d9ea5",
+      "packager_commit": "a8f72474c4f5289ea881226299ae7706b8024b59"
+    }
   },
   "measurement": {
     "phase": "final",
@@ -161,8 +171,8 @@
       "label": "压缩发行包",
       "unit": "bytes",
       "zmcl": {
-        "value": null,
-        "label": "待最终打包"
+        "value": 648849,
+        "note": "Linux x86_64 tar.gz；glibc ≥ 2.43"
       },
       "xmcl": {
         "value": 85934576,
@@ -175,8 +185,8 @@
       "label": "展开后常规文件",
       "unit": "bytes",
       "zmcl": {
-        "value": null,
-        "label": "待最终打包"
+        "value": 1453865,
+        "note": "7 个常规文件，含说明文档与安装器"
       },
       "xmcl": {
         "value": 293657164,
@@ -322,6 +332,14 @@
     {
       "title": "最终派生汇总",
       "url": "https://github.com/LIghtJUNction/zmcl/blob/main/docs/measurements/2026-11-20-comparison.json"
+    },
+    {
+      "title": "Linux 开发预览下载",
+      "url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.0"
+    },
+    {
+      "title": "最终分发包与安装验收",
+      "url": "https://github.com/LIghtJUNction/zmcl/blob/main/docs/validation/package-install-2026-11-20.json"
     }
   ]
 }

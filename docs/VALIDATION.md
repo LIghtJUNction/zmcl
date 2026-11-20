@@ -208,3 +208,20 @@ cargo clippy --workspace --all-targets --locked -- -D warnings
 最终 Linux x86_64 主程序经 `readelf --version-info` 检查，最高要求的 glibc 版本符号是 `GLIBC_2.43`。因此本轮预编译包要求 glibc 2.43 或更新版本，并依赖发行清单列出的 X11/OpenGL/字体库以及按需系统程序。这个结论是直接 ELF 符号检查，不代表所有满足该版本的发行版均已实机验收；较旧系统可使用仓库的源码构建流程。
 
 安装器还在带空格的私有目录中通过桌面入口静态规范检查和 GLib 参数解析；将生成入口的 `gui` 替换为 `--version` 后，`gio launch` 实际返回版本号。这项检查没有启动图形窗口或游戏。见[桌面入口验收](validation/desktop-entry-2026-11-20.json)。
+
+## 最终分发包
+
+发行包从干净的资料及打包器提交 [`a8f72474c4f5289ea881226299ae7706b8024b59`](https://github.com/LIghtJUNction/zmcl/commit/a8f72474c4f5289ea881226299ae7706b8024b59) 生成；实际应用二进制对应前述 `0337762`。后续网站和报告补充不改变该二进制。归档内的 `release.json` 分别记录这两种来源，以及运行环境和各文件摘要。
+
+| 项目 | 最终结果 |
+| --- | --- |
+| 文件名 | `zmcl-0.1.0-linux-x86_64.tar.gz` |
+| 压缩归档 | 648,849 B，约 633.64 KiB |
+| 解压文件内容总大小 | 1,453,865 B，7 个常规文件 |
+| 主程序 | 1,412,176 B |
+| 归档 SHA-256 | `304f7a0e3c2ed5dd84ecc98093715793b3f5eb4cb484449b8342b619116d9ea5` |
+| 打包器工作区修改 | `false` |
+
+这里的解压大小是文件内容字节之和，不是文件系统分配量；未把系统图形库、curl/Python、Java、游戏文件或 Horizon 下载包装进启动器归档。最终包完成 5 个安装验收操作，包含 1 次预期的修改文件保护拒绝，模拟游戏数据均保留。源码中的 README/FEATURES 不变，只有归档副本的相对 Markdown 链接转换为公共仓库地址。
+
+[完整打包与安装证据](validation/package-install-2026-11-20.json) · [v0.1.0 开发预览下载](https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.0)
