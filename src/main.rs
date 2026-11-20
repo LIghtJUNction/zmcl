@@ -492,7 +492,7 @@ pub fn run_cli(args: Vec<String>) -> Result<()> {
                 ("os", quote(std::env::consts::OS)),
                 ("arch", quote(std::env::consts::ARCH)),
                 ("curl", util::command_exists("curl").to_string()),
-                ("python3", util::command_exists("python3").to_string()),
+                ("python3", util::python_command().is_ok().to_string()),
                 ("java", runtime::java_report()),
                 ("gui", cfg!(feature = "gui").to_string()),
                 ("instances", app.instances()?.len().to_string())

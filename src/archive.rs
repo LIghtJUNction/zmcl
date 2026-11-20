@@ -1,5 +1,5 @@
-use crate::util::Result;
-use std::{path::Path, process::Command};
+use crate::util::{self, Result};
+use std::path::Path;
 
 /// The system Python ZIP reader supplies mature decompression; all paths and limits are checked before writes.
 pub fn extract_natives(archive: &Path, dest: &Path, excludes: &[String]) -> Result<()> {
@@ -54,7 +54,7 @@ with zipfile.ZipFile(source) as z:
             .collect::<Vec<_>>()
             .join(",")
     );
-    let output = Command::new("python3")
+    let output = util::python_command()?
         .args(["-c", script])
         .arg(archive)
         .arg(dest)

@@ -181,7 +181,8 @@ def signed_hash(tag, sums, signatures, asset, expected, scratch, keys=PUBLIC_KEY
                         ["openssl", "pkeyutl", "-verify", "-pubin", "-inkey", str(key_path),
                          "-keyform", "DER", "-rawin", "-in", str(message_path), "-sigfile", str(signature_path)],
                         stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
-                        stderr=subprocess.DEVNULL, timeout=10, check=False)
+                        stderr=subprocess.DEVNULL, timeout=10, check=False,
+                        creationflags=subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0)
                 except FileNotFoundError:
                     fail("Horizon installation requires system OpenSSL with Ed25519 support")
                 if checked.returncode == 0:

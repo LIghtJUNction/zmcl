@@ -9,7 +9,6 @@ use std::{
     collections::{BTreeMap, BTreeSet, VecDeque},
     fs,
     path::{Path, PathBuf},
-    process::Command,
     sync::atomic::{AtomicU64, Ordering},
 };
 use zmcl_core::json::{Kind, Value, get_str, quote, req_str, string, with_json};
@@ -685,9 +684,8 @@ fn parse_pack(bytes: &[u8]) -> Result<Pack> {
 }
 
 fn python(args: &[&std::ffi::OsStr]) -> Result<()> {
-    let program = if cfg!(windows) { "python" } else { "python3" };
-    let output = Command::new(program)
-        .args(["-I", "-c", ZIP_CODEC])
+    let output = util::python_command()?
+        .args(["-c", ZIP_CODEC])
         .args(args)
         .output()
         .map_err(|e| {

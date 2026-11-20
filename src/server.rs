@@ -9,7 +9,7 @@ use std::{
     io::{Read, Write},
     net::{IpAddr, SocketAddr, TcpStream, ToSocketAddrs},
     path::PathBuf,
-    process::{Command, Stdio},
+    process::Stdio,
     sync::mpsc,
     thread,
     time::{Duration, Instant, SystemTime, UNIX_EPOCH},
@@ -96,7 +96,7 @@ fn process(app: &App, id: &str, action: &str, body: Option<&str>) -> Result<Stri
     if !matches!(action, "status" | "start" | "stop") {
         return Err("Invalid server operation".into());
     }
-    let mut child = Command::new("python3")
+    let mut child = util::python_command()?
         .args(["-c", PROCESS, action])
         .arg(&dir)
         .stdin(if body.is_some() {

@@ -6,7 +6,7 @@ use std::{
     fs,
     io::Write,
     path::PathBuf,
-    process::{Command, Stdio},
+    process::Stdio,
     time::{Duration, Instant},
 };
 use zmcl_core::json::{get_str, quote, req_str, with_json};
@@ -41,7 +41,7 @@ impl Account {
     }
 }
 fn secret(action: &str, id: &str, input: Option<&str>) -> Result<String> {
-    let mut child = Command::new("python3")
+    let mut child = util::python_command()?
         .args(["-c", HELPER, action, id])
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
@@ -196,7 +196,7 @@ fn exchange(ms_access: &str, refresh_token: String, client_id: String) -> Result
         return Err(auth_error("Xbox user authentication", &response));
     }
     let user_token = with_json(&response.body, |v| req_str(v, "Token"))?;
-    let prepared = Command::new("python3")
+    let prepared = util::python_command()?
         .args(["-c", DEVICE])
         .output()
         .map_err(|e| format!("Xbox device signing requires Python 3 and OpenSSL: {e}"))?;

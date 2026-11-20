@@ -4,7 +4,7 @@ use crate::{App, util};
 use std::fs;
 use std::io::Read;
 use std::path::{Path, PathBuf};
-use std::process::{Command, Stdio};
+use std::process::Stdio;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
 type Result<T> = std::result::Result<T, String>;
@@ -95,9 +95,7 @@ fn run(
     }
     let script = helper.dir.join("archive.py");
     util::atomic_write(&script, include_bytes!("backup/archive.py"))?;
-    let executable = if cfg!(windows) { "python" } else { "python3" };
-    let mut child = Command::new(executable)
-        .arg("-I")
+    let mut child = util::python_command()?
         .arg(&script)
         .arg(operation)
         .arg(instance)

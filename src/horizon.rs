@@ -362,8 +362,7 @@ fn helper(app: &App, arguments: &[OsString]) -> Result<String> {
     private_directory(&temporary.0)?;
     let script = temporary.0.join("archive.py");
     util::atomic_write(&script, include_bytes!("horizon/archive.py"))?;
-    let mut child = Command::new(if cfg!(windows) { "python" } else { "python3" })
-        .arg("-I")
+    let mut child = util::python_command()?
         .arg(&script)
         .args(arguments)
         .stdin(Stdio::null())

@@ -5,7 +5,7 @@ use std::ffi::OsString;
 use std::fs::{self, OpenOptions};
 use std::io::Read;
 use std::path::{Path, PathBuf};
-use std::process::{Command, Stdio};
+use std::process::Stdio;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
 type Result<T> = std::result::Result<T, String>;
@@ -120,9 +120,7 @@ fn run(app: &App, operation: &str, args: &[OsString]) -> Result<String> {
     let helper = Temporary::directory(&cache, "world-helper-")?;
     let script = helper.path.join("manage.py");
     util::atomic_write(&script, include_bytes!("worlds/manage.py"))?;
-    let executable = if cfg!(windows) { "python" } else { "python3" };
-    let mut child = Command::new(executable)
-        .arg("-I")
+    let mut child = util::python_command()?
         .arg(&script)
         .arg(operation)
         .args(args)

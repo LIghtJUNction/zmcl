@@ -1,7 +1,8 @@
 # Xbox ProofOfPossession framing; system OpenSSL owns ECDSA, never custom crypto.
 import base64,json,os,struct,subprocess,time,uuid
 def run(args,data=None):
-    p=subprocess.run(['openssl',*args],input=data,stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,timeout=15)
+    p=subprocess.run(['openssl',*args],input=data,stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,timeout=15,
+        creationflags=subprocess.CREATE_NO_WINDOW if os.name=='nt' else 0)
     if p.returncode:raise RuntimeError('OpenSSL failed')
     return p.stdout
 def b64url(v):return base64.urlsafe_b64encode(v).rstrip(b'=').decode()

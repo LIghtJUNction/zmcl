@@ -7,7 +7,7 @@ use crate::{
 use std::{
     fs,
     path::{Path, PathBuf},
-    process::{Command, Stdio},
+    process::Stdio,
     time::{SystemTime, UNIX_EPOCH},
 };
 use zmcl_core::{
@@ -323,7 +323,7 @@ pub fn install(app: &App, major: u32) -> Result<String> {
             .as_nanos();
         let stage = util::safe_join(&base, &format!(".stage-{}-{nonce}", std::process::id()))?;
         let prepared = (|| {
-            let output = Command::new("python3")
+            let output = util::python_command()?
                 .args(["-c", EXTRACT])
                 .arg(&archive)
                 .arg(&stage)
