@@ -1,12 +1,14 @@
 # zmcl 开发与验收报告
 
-## v0.1.2 源码验收
+## v0.1.2 源码与发行验收
 
 应用源码 [e86b584](https://github.com/LIghtJUNction/zmcl/commit/e86b5841532ef04cc74cea5585ae396150452408) 已通过 **97 项 Rust 测试（78 应用 + 19 核心）**、fmt、严格 Clippy、Linux GUI release、Windows GNU 完整 GUI 跨编译，以及 Linux 原生窗口四组创建和六项管理流程。[脱敏验收记录](validation/gui-iteration-0.1.2-2026-11-20.json)逐文件证明冻结工作树与公开提交的运行源码等价，保留实际构建基线，不倒写构建身份。
 
 Linux 程序为 **1,473,144 字节**，SHA-256 `71bf4017072703a91359ea84e2493db218d9962456ece2060d0f2e42b3500c32`；Windows GNU 程序为 **1,366,528 字节**，SHA-256 `45e96c55b703977331f75feb757714dcbba3df6b146330d8d2758937711a45f5`。后者是跨编译产物，尚未运行于 Windows；macOS 尚无本轮应用构建与运行结果。
 
-本轮新建实例、解释器发现、隐藏日志重绘、管理页容量释放和框架字体/矩形路径的机制、性能对照、截图与不足见[完整迭代报告](reports/2026-11-20-gui-iteration.md)。zgpui 0.1.5 已完成真正的跨平台发行门禁，但上游探针不代替应用实机验收。此节记录源码验收；0.1.2 安装包、AUR 与安装后记录在完成后单独追加。
+本轮新建实例、解释器发现、隐藏日志重绘、管理页容量释放和框架字体/矩形路径的机制、性能对照、截图与不足见[完整迭代报告](reports/2026-11-20-gui-iteration.md)。zgpui 0.1.5 已完成真正的跨平台发行门禁，但上游探针不代替应用实机验收。[GitHub v0.1.2](https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.2) 与 AUR 0.1.2-1 已公开，归档和校验文件匿名下载一致。公共 AUR 新克隆构建、正常包管理器升级及安装后四组原生创建流程均通过。
+
+归档为 679,358 字节；系统升级为 0.1.1-1 → 0.1.2-1，安装后程序保持上述 Linux 摘要，19 个受管文件没有改动。2026-11-20 18:44（Asia/Taipei）复验，current/legacy RPC、yay 和 paru 均返回 0.1.2-1。详细记录：[发行包](validation/release-0.1.2-2026-11-20.json)、[AUR 与系统安装](validation/aur-install-0.1.2-2026-11-20.json)、[安装后原生窗口](validation/installed-gui-0.1.2-2026-11-20.json)。公共新克隆首轮曾因宿主磁盘不足解包失败，原失败记录与清理后成功的重试分别保留。
 
 ![0.1.2 创建与安装界面](validation/images/zmcl-0.1.2-create.png)
 

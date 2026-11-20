@@ -1,0 +1,252 @@
+{
+  "schema": 1,
+  "application": "zmcl",
+  "version": "0.1.2",
+  "package_version": "0.1.2-1",
+  "passed": true,
+  "generated_at_utc": "2026-11-20T10:51:46.811643+00:00",
+  "release": {
+    "url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.2",
+    "release_id": 452547223,
+    "published_at_utc": "2026-11-20T10:24:37Z",
+    "development_preview": true,
+    "draft": false,
+    "app_source_commit": "e86b5841532ef04cc74cea5585ae396150452408",
+    "packaging_commit": "dc9e586ed541cc3e1d75661c54caacdd021834a9",
+    "archive": {
+      "name": "zmcl-0.1.2-linux-x86_64.tar.gz",
+      "bytes": 679358,
+      "sha256": "5cb7945cb5888d1ec02d84e55a4b91576161ddb6fe6c3a6be2644c8f058fb3c4",
+      "url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.2/zmcl-0.1.2-linux-x86_64.tar.gz"
+    },
+    "binary": {
+      "bytes": 1473144,
+      "sha256": "71bf4017072703a91359ea84e2493db218d9962456ece2060d0f2e42b3500c32"
+    },
+    "public_unauthenticated_download_verified": true,
+    "checksum_sidecar_verified": true
+  },
+  "aur": {
+    "name": "zmcl-bin",
+    "url": "https://aur.archlinux.org/packages/zmcl-bin",
+    "git_url": "https://aur.archlinux.org/zmcl-bin.git",
+    "source_commit": "16b688237f8c54b47085a16279535db8f6c5c553",
+    "previous_commit": "15bdd71d63db740fadf13edbe9d876f2fb0f1bc1",
+    "published_at_utc": "2026-11-20T10:28:23.585910+00:00",
+    "public_remote_verified": true,
+    "recipe_sha256": {
+      "PKGBUILD": "25e008763521f87a2aea1294ae07c12a374233b2ddf836d3a0e6e7f1dffa5923",
+      ".SRCINFO": "b2ba4762fe0f493c00f8aa3424cd1f918885a697633705eb20e97da539ad4e75"
+    },
+    "dependencies": [
+      "glibc>=2.39",
+      "libgcc",
+      "libx11",
+      "freetype2",
+      "fontconfig>=2.17.0",
+      "hicolor-icon-theme",
+      "curl",
+      "python>=3.8"
+    ],
+    "minimum_python": "3.8",
+    "preserve_official_binary_without_restripping": true
+  },
+  "preparation_build": {
+    "passed": true,
+    "recipe_base_commit": "15bdd71d63db740fadf13edbe9d876f2fb0f1bc1",
+    "source_identity_note": "Preparation used the updated recipe as working-tree changes before its later AUR commit. Its recipe digests match the published commit.",
+    "recipe_sha256": {
+      "PKGBUILD": "25e008763521f87a2aea1294ae07c12a374233b2ddf836d3a0e6e7f1dffa5923",
+      ".SRCINFO": "b2ba4762fe0f493c00f8aa3424cd1f918885a697633705eb20e97da539ad4e75"
+    },
+    "package": {
+      "name": "zmcl-bin-0.1.2-1-x86_64.pkg.tar.zst",
+      "bytes": 674229,
+      "sha256": "d7bac3fa8492ef755787b21fc1325aa256a8d3e34a07197ef0d9810a868387eb"
+    },
+    "source_checksums_verified": true,
+    "package_built": true,
+    "payload_file_count": 7,
+    "payload_checks": {
+      "exact_package_file_set": true,
+      "regular_payload_files": true,
+      "official_binary_sha256_preserved": true,
+      "installed_layout_version_executed": true,
+      "desktop_entry_valid": true,
+      "runtime_libraries_resolved_on_test_host": true
+    },
+    "recipe_unchanged_during_checks": true,
+    "completed_at_utc": "2026-11-20T10:26:44.561561+00:00"
+  },
+  "fresh_public_build": {
+    "aur_source_commit": "16b688237f8c54b47085a16279535db8f6c5c553",
+    "independent_public_clone": true,
+    "prep_artifacts_or_sources_reused": false,
+    "initial_source_download": {
+      "bytes": 679358,
+      "sha256": "5cb7945cb5888d1ec02d84e55a4b91576161ddb6fe6c3a6be2644c8f058fb3c4"
+    },
+    "first_attempt": {
+      "started_at_utc": "2026-11-20T10:28:59.501500+00:00",
+      "source_checksums_verified": true,
+      "build_exit_code": 1,
+      "outcome": "failed",
+      "failed_stage": "extracting the verified public archive",
+      "error_code": "ENOSPC",
+      "error_summary": "The development filesystem had insufficient space to extract the executable.",
+      "package_created": false,
+      "original_receipt_and_logs_preserved": true,
+      "original_receipt_sha256": "5071ee4494165600216cb1eb525e4e96dfa0ef638061daeec62474023c5b8054"
+    },
+    "retry": {
+      "attempt": "retry-1",
+      "started_at_utc": "2026-11-20T10:41:15.570316+00:00",
+      "completed_at_utc": "2026-11-20T10:41:20.049594+00:00",
+      "passed": true,
+      "recovery": "The coordinator freed completed-task build caches before retrying.",
+      "independently_downloaded_archive_reused": true,
+      "source_download_repeated": false,
+      "archive_unchanged": true,
+      "build_exit_code": 0,
+      "payload_check_exit_code": 0,
+      "package": {
+        "name": "zmcl-bin-0.1.2-1-x86_64.pkg.tar.zst",
+        "bytes": 674238,
+        "sha256": "17f8b87cd028fe1204088de52474054f4c0f5d47f3d07e999ea9ee4b44821867"
+      },
+      "payload_file_count": 7,
+      "payload_checks": {
+        "exact_package_file_set": true,
+        "regular_payload_files": true,
+        "official_binary_sha256_preserved": true,
+        "installed_layout_version_executed": true,
+        "desktop_entry_valid": true,
+        "runtime_libraries_resolved_on_test_host": true
+      },
+      "binary_sha256": "71bf4017072703a91359ea84e2493db218d9962456ece2060d0f2e42b3500c32",
+      "binary_bytes": 1473144,
+      "recipe_unchanged": true,
+      "srcinfo_matches_regeneration": true,
+      "tracked_worktree_clean_after_checks": true
+    },
+    "package_identity_note": "Preparation and fresh-public builds have separate package digests. The host upgrade used the fresh-public retry package."
+  },
+  "namcap": {
+    "performed_on": "Preparation recipe and package",
+    "recipe_exit_code": 0,
+    "package_exit_code": 0,
+    "recipe_findings": [],
+    "package_warnings": [
+      "zmcl-bin W: Dependency included, but may not be needed ('curl')",
+      "zmcl-bin W: Dependency included, but may not be needed ('python')"
+    ],
+    "external_helper_dependency_explanation": "curl and Python are external helpers invoked on demand, so ELF-only dependency analysis can report them as unused; the runtime dependencies remain required.",
+    "host_database_warnings": {
+      "count": 2211,
+      "message_pattern": "unknown key '%INSTALLED_DB%' in local database",
+      "scope": "Host package database field-reading warnings, separate from the application package findings. No installed-package inventory or raw diagnostics is included."
+    },
+    "fresh_public_build_rerun": false,
+    "reuse_basis": "The public recipe hashes match preparation. The fresh package file set, binary, version, desktop entry and library resolution were independently checked."
+  },
+  "host_upgrade": {
+    "method": "Normal package-only upgrade through pacman using the independently built public AUR package",
+    "full_system_upgrade": false,
+    "other_packages_upgraded": false,
+    "completed_at_utc": "2026-11-20T10:42:50.880289+00:00",
+    "installed_package": {
+      "name": "zmcl-bin-0.1.2-1-x86_64.pkg.tar.zst",
+      "bytes": 674238,
+      "sha256": "17f8b87cd028fe1204088de52474054f4c0f5d47f3d07e999ea9ee4b44821867"
+    },
+    "before": {
+      "package": "zmcl-bin 0.1.1-1",
+      "binary_sha256": "a28998952b42d09f652ac95da47ddb15930cd556b6fa4e9b7e7ebbd23a4ac2e9",
+      "package_integrity": {
+        "total_files": 19,
+        "altered_files": 0
+      }
+    },
+    "after": {
+      "package": "zmcl-bin 0.1.2-1",
+      "binary_path": "/usr/bin/zmcl",
+      "binary_sha256": "71bf4017072703a91359ea84e2493db218d9962456ece2060d0f2e42b3500c32",
+      "binary_bytes": 1473144,
+      "version_output": "zmcl 0.1.2",
+      "package_integrity": {
+        "total_files": 19,
+        "altered_files": 0
+      }
+    },
+    "desktop_entry_valid": true,
+    "installed_binary_matches_release": true,
+    "installed_binary_matches_verified_public_package": true
+  },
+  "public_metadata_visibility": {
+    "initial": {
+      "checked_at_utc": "2026-11-20T10:28:54.466669+00:00",
+      "queries": [
+        {
+          "query": "rpc",
+          "exit_code": 0,
+          "reported_version": "0.1.1-1",
+          "python_ge_3_8_visible": false
+        },
+        {
+          "query": "yay",
+          "exit_code": 0,
+          "reported_version": "0.1.1-1",
+          "python_ge_3_8_visible": false
+        },
+        {
+          "query": "paru",
+          "exit_code": 0,
+          "reported_version": "0.1.1-1",
+          "python_ge_3_8_visible": false
+        }
+      ]
+    },
+    "final": {
+      "checked_at_utc": "2026-11-20T10:44:22.414102+00:00",
+      "queries": [
+        {
+          "query": "rpc-current",
+          "exit_code": 0,
+          "reported_version": "0.1.2-1",
+          "python_ge_3_8_visible": true
+        },
+        {
+          "query": "rpc-legacy",
+          "exit_code": 0,
+          "reported_version": "0.1.2-1",
+          "python_ge_3_8_visible": true
+        },
+        {
+          "query": "yay",
+          "exit_code": 0,
+          "reported_version": "0.1.2-1",
+          "python_ge_3_8_visible": true
+        },
+        {
+          "query": "paru",
+          "exit_code": 0,
+          "reported_version": "0.1.2-1",
+          "python_ge_3_8_visible": true
+        }
+      ]
+    },
+    "initial_observation": "The first queries still reported 0.1.1-1 after the public Git repository had advanced; these earlier responses are retained.",
+    "final_all_report_0_1_2_1": true,
+    "final_all_show_python_ge_3_8": true
+  },
+  "scope": {
+    "tested_platform": "Linux x86_64 development host",
+    "actual_host_package_upgrade": true,
+    "windows_or_macos_installation": false,
+    "account_login_or_game_launch_proven_by_this_record": false,
+    "installed_gui_validation_record": "installed-gui-0.1.2-2026-11-20.json",
+    "private_absolute_paths_included": false,
+    "raw_commands_or_session_logs_included": false,
+    "process_identifiers_included": false
+  }
+}

@@ -7,34 +7,54 @@
     "updated": "2026-11-20",
     "stage": "development",
     "release": {
-      "version": "0.1.1",
+      "version": "0.1.2",
       "type": "prerelease",
-      "url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.1",
+      "url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.2",
       "platform": "linux-x86_64",
-      "source_commit": "35eb8a3242a6ba637266ba1480354138389c9cb0",
+      "source_commit": "e86b5841532ef04cc74cea5585ae396150452408",
       "minimum_direct_elf_glibc": "2.39",
       "minimum_fontconfig": "2.17.0",
       "requires_opengl": false,
       "native_backend": {
         "library": "zgpui",
-        "version": "0.1.2",
-        "commit": "5b268da910639abd2fb8e581acb4f6eed50b7516",
+        "version": "0.1.5",
+        "commit": "4aba3ba83815253fb7e4013baa8bcf894439d32d",
         "renderer": "native Linux CPU"
       },
-      "archive_bytes": 664850,
-      "archive_sha256": "c61a83ce918d7fe3d58a080bc41bc1c5f301c259396cc4a96a5acf81c3ee9f0b",
-      "binary_bytes": 1439712,
-      "binary_sha256": "a28998952b42d09f652ac95da47ddb15930cd556b6fa4e9b7e7ebbd23a4ac2e9",
+      "archive_bytes": 679358,
+      "archive_sha256": "5cb7945cb5888d1ec02d84e55a4b91576161ddb6fe6c3a6be2644c8f058fb3c4",
+      "binary_bytes": 1473144,
+      "binary_sha256": "71bf4017072703a91359ea84e2493db218d9962456ece2060d0f2e42b3500c32",
       "payload_regular_files": 7,
-      "payload_regular_file_bytes": 1490322,
-      "packager_commit": "35eb8a3242a6ba637266ba1480354138389c9cb0",
-      "download_url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.1/zmcl-0.1.1-linux-x86_64.tar.gz",
-      "checksum_url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.1/zmcl-0.1.1-linux-x86_64.tar.gz.sha256",
+      "payload_regular_file_bytes": 1526666,
+      "packager_commit": "dc9e586ed541cc3e1d75661c54caacdd021834a9",
+      "download_url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.2/zmcl-0.1.2-linux-x86_64.tar.gz",
+      "checksum_url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.2/zmcl-0.1.2-linux-x86_64.tar.gz.sha256",
       "aur": {
         "package": "zmcl-bin",
-        "version": "0.1.1-1",
-        "url": "https://aur.archlinux.org/packages/zmcl-bin"
-      }
+        "version": "0.1.2-1",
+        "url": "https://aur.archlinux.org/packages/zmcl-bin",
+        "source_commit": "16b688237f8c54b47085a16279535db8f6c5c553",
+        "publication_status": "published",
+        "fresh_public_build_validation": "passed",
+        "installed_upgrade_and_window_validation": "passed",
+        "validation_note": "Normal pacman upgrade from 0.1.1-1 to 0.1.2-1 passed; official executable SHA-256 and all 19 package entries match. Four installed native creation fixture groups passed; no real sign-in or game launch was added.",
+        "initial_rpc_helper_version": "0.1.1-1",
+        "latest_rpc_helper_status": "verified",
+        "metadata_verification": {
+          "checked_at": "2026-11-20T10:44:22.414102+00:00",
+          "sources": [
+            "current RPC",
+            "legacy RPC",
+            "yay -Si",
+            "paru -Si"
+          ],
+          "version": "0.1.2-1"
+        },
+        "validation_evidence": "docs/validation/aur-install-0.1.2-2026-11-20.json",
+        "installed_gui_evidence": "docs/validation/installed-gui-0.1.2-2026-11-20.json"
+      },
+      "minimum_python": "3.8"
     }
   },
   "measurement": {
@@ -63,15 +83,15 @@
     {
       "name": "原生界面与命令行",
       "state": "verified",
-      "label": "0.1.1 Linux 窗口验收",
-      "summary": "当前界面使用 zgpui 0.1.2 原生 CPU 后端。实例与内容入口继续保留，新增世界、备份、资源和服务器页面；本轮通过六项真实窗口与文件效果验收，真实账号及联网流程不在本轮范围。",
-      "evidence": "src/gui/manage_smoke.py"
+      "label": "0.1.2 Linux 窗口验收",
+      "summary": "当前界面使用 zgpui 0.1.5 原生 CPU 后端。最终 Linux 程序通过四组创建与六项管理窗口及文件效果验收；这是构建产物验收，AUR 安装后四组创建流程也已通过，真实账号、联网游戏和 Windows/macOS 应用原生运行不在本轮最终组合范围。",
+      "evidence": "docs/validation/gui-iteration-0.1.2-2026-11-20.json"
     },
     {
       "name": "实例与共享存储",
       "state": "verified",
-      "label": "CLI 与夹具验收",
-      "summary": "配置、独立可写克隆、回收站与恢复；校验后的缓存复用与损坏修复已有验收。多实例的实际物理空间仍需单独测量。",
+      "label": "0.1.2 创建及历史 CLI 验收",
+      "summary": "GUI 支持筛选官方发行版、建议不重复的实例名，以及创建并安装或仅创建。配置、独立可写克隆、回收站与恢复、校验后的缓存复用和损坏修复保留各自记录；多实例物理空间仍需单独测量。",
       "evidence": "docs/FEATURES.md"
     },
     {
@@ -133,7 +153,7 @@
     {
       "name": "存档与备份",
       "state": "verified",
-      "label": "0.1.1 GUI 合成存档往返",
+      "label": "0.1.2 GUI 合成存档往返",
       "summary": "GUI 已验收世界目录导入、ZIP 导出、备份及确认恢复，并保留 pre-restore 快照；测试端 CLI 回导校验文件内容。CLI 仍提供克隆等操作，小型合成样本不代表实际游戏游玩或大存档。",
       "evidence": "src/gui/manage_smoke.py"
     },
@@ -169,7 +189,7 @@
       "name": "完整桌面与平台体验",
       "state": "planned",
       "label": "待完成",
-      "summary": "Bedrock、手柄/Big Picture、完整主题、本地化与无障碍、签名自更新和 Windows/macOS 独立实测仍是目标。",
+      "summary": "Windows 完整 GUI 交叉构建已通过；Windows 应用原生运行、macOS 应用构建与桌面流程仍待验收。Bedrock、手柄/Big Picture、完整主题、多语言与无障碍、签名自更新继续保留在待办范围。",
       "evidence": "docs/FEATURES.md"
     }
   ],
@@ -362,12 +382,20 @@
       "url": "https://github.com/LIghtJUNction/zmcl/blob/main/docs/validation/package-install-2026-11-20.json"
     },
     {
-      "title": "当前 Linux v0.1.1 开发预览",
+      "title": "历史 Linux v0.1.1 开发预览",
       "url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.1"
     },
     {
-      "title": "当前 GUI 活动测量脚本",
+      "title": "GUI 活动测量脚本",
       "url": "https://github.com/LIghtJUNction/zmcl/blob/main/scripts/bench_gui_activity.py"
+    },
+    {
+      "title": "当前 Linux v0.1.2 开发预览",
+      "url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.2"
+    },
+    {
+      "title": "0.1.2 GUI 功能、性能与跨平台验收",
+      "url": "https://github.com/LIghtJUNction/zmcl/blob/main/docs/reports/2026-11-20-gui-iteration.md"
     }
   ],
   "historical_releases": [
@@ -380,6 +408,36 @@
       "archive_bytes": 648849,
       "archive_sha256": "304f7a0e3c2ed5dd84ecc98093715793b3f5eb4cb484449b8342b619116d9ea5",
       "packager_commit": "a8f72474c4f5289ea881226299ae7706b8024b59"
+    },
+    {
+      "version": "0.1.1",
+      "type": "prerelease",
+      "url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.1",
+      "platform": "linux-x86_64",
+      "source_commit": "35eb8a3242a6ba637266ba1480354138389c9cb0",
+      "minimum_direct_elf_glibc": "2.39",
+      "minimum_fontconfig": "2.17.0",
+      "requires_opengl": false,
+      "native_backend": {
+        "library": "zgpui",
+        "version": "0.1.2",
+        "commit": "5b268da910639abd2fb8e581acb4f6eed50b7516",
+        "renderer": "native Linux CPU"
+      },
+      "archive_bytes": 664850,
+      "archive_sha256": "c61a83ce918d7fe3d58a080bc41bc1c5f301c259396cc4a96a5acf81c3ee9f0b",
+      "binary_bytes": 1439712,
+      "binary_sha256": "a28998952b42d09f652ac95da47ddb15930cd556b6fa4e9b7e7ebbd23a4ac2e9",
+      "payload_regular_files": 7,
+      "payload_regular_file_bytes": 1490322,
+      "packager_commit": "35eb8a3242a6ba637266ba1480354138389c9cb0",
+      "download_url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.1/zmcl-0.1.1-linux-x86_64.tar.gz",
+      "checksum_url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.1/zmcl-0.1.1-linux-x86_64.tar.gz.sha256",
+      "aur": {
+        "package": "zmcl-bin",
+        "version": "0.1.1-1",
+        "url": "https://aur.archlinux.org/packages/zmcl-bin"
+      }
     }
   ],
   "historical_measurement_scope": "measurement 与 measurements 保留原样：zmcl 0.1.0 固定源码 0337762 和 XMCL v0.73.1 的历史对照，不是当前发行版结果。",
@@ -498,6 +556,129 @@
       "docs/VALIDATION.md",
       "scripts/bench_gui_activity.py",
       "src/gui/manage_smoke.py"
-    ]
-  }
+    ],
+    "historical": true,
+    "label": "历史 v0.1.1 固定发行二进制；不是 v0.1.2 的新测量",
+    "relation_to_current_release": "保留旧字段名以兼容已有数据；本对象的版本、二进制、条件和所有数值均属于 0.1.1。"
+  },
+  "iteration_measurements": [
+    {
+      "label": "完整窗口固定重绘 CPU 对照",
+      "phase": "prerelease_candidate_comparison",
+      "final_release": {
+        "version": "0.1.2",
+        "binary_sha256": "71bf4017072703a91359ea84e2493db218d9962456ece2060d0f2e42b3500c32",
+        "included_in_this_comparison": false
+      },
+      "identity": {
+        "baseline": {
+          "version": "0.1.1",
+          "revision": "35eb8a3242a6ba637266ba1480354138389c9cb0 + zgpui 5b268da910639abd2fb8e581acb4f6eed50b7516",
+          "binary_sha256": "a28998952b42d09f652ac95da47ddb15930cd556b6fa4e9b7e7ebbd23a4ac2e9",
+          "binary_bytes": 1439712,
+          "identity_consistent_across_runs": true
+        },
+        "optimized": {
+          "version": "0.1.1 renderer candidate",
+          "revision": "03dae9cd9c4d291547653255015e126d0d7141e6 application + zgpui c54cf244ccbda5f5822ae521b0facd5481071464; manifest 0.1.3 path pin",
+          "binary_sha256": "bd8773968ccbb000bb9f153d800d9e225d7a99d978960a8b9013f3b141584925",
+          "binary_bytes": 1444024,
+          "identity_consistent_across_runs": true
+        }
+      },
+      "scenario": "Fresh empty launcher root; visible library, idle, forced full-window Expose and settled idle",
+      "scope": "Main GUI and full related process family/session; Xvfb measured separately before/during",
+      "trials_per_variant": 3,
+      "window": [
+        1120,
+        760
+      ],
+      "metric": "GUI CPU time during forced full-window Expose workload",
+      "unit": "seconds",
+      "aggregation": "Median of three per-trial GUI CPU totals during the sampled drawing phase.",
+      "baseline_median": 2.65,
+      "optimized_median": 1.47,
+      "change_percent": -44.528301887,
+      "change_percent_definition": "Positive means candidate larger; negative means candidate smaller.",
+      "limitations": [
+        "Three pairs on one shared Linux host with private Xvfb.",
+        "Expose request count is not actual FPS.",
+        "Idle RSS remained broadly unchanged; no all-states memory bound.",
+        "The redraw and large-list candidates are different builds."
+      ],
+      "evidence": "docs/measurements/2026-11-20-renderer-iteration.json",
+      "evidence_url": "https://github.com/LIghtJUNction/zmcl/blob/dc9e586ed541cc3e1d75661c54caacdd021834a9/docs/measurements/2026-11-20-renderer-iteration.json"
+    },
+    {
+      "label": "2,000 个合成世界返回首页后的 GUI PSS+SwapPss 对照",
+      "phase": "prerelease_candidate_comparison",
+      "final_release": {
+        "version": "0.1.2",
+        "binary_sha256": "71bf4017072703a91359ea84e2493db218d9962456ece2060d0f2e42b3500c32",
+        "included_in_this_comparison": false
+      },
+      "identity": {
+        "baseline": {
+          "sha256": "9b83c4da3828a140364216f3a1509f1c1f0a25168258502ad5c2fb05c4b2a39a",
+          "bytes": 1456368,
+          "source_manifest_sha256": "d6c36991ea376b1c0783462f06789a675527d07c28354246f65b3fde8ef9f1aa",
+          "recorded_source_head": "f125316149aafed86471e55212899ffb0c98fc6e",
+          "source_file_sha256": {
+            "src/gui.rs": "b7d5d550470c58a46030e6d4f0158c7c63743ef32ea344c78c29dccb4555afe6",
+            "src/gui/create_smoke.py": "b9f5d2a16612eb215bea73580d805c6fad2e01d627af2ecabd04c46aa4d19e00"
+          },
+          "framework_commit": "5b268da910639abd2fb8e581acb4f6eed50b7516",
+          "later_committed_gui_matches_build_source": true,
+          "later_commit": "893ba20b7cb13de8efb744455be639a6e408243f",
+          "files_changed_from_recorded_head_to_later_commit": [
+            "src/gui.rs",
+            "src/gui/create_smoke.py"
+          ]
+        },
+        "optimized": {
+          "sha256": "ffc5d79abdca092a83ee6ba5c94c72cc365526cd26401a39a427bad4359a00a2",
+          "bytes": 1460040,
+          "source_snapshot": "app-framework-preview-20261120",
+          "framework_commit": "92d3cf53d68445890556f44456d45d577cda7541",
+          "application_commit": "893ba20b7cb13de8efb744455be639a6e408243f",
+          "application_patch_sha256": "014e1549cb4d5c1c617831f5d4ff58b547f3569a71e161ae5a760b14d1ee1110",
+          "source_file_sha256": {
+            "src/gui.rs": "665496f559f51e21cbd508cf7d4c6329dcaa73284035ef4d95754d0fc1891164",
+            "src/util.rs": "d4ca97852d8eb344665e6ba55b41f6e184381cb59b964377a6c6f63f7123f304",
+            "src/net.rs": "1305e2bdc85733f0f8e9d19915dc31a7bea0acf1d243c24486a86709e607e649",
+            "src/runtime.rs": "3d25637763720fbf97c3108c2c16f2cdbe4466941e9c981ba921c626b8a15f22",
+            "src/horizon.rs": "c9148e950f09d958d45ab44b21306bf0f73b85fa0f18f293b2cbef6a1d5ee463",
+            "Cargo.toml": "f20d51e1090b08058d4126c73daff5aea447bf3ccc60e0a8bc34b487f7bae389",
+            "Cargo.lock": "e35213040572adb99f06b973db0f6af6a3f47b0a5bd1d7e2b0294c64feb8bed5"
+          }
+        }
+      },
+      "scenario": "Two interleaved baseline/candidate pairs; Library -> 2000 Worlds -> Library -> 2000 Worlds.",
+      "scope": "Frozen Linux binaries containing the combined renderer and management-page lifetime batch; no isolated causal attribution.",
+      "trials_per_variant": 2,
+      "window": [
+        1120,
+        760
+      ],
+      "metric": "GUI PSS+SwapPss after returning from Worlds to Library",
+      "unit": "kib",
+      "aggregation": "Median of two trial medians (the midpoint for n=2); both individual trial medians and pair changes are preserved.",
+      "baseline_median": 7940,
+      "optimized_median": 6110,
+      "change_percent": -23.047858942,
+      "paired_change_percent": [
+        -23.710042789,
+        -22.384673557
+      ],
+      "change_percent_definition": "Positive means candidate larger; negative means candidate smaller.",
+      "limitations": [
+        "The 2,000-world fixture uses 160 ASCII title characters per world and is not a typical library.",
+        "The candidate combines renderer and management-list lifetime changes; no isolated attribution.",
+        "Whole-operation Python and application-tree peak changes were not consistently lower.",
+        "The redraw and large-list candidates are different builds."
+      ],
+      "evidence": "docs/measurements/2026-11-20-large-library-iteration.json",
+      "evidence_url": "https://github.com/LIghtJUNction/zmcl/blob/dc9e586ed541cc3e1d75661c54caacdd021834a9/docs/measurements/2026-11-20-large-library-iteration.json"
+    }
+  ]
 }

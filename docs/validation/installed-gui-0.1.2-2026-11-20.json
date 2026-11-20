@@ -1,0 +1,101 @@
+{
+  "schema": 1,
+  "application": "zmcl",
+  "version": "0.1.2",
+  "passed": true,
+  "generated_at_utc": "2026-11-20T10:51:46.811643+00:00",
+  "installed_application": {
+    "binary_path": "/usr/bin/zmcl",
+    "package": "zmcl-bin 0.1.2-1",
+    "binary_bytes": 1473144,
+    "binary_sha256": "71bf4017072703a91359ea84e2493db218d9962456ece2060d0f2e42b3500c32",
+    "version_output": "zmcl 0.1.2",
+    "aur_source_commit": "16b688237f8c54b47085a16279535db8f6c5c553",
+    "app_source_commit": "e86b5841532ef04cc74cea5585ae396150452408",
+    "installed_from_package": {
+      "name": "zmcl-bin-0.1.2-1-x86_64.pkg.tar.zst",
+      "bytes": 674238,
+      "sha256": "17f8b87cd028fe1204088de52474054f4c0f5d47f3d07e999ea9ee4b44821867"
+    },
+    "matches_host_installation_record": true,
+    "matches_public_release_binary": true,
+    "identity_basis": "The coordinator ran the native fixture against the installed /usr/bin/zmcl. Its captured binary digest matches the host-upgrade record and the released program."
+  },
+  "validation": {
+    "method": "Real native X11 pointer and keyboard input on an isolated Xvfb display, plus assertions on isolated CLI file effects",
+    "case_count": 4,
+    "passed_count": 4,
+    "failed_count": 0,
+    "cases": [
+      {
+        "case": "Default name, filtered release selection and failed automatic install retain the saved instance",
+        "passed": true
+      },
+      {
+        "case": "Create-only preserves an uninstalled second instance with a unique suggested name",
+        "passed": true
+      },
+      {
+        "case": "Duplicate name is explained before submission and preserves both instances",
+        "passed": true
+      },
+      {
+        "case": "Installed-state fixture opens the account page from the main action without signing in or launching",
+        "passed": true
+      }
+    ],
+    "test_data": "An isolated cached release manifest and isolated instance records. Installed state for account routing is synthetic.",
+    "automatic_install_failure_case": "The fixture deliberately lacks the download metadata needed for installation; the test confirms the newly saved instance is retained after the operation fails.",
+    "limits": [
+      "No provider downloads",
+      "No Microsoft sign-in",
+      "Installed state for account routing is synthetic",
+      "No game launch"
+    ]
+  },
+  "visual_review": {
+    "existing_screenshots_reviewed": true,
+    "new_gui_run_for_this_public_record": false,
+    "reviewed_views": [
+      {
+        "view": "Creation form after selecting Minecraft 1.21.1",
+        "window_pixels": [
+          1120,
+          760
+        ],
+        "observation": "Version, loader options and Create & install are readable without overlap or clipping."
+      },
+      {
+        "view": "Compact creation form with a duplicate name",
+        "window_pixels": [
+          800,
+          600
+        ],
+        "observation": "Duplicate-name guidance and disabled submission remain visible without overlap or clipping."
+      }
+    ],
+    "private_paths_or_account_secrets_visible_in_reviewed_views": false,
+    "published_screenshot": {
+      "path": "images/zmcl-0.1.2-aur-installed.png",
+      "bytes": 47410,
+      "sha256": "5eda53f394a6f67b5d3248612447f485e5aecd1c54fd5446205c58aee0b3a716"
+    }
+  },
+  "scope": {
+    "actual_installed_program_exercised": true,
+    "native_gui_input": true,
+    "isolated_fixture_data": true,
+    "provider_downloads": false,
+    "real_microsoft_sign_in": false,
+    "real_game_installation": false,
+    "java_or_game_launch": false,
+    "real_server_start": false,
+    "windows_runtime_test": false,
+    "macos_runtime_test": false,
+    "memory_benchmark": false,
+    "historical_game_runs_reused_as_this_binary_run": false,
+    "private_absolute_paths_included": false,
+    "raw_commands_or_session_logs_included": false,
+    "process_identifiers_included": false
+  }
+}
