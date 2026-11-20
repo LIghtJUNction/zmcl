@@ -15,11 +15,16 @@ name = "zgpui"
 version = "0.1.2"
 
 [[package]]
+name = "zi18n"
+version = "0.1.0"
+
+[[package]]
 name = "zmcl"
 version = "0.1.1"
 dependencies = [
  "zclap",
  "zgpui",
+ "zi18n",
  "zmcl-core",
 ]
 

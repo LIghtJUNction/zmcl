@@ -10,6 +10,9 @@ use std::{
 use zgpui::native::{ButtonStyle, Canvas, Event, Rect, Theme, Ui, Window};
 use zmcl_core::json::{Kind, Value, get_str, with_json};
 
+mod titles;
+use titles::EnglishTitles;
+
 const BG: u32 = 0x111214ff;
 const SIDE: u32 = 0x151618ff;
 const PANEL: u32 = 0x1b1d20ff;
@@ -812,6 +815,7 @@ struct App {
     exit_after_launch: bool,
     exit_requested: bool,
     ui: Ui,
+    titles: EnglishTitles,
     page: Page,
     instances: Vec<Instance>,
     accounts: Vec<Account>,
@@ -867,6 +871,7 @@ impl App {
             exit_after_launch: false,
             exit_requested: false,
             ui: Ui::default(),
+            titles: EnglishTitles::new(),
             page: Page::Library,
             instances: Vec::new(),
             accounts: Vec::new(),
@@ -1426,7 +1431,7 @@ impl App {
         enabled: bool,
     ) -> Option<Action> {
         let mut action = None;
-        Self::heading(c, x, w, "Library", "Your Minecraft instances.");
+        Self::heading(c, x, w, self.titles.library, "Your Minecraft instances.");
         let busy = self.busy();
         if self.ui.button(
             c,
@@ -1763,10 +1768,10 @@ impl App {
         let page = self.management_page;
         let instance = self.selected.clone().unwrap_or_default();
         let title = match page {
-            ManagementPage::Worlds => "Worlds",
-            ManagementPage::Backups => "Backups",
-            ManagementPage::Resources => "Resources",
-            ManagementPage::Servers => "Servers",
+            ManagementPage::Worlds => self.titles.worlds,
+            ManagementPage::Backups => self.titles.backups,
+            ManagementPage::Resources => self.titles.resources,
+            ManagementPage::Servers => self.titles.servers,
         };
         let subtitle = if page == ManagementPage::Servers {
             "Local Minecraft servers. Start and stop on Linux.".to_owned()
@@ -2268,7 +2273,7 @@ impl App {
             c,
             x,
             w,
-            "Discover mods",
+            self.titles.discover,
             "Find mods on Modrinth and add them to your selected instance.",
         );
         let busy = self.busy();
@@ -2406,7 +2411,7 @@ impl App {
             c,
             x,
             w,
-            "Modpacks",
+            self.titles.packs,
             "Bring a Modrinth modpack with you, or share your own.",
         );
         if self.ui.button(
@@ -2561,7 +2566,7 @@ impl App {
             c,
             x,
             w,
-            "Accounts",
+            self.titles.accounts,
             "Connect Microsoft to use your Minecraft account.",
         );
         let visible = self.accounts.len().min(if h > 900. {
@@ -2681,7 +2686,7 @@ impl App {
             c,
             x,
             w,
-            "Settings",
+            self.titles.settings,
             "Check your setup and see what is stored on this device.",
         );
         if self.ui.button(
