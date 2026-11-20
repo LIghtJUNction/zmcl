@@ -11,7 +11,12 @@ memory in only one side of a launcher comparison.
 
 ## Working tree and validation
 
-Use isolated checkouts if another owner is editing a file. Preserve unrelated work.
+Development rolls on `main` as the sole development branch. Coordinate one writer
+before changing the shared branch or index, and publish tested batches directly
+to `main`. Do not create feature branches for new work. Temporary detached
+snapshots may isolate preparation while another owner edits a file. Preserve
+unrelated work, then integrate through the main writer. Retire an old branch
+only after all its commits are integrated and no active work depends on it.
 Run local Cargo tests, Clippy with warnings denied and the changed Python helper
 tests. Use real install/launch or file roundtrips for changed user-visible paths.
 Do not trigger routine remote CI or CodeQL as an acceptance gate. Documentation
