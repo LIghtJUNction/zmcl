@@ -92,6 +92,33 @@ def eula_accepted(root):
         if sep and key.strip()=='eula':answer=value.strip()=='true'
     return answer
 
+def cleanup_failed_start(child, pidfd):
+    """Reap only the child owned by this failed start, with bounded escalation."""
+    import subprocess
+    errors=[]
+    for label,signum,fallback,timeout in (
+            ('graceful',signal.SIGTERM,child.terminate,15),
+            ('forced',signal.SIGKILL,child.kill,5)):
+        sent=False
+        if pidfd is not None:
+            try:
+                signal.pidfd_send_signal(pidfd,signum)
+                sent=True
+            except OSError as error:
+                errors.append(f'{label} pidfd signal failed: {error}')
+        if not sent:
+            # Popen owns this waitable child even if pidfd acquisition or
+            # signaling failed. Recorded processes never use this fallback.
+            try:fallback()
+            except OSError as error:
+                errors.append(f'{label} owned-child signal failed: {error}')
+        try:
+            child.wait(timeout=timeout)
+            return
+        except (OSError,subprocess.TimeoutExpired) as error:
+            errors.append(f'{label} wait failed: {error}')
+    raise RuntimeError('Cannot confirm process exit; '+'; '.join(errors))
+
 def start(root, options):
     if not supported():raise RuntimeError('Managed start/stop currently requires Linux pidfd support; install and status ping are cross-platform')
     state=status(root)
@@ -132,12 +159,13 @@ def start(root, options):
         time.sleep(0.15)
         if child.poll() is not None:raise RuntimeError('Server exited during startup; inspect '+str(logfile))
         return status(root)
-    except BaseException:
-        if child is not None and child.poll() is None and pidfd is not None:
-            try:
-                signal.pidfd_send_signal(pidfd,signal.SIGTERM)
-                child.wait(timeout=15)
-            except (ProcessLookupError,subprocess.TimeoutExpired):pass
+    except BaseException as startup_error:
+        if child is not None:
+            try:cleanup_failed_start(child,pidfd)
+            except Exception as cleanup_error:
+                raise RuntimeError(
+                    f'Server startup failed: {startup_error}; cleanup failed for PID '
+                    f'{child.pid}: {cleanup_error}') from startup_error
         raise
     finally:
         if pidfd is not None:os.close(pidfd)
