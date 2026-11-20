@@ -31,6 +31,7 @@ LIMITS = [
     "Xvfb is measured before and during the app and reported separately; it remains real system cost.",
     "The Python observer and X11 driver are test-process work, excluded from launcher and display totals.",
     "CPU totals require stable sampled identities; common-process CPU during churn is only a lower bound.",
+    "Executable filenames are read around each memory sample; observed exec or PID changes invalidate that read. Process labels alone do not identify the executable.",
     "This is a shared development host with no system-wide cache flush or CPU isolation.",
 ]
 
@@ -206,6 +207,7 @@ class ProcessSampler:
         if self._thread is not None:
             raise RuntimeError("Stop the memory observer before reporting")
         observed = {}
+        executable_images = {}
         for row in self.samples:
             for identity, process in row["process_memory"].items():
                 item = observed.setdefault(identity, {
@@ -217,8 +219,23 @@ class ProcessSampler:
                 item["samples_seen"] += 1
                 if row["phase"] not in item["phases"]:
                     item["phases"].append(row["phase"])
+                executable = process.get("executable")
+                if executable not in item.setdefault("executables", []):
+                    item["executables"].append(executable)
+                executable_identity = process.get("executable_identity")
+                image_key = (identity, executable_identity, executable)
+                image = executable_images.setdefault(image_key, {
+                    "identity": identity, "pid": process["pid"], "executable": executable,
+                    "executable_identity": executable_identity,
+                    "role": item["role"], "first_seen_seconds": row["elapsed_seconds"],
+                    "samples_seen": 0, "phases": [], **{metric: 0 for metric in METRICS}})
+                image["last_seen_seconds"] = row["elapsed_seconds"]
+                image["samples_seen"] += 1
+                if row["phase"] not in image["phases"]:
+                    image["phases"].append(row["phase"])
                 for metric in METRICS:
                     item[metric] = max(item[metric], process[metric])
+                    image[metric] = max(image[metric], process[metric])
         return {
             "sampling_error": self.error, "requested_sleep_seconds": self.interval,
             "sampling_cpu_seconds": self.sampling_cpu_seconds,
@@ -228,7 +245,9 @@ class ProcessSampler:
                        for name in dict.fromkeys(row["phase"] for row in self.samples)},
             "phase_events": self.events,
             "observed_processes": list(observed.values()),
-            "observed_process_metrics": "Per-identity observed maxima in KiB; these maxima need not be simultaneous",
+            "observed_executables": list(executable_images.values()),
+            "observed_process_metrics": "Per-process and per-executable observed maxima in KiB; these maxima need not be simultaneous. CPU remains per PID:starttime across exec.",
+
             "samples": self.samples, "limitations": LIMITS,
         }
 

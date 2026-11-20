@@ -61,7 +61,14 @@ def sample(pids):
     unread = []
     for pid in sorted(pids):
         try:
-            content = Path(f"/proc/{pid}/smaps_rollup").read_text()
+            proc = Path(f"/proc/{pid}")
+            before = (proc / "stat").read_text()
+            before_start = before[before.rfind(")") + 2:].split()[19]
+            # comm is a process label: a Python shim can still execute mise.
+            # Bracket the memory read so an exec cannot mislabel its footprint.
+            executable_before = os.readlink(proc / "exe")
+            image_before = (proc / "exe").stat()
+            content = (proc / "smaps_rollup").read_text()
             values = {line.split(":")[0]: int(line.split()[1])
                       for line in content.splitlines()
                       if line.startswith(("Rss:", "Pss:", "Swap:", "SwapPss:"))}
@@ -70,18 +77,34 @@ def sample(pids):
             if parts[0] == "Z":
                 continue
             name = Path(f"/proc/{pid}/comm").read_text().strip()
+            executable_after = os.readlink(proc / "exe")
+            image_after = (proc / "exe").stat()
+            image_id = (image_before.st_dev, image_before.st_ino)
+            if (before_start != parts[19] or executable_before != executable_after or
+                    image_id != (image_after.st_dev, image_after.st_ino)):
+                unread.append(pid)
+                continue
+            # Store only the executable filename, never a private installation path.
+            deleted = executable_after.endswith(" (deleted)")
+            executable = Path(executable_after.removesuffix(" (deleted)")).name
             # starttime protects the CPU identity check against PID reuse.
             identity = str(pid) + ":" + parts[19]
-            ticks[identity] = int(parts[11]) + int(parts[12])
+            cpu_ticks = int(parts[11]) + int(parts[12])
+            process = {"pid": pid, "name": name, "executable": executable,
+                       "executable_identity": f"{image_id[0]}:{image_id[1]}",
+                       "executable_deleted": deleted,
+                       "rss_kib": values["Rss"], "pss_kib": values["Pss"],
+                       "swap_kib": values["Swap"], "swap_pss_kib": values["SwapPss"]}
+            # Commit a complete row only; a failed field must not leave CPU
+            # identity or totals without its matching memory values.
+            ticks[identity] = cpu_ticks
             names.append(name)
-            memory[identity] = {"pid": pid, "name": name,
-                                "rss_kib": values["Rss"], "pss_kib": values["Pss"],
-                                "swap_kib": values["Swap"], "swap_pss_kib": values["SwapPss"]}
-            rss += values["Rss"]
-            pss += values["Pss"]
-            swap += values["Swap"]
-            swap_pss += values["SwapPss"]
-        except (FileNotFoundError, PermissionError, ProcessLookupError, ValueError, KeyError):
+            memory[identity] = process
+            rss += process["rss_kib"]
+            pss += process["pss_kib"]
+            swap += process["swap_kib"]
+            swap_pss += process["swap_pss_kib"]
+        except (OSError, ValueError, KeyError, IndexError):
             unread.append(pid)
     return {"rss_kib": rss, "pss_kib": pss, "swap_kib": swap, "swap_pss_kib": swap_pss, "processes": len(ticks),
             "cpu_ticks": ticks, "process_names": sorted(names), "process_memory": memory,
