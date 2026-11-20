@@ -1,6 +1,7 @@
 """Local synthetic-world tests; never launches Minecraft or accesses the network."""
 import contextlib
 import gzip
+import hashlib
 import importlib.util
 import io
 import json
@@ -14,6 +15,7 @@ import sys
 import tempfile
 import time
 import unittest
+from unittest import mock
 import zipfile
 
 spec = importlib.util.spec_from_file_location("world_manage", Path(__file__).with_name("manage.py"))
@@ -146,6 +148,89 @@ class WorldsTests(unittest.TestCase):
         result = self.instance / "game" / "saves" / "Wrapper"
         self.assertTrue((result / "empty").is_dir())
         self.assertFalse((result / "MyWorld").exists())
+
+    def test_export_large_compressible_files_roundtrip_with_import_limits(self):
+        source = self.world()
+        threshold = 16 * 1024 * 1024
+        sizes = {"region/at-limit.mca": threshold,
+                 "region/above-limit.mca": threshold + 1}
+        for relative, size in sizes.items():
+            with (source / relative).open("wb") as stream:
+                stream.truncate(size)
+        output = self.root / "large-world.zip"
+        stage = self.root / ".zmcl-world-large-export.zip"
+        stage.touch(mode=0o600)
+        exported = manage.export_world(self.instance, source.name, output, stage)
+        manage.import_world(self.other, output, "Returned", self.stage(self.other))
+        returned = self.other / "game/saves/Returned"
+        with zipfile.ZipFile(output) as archive:
+            small = archive.getinfo("region/at-limit.mca")
+            large = archive.getinfo("region/above-limit.mca")
+            self.assertEqual(small.compress_type, zipfile.ZIP_DEFLATED)
+            self.assertGreater(small.file_size, small.compress_size * 500)
+            self.assertEqual(large.compress_type, zipfile.ZIP_STORED)
+            self.assertEqual(large.file_size, large.compress_size)
+        def digest(path):
+            result = hashlib.sha256()
+            with path.open("rb") as stream:
+                for block in iter(lambda: stream.read(65536), b""):
+                    result.update(block)
+            return result.hexdigest()
+
+        self.assertEqual(exported["sha256"], digest(output))
+        for relative in ["level.dat", "datapacks/settings.json", *sizes]:
+            with self.subTest(relative=relative):
+                self.assertEqual((source / relative).stat().st_size,
+                                 (returned / relative).stat().st_size)
+                self.assertEqual(digest(source / relative), digest(returned / relative))
+
+    def test_import_still_rejects_high_ratio_large_entries(self):
+        output = self.root / "high-ratio.zip"
+        with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+            archive.writestr("level.dat", gzip.compress(level_bytes()))
+            with archive.open("region/large.mca", "w") as stream:
+                for _ in range(257):
+                    stream.write(b"\0" * 65536)
+        with self.assertRaisesRegex(ValueError, "compression ratio"):
+            manage.import_world(self.instance, output, "RejectedRatio", self.stage())
+        self.assertFalse((self.instance / "game/saves/RejectedRatio").exists())
+
+    def test_export_does_not_publish_archive_exceeding_directory_budget(self):
+        source = self.world()
+        output = self.root / "wide-directory.zip"
+        stage = self.root / ".zmcl-world-wide-directory.zip"
+        stage.touch(mode=0o600)
+        with mock.patch.object(manage, "MAX_CENTRAL", 1):
+            with self.assertRaisesRegex(ValueError, "central directory"):
+                manage.export_world(self.instance, source.name, output, stage)
+        self.assertFalse(output.exists())
+        self.assertEqual(manage.metadata(source)["name"], "测试 World")
+
+    def test_export_does_not_publish_archive_exceeding_total_budget(self):
+        source = self.world()
+        (source / "region/r.0.0.mca").write_bytes(b"tiny")
+        total = sum(path.stat().st_size for path in source.rglob("*") if path.is_file())
+        output = self.root / "archive-overhead.zip"
+        stage = self.root / ".zmcl-world-archive-overhead.zip"
+        stage.touch(mode=0o600)
+        with mock.patch.object(manage, "MAX_TOTAL", total):
+            with self.assertRaisesRegex(ValueError, "size budget"):
+                manage.export_world(self.instance, source.name, output, stage)
+        self.assertFalse(output.exists())
+        self.assertEqual(manage.metadata(source)["name"], "测试 World")
+
+    def test_export_retains_file_and_entry_budgets(self):
+        source = self.world()
+        for setting, value, message in [("MAX_FILE", 1, "file exceeds"),
+                                        ("MAX_ENTRIES", 1, "entries")]:
+            with self.subTest(setting=setting):
+                output = self.root / (setting + ".zip")
+                stage = self.root / (".zmcl-world-" + setting + ".zip")
+                stage.touch(mode=0o600)
+                with mock.patch.object(manage, setting, value):
+                    with self.assertRaisesRegex(ValueError, message):
+                        manage.export_world(self.instance, source.name, output, stage)
+                self.assertFalse(output.exists())
 
     def test_ambiguous_world_roots_are_rejected(self):
         source = self.archive([

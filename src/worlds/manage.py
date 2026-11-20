@@ -20,6 +20,7 @@ MAX_ENTRIES = 50000
 MAX_FILE = 1024 * 1024 * 1024
 MAX_TOTAL = 16 * 1024 * 1024 * 1024
 MAX_CENTRAL = 16 * 1024 * 1024
+ZIP_RATIO_MIN_BYTES = 16 * 1024 * 1024
 MAX_NBT_COMPRESSED = 8 * 1024 * 1024
 MAX_NBT_RAW = 16 * 1024 * 1024
 MAX_NBT_TAGS = 250000
@@ -560,7 +561,7 @@ def inspect_zip(archive, budget):
             fail("ZIP directory contains file data")
         if member.compress_size < 0 or member.compress_size > MAX_TOTAL:
             fail("Invalid ZIP compressed size")
-        if member.file_size > 16 * 1024 * 1024 and member.file_size > max(1, member.compress_size) * 500:
+        if member.file_size > ZIP_RATIO_MIN_BYTES and member.file_size > max(1, member.compress_size) * 500:
             fail("ZIP compression ratio exceeds its safety budget")
         budget.add(0 if directory else member.file_size)
         key = portable(parts)
@@ -786,7 +787,13 @@ def export_world(instance, name, destination, stage):
                     budget.tick()
                     member = zipfile.ZipInfo("/".join(parts) + ("/" if directory else ""))
                     member.create_system = 3
-                    member.compress_type = zipfile.ZIP_DEFLATED
+                    # Large members must satisfy the importer's ratio guard even
+                    # when their contents are almost entirely zeroes. Storing
+                    # them avoids a second compression pass, at the cost of a
+                    # larger archive; file and archive byte limits still apply.
+                    member.compress_type = (zipfile.ZIP_STORED
+                                            if not directory and before.st_size > ZIP_RATIO_MIN_BYTES
+                                            else zipfile.ZIP_DEFLATED)
                     member.external_attr = ((stat.S_IFDIR | 0o700) if directory else
                                             (stat.S_IFREG | 0o600)) << 16
                     if directory:
@@ -804,6 +811,9 @@ def export_world(instance, name, destination, stage):
         stable(stability)
         digest = hashlib.sha256()
         with open_regular(stage, max_size=MAX_TOTAL) as written:
+            # Long paths can exceed the importer's central-directory limit
+            # even when the source entry count and data bytes are in budget.
+            check_zip_directory(written)
             for chunk in iter(lambda: written.read(CHUNK), b""):
                 budget.tick()
                 digest.update(chunk)
