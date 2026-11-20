@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="color-scheme" content="dark">
-  <meta name="description" content="zmcl：基于 Rust 与 Project Z 的 Minecraft 启动器。Linux 下载、AUR 安装、功能状态和实际内存记录。">
+  <meta name="description" content="zmcl：基于 Rust 与 Project Z 的 Minecraft 启动器。Linux 与 Windows 下载、安装更新说明、功能状态和实际内存记录。">
   <meta name="theme-color" content="#111111">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self'; style-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'">
   <title>zmcl — Minecraft 启动器</title>
@@ -17,7 +17,7 @@
   <header class="header">
     <a class="wordmark" href="#top">zmcl</a>
     <nav aria-label="项目链接">
-      <a href="https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.3">下载</a>
+      <a href="#install">下载</a>
       <a href="https://github.com/LIghtJUNction/zmcl">GitHub <span aria-hidden="true">↗</span></a>
     </nav>
   </header>
@@ -36,10 +36,10 @@
 
     <main id="main">
       <div class="intro" id="top">
-        <p class="version">Project Z <span aria-hidden="true">/</span> v0.1.3 · 开发预览</p>
+        <p class="version">Project Z <span aria-hidden="true">/</span> v0.1.4 · 开发预览</p>
         <h1>Minecraft 启动器</h1>
         <p class="lead">zmcl 是基于 Rust 与 Project Z 的原生启动器。提供 Java 版实例、加载器和内容管理，支持图形界面与命令行。</p>
-        <p class="intro-note">目前主要在 Linux 上开发和验证。功能覆盖与内存优化仍在进行中。</p>
+        <p class="intro-note">提供 Linux 与 Windows 安装包。安装、窗口和游戏流程分别记录验收范围；功能覆盖与内存优化仍在进行中。</p>
         <div class="intro-links">
           <a class="install-link" href="#install">安装 zmcl <span aria-hidden="true">↓</span></a>
           <a href="https://github.com/LIghtJUNction/zmcl/blob/main/docs/FEATURES.md">查看功能矩阵 ↗</a>
@@ -47,18 +47,66 @@
       </div>
 
       <section id="install" aria-labelledby="install-title">
-        <h2 id="install-title">安装</h2>
-        <h3>Arch Linux</h3>
-        <p>使用 AUR 包 <a href="https://aur.archlinux.org/packages/zmcl-bin"><code>zmcl-bin</code></a> 安装官方预编译程序。</p>
-        <div class="command">
-          <div class="command-heading"><span>AUR</span><button type="button" data-copy="aur-command" aria-label="复制 AUR 安装命令">复制</button></div>
-          <pre><code id="aur-command">paru -S zmcl-bin</code></pre>
-        </div>
-        <p class="note" id="aur-status">当前包为 0.1.3-1 开发预览，已完成公共新克隆构建、正常升级和安装后窗口验收。也可运行 <code>yay -S zmcl-bin</code>，用 <code>zmcl --version</code> 核对实际安装版本。</p>
+        <h2 id="install-title">下载与安装</h2>
+        <p>选择适合系统的 0.1.4 开发预览。用户安装包可放到自己的目录；DEB 交给 apt 管理。macOS 暂无发行包。</p>
+        <dl class="feature-list">
+          <div><dt>Linux x86_64</dt><dd><a href="https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.4/zmcl-0.1.4-linux-x86_64.tar.gz">下载 tar.gz · 700,244 字节</a><br>解包后用 Python 安装到自己的目录，可使用带空格的路径。</dd></div>
+          <div><dt>Debian x86_64</dt><dd><a href="https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.4/zmcl-0.1.4-linux-x86_64.deb">下载 DEB · 571,108 字节</a><br>需要 glibc ≥ 2.39、Fontconfig ≥ 2.17.0。已在 Debian forky/sid 容器验收。</dd></div>
+          <div><dt>Windows amd64</dt><dd><a href="https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.4/zmcl-0.1.4-windows-amd64.zip">下载 ZIP · 670,411 字节</a><br>需要 Python ≥ 3.8；原生 build 26100 runner 的安装、窗口和卸载验收通过。</dd></div>
+        </dl>
+        <p class="note">Linux tar.gz 同样要求 glibc ≥ 2.39、Fontconfig ≥ 2.17.0、FreeType 和 X11/XWayland，文件与下载任务需要 Python ≥ 3.8、curl 和 CA 证书。默认 CPU 绘制，无需 OpenGL。DEB 的成功验收不代表任意 Debian 稳定版兼容；Windows 结果不覆盖所有系统版本和实际游戏。</p>
+        <p class="section-links"><a href="https://github.com/LIghtJUNction/zmcl/blob/main/docs/INSTALL.md">完整安装、更新与卸载说明 ↗</a><a href="https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.4">0.1.4 发行页 ↗</a><a href="https://github.com/LIghtJUNction/zmcl/blob/main/docs/reports/2026-11-20-zdistro.md">实际验收范围 ↗</a></p>
 
-        <h3>Linux x86_64</h3>
-        <p><a href="https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.3/zmcl-0.1.3-linux-x86_64.tar.gz">下载 v0.1.3 开发预览（tar.gz，679,517 字节）</a>。此预编译包要求 <code>glibc ≥ 2.39</code>、<code>Fontconfig ≥ 2.17.0</code>、X11/XWayland 与 FreeType。默认使用 CPU 绘制，无需 OpenGL；Python ≥ 3.8 和 curl 在相应操作期间运行，Java 与 Minecraft 单独安装。</p>
-        <p class="note"><a href="https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.3/zmcl-0.1.3-linux-x86_64.tar.gz.sha256">SHA-256 校验文件 ↗</a> · <a href="https://github.com/LIghtJUNction/zmcl/blob/main/docs/INSTALL.md">安装与卸载说明 ↗</a> · <a href="https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.3">发行记录 ↗</a></p>
+        <details class="source-build">
+          <summary>Linux tar.gz：解包和用户安装</summary>
+          <p>先核对下方 SHA-256，再运行。前缀保持一致即可升级；安装器会给出本次程序的直接启动命令。</p>
+          <div class="command">
+            <div class="command-heading"><span>Shell</span><button type="button" data-copy="portable-command" aria-label="复制 Linux 用户安装命令">复制</button></div>
+<pre><code id="portable-command">tar -xzf zmcl-0.1.4-linux-x86_64.tar.gz
+cd zmcl-0.1.4-linux-x86_64
+python3 scripts/install.py install --prefix "$HOME/.local"
+"$HOME/.local/bin/zmcl" gui</code></pre>
+          </div>
+          <p class="note">自定义前缀可写为 <code>"$HOME/Applications/zmcl portable"</code>，启动时也使用相同目录下的 <code>bin/zmcl</code>。安装器不会修改 PATH。</p>
+        </details>
+
+        <details class="source-build">
+          <summary>DEB：使用 apt 安装</summary>
+          <p>核对 SHA-256 后，让 apt 检查运行库和必需依赖。用户实例、存档及账号数据不属于软件包的文件清单。</p>
+          <div class="command">
+            <div class="command-heading"><span>Shell</span><button type="button" data-copy="deb-command" aria-label="复制 DEB 安装命令">复制</button></div>
+<pre><code id="deb-command">sudo apt install --no-install-recommends ./zmcl-0.1.4-linux-x86_64.deb
+/usr/bin/zmcl --version
+/usr/bin/zmcl gui</code></pre>
+          </div>
+          <p class="note">CA 证书是显式依赖，在不安装推荐包的最小 Debian 环境中也会安装。升级继续安装新版 DEB，卸载使用 <code>sudo apt remove zmcl</code>。</p>
+        </details>
+
+        <details class="source-build">
+          <summary>Windows ZIP：解包和用户安装</summary>
+          <p>在 PowerShell 中进入 ZIP 所在目录，核对 SHA-256 后运行。若没有 <code>py -3</code>，使用已安装的 Python 3.8 或更新版本。</p>
+          <div class="command">
+            <div class="command-heading"><span>PowerShell</span><button type="button" data-copy="windows-command" aria-label="复制 Windows 用户安装命令">复制</button></div>
+<pre><code id="windows-command">Expand-Archive .\zmcl-0.1.4-windows-amd64.zip -DestinationPath .
+Set-Location .\zmcl-0.1.4-windows-amd64
+py -3 scripts/install.py install --prefix "$env:LOCALAPPDATA\Programs\zmcl"
+&amp; "$env:LOCALAPPDATA\Programs\zmcl\bin\zmcl.exe" gui</code></pre>
+          </div>
+        </details>
+
+        <details class="source-build">
+          <summary>SHA-256 与构建身份</summary>
+          <p>下载文件的摘要应与对应行完全一致。Linux 用 <code>sha256sum 文件名</code>，PowerShell 用 <code>Get-FileHash 文件名 -Algorithm SHA256</code> 检查。</p>
+<pre><code>8265e672ef7914362c1038b71ed382d18efafe49668d7791005713faa5f580f1  zmcl-0.1.4-linux-x86_64.tar.gz
+c19afcdd4e567ffcb580f60fbe5812d6915c12b484e9751518c3f0b790c5b7b8  zmcl-0.1.4-linux-x86_64.deb
+48bd7dc7ce0eb799fed225678b6a6d9c4ed518f7ee96482b2c5c1f0f516271cf  zmcl-0.1.4-windows-amd64.zip</code></pre>
+          <p class="note">源码 <a href="https://github.com/LIghtJUNction/zmcl/commit/25c243a593b187b0f0835e740665e1fce96d3621">25c243a</a> · <a href="https://github.com/LIghtJUNction/zmcl/blob/main/docs/validation/zdistro-release-0.1.4.json">结构化发行回执 ↗</a></p>
+        </details>
+
+        <details class="source-build">
+          <summary>Arch Linux / AUR</summary>
+          <p id="aur-status"><a href="https://aur.archlinux.org/packages/zmcl-bin">zmcl-bin</a> 已公开 0.1.4-1 配方（源码 <code>a769068</code>）。可用 <code>paru -S zmcl-bin</code> 或 <code>yay -S zmcl-bin</code> 安装，并用 <code>zmcl --version</code> 核对实际程序。公开新克隆构建、本机升级与已安装界面验收已通过，真实官方更新查询返回当前 0.1.4。</p>
+        </details>
 
         <details class="source-build">
           <summary>从源码构建</summary>
@@ -71,13 +119,13 @@ cd zmcl
 cargo build --release --locked
 ./target/release/zmcl gui</code></pre>
           </div>
-          <p class="note">Windows 完整 GUI 交叉构建已通过；Windows 应用原生运行，以及 macOS 应用构建和桌面流程仍待验收。发行包仅提供 Linux x86_64。<a href="https://github.com/LIghtJUNction/zmcl/blob/main/README.md">完整构建说明 ↗</a></p>
+          <p class="note"><a href="https://github.com/LIghtJUNction/zmcl/blob/main/README.md">完整构建说明 ↗</a>。macOS 应用构建和桌面流程仍待验收。</p>
         </details>
       </section>
 
       <section id="usage" aria-labelledby="usage-title">
         <h2 id="usage-title">开始使用</h2>
-        <p>安装后，在应用菜单打开 <strong>zmcl</strong>，或运行 <code>zmcl gui</code>。创建实例时筛选 Minecraft 发行版、选择加载器，默认创建并安装；也可先选择仅创建。</p>
+        <p>安装后，使用安装器显示的完整路径打开程序。Linux 桌面入口也可从应用菜单启动；PATH 已指向本次安装时可运行 <code>zmcl gui</code>。创建实例时筛选 Minecraft 发行版、选择加载器，默认创建并安装；也可先选择仅创建。</p>
         <p>也可以通过命令行创建实例。下面使用明确的单机身份：</p>
         <div class="command">
           <div class="command-heading"><span>示例 · Minecraft 1.21.1</span><button type="button" data-copy="instance-command" aria-label="复制实例创建命令">复制</button></div>
@@ -90,13 +138,14 @@ zmcl launch survival --offline Player</code></pre>
 
       <section id="features" aria-labelledby="features-title">
         <h2 id="features-title">当前功能</h2>
-        <p>v0.1.3 接续既有的发行版筛选、实例命名和创建安装流程，继续减少世界与备份管理中的临时分配。AUR 安装后的程序再次通过六组原生管理操作；0.1.2 的创建流程和实际游戏、加载器及联网结果保留各自原构建的记录。</p>
+        <p>v0.1.4 改进安装完成提示、来源识别和手动更新检查，并通过 Linux 安装更新与 Windows 原生发行验收。既有创建、管理和游戏记录保留各自版本；本轮的窗口与文件夹具不等同于真实账号或游戏流程。</p>
         <dl class="feature-list">
+          <div><dt>安装与更新</dt><dd>Settings 展示当前版本、程序位置和安装来源。手动检查官方更新，区分新版本、已最新和本机版本更高；失败可重试。下载后按原安装渠道更新，检查本身不改写程序。</dd></div>
           <div><dt>游戏与加载器</dt><dd>Java 版安装、修复和启动。原版 26.3、Fabric / Quilt / Forge 1.21.1 已有此前构建的真实菜单记录；本版未重跑实际游戏，NeoForge 仍待实机验收。</dd></div>
           <div><dt>实例</dt><dd>筛选官方发行版、建议不重复的名称，选择创建并安装或仅创建。保留配置、克隆、回收站和恢复，以及下载校验、缓存复用与损坏修复。</dd></div>
           <div><dt>Modrinth</dt><dd>模组搜索与添加、mrpack 导入与导出。模组启停、更新、移除和恢复主要通过命令行完成。</dd></div>
-          <div><dt>世界与备份</dt><dd>GUI 已验收世界目录导入、ZIP 导出、备份与确认恢复，并保留恢复前快照。CLI 还提供克隆等操作；本轮使用合成存档，没有把文件往返等同于实际游戏内游玩。</dd></div>
-          <div><dt>资源与服务端</dt><dd>资源包、光影包及本地服务器已有 GUI 管理入口。本版验证了未托管资源文件保留、创建服务器及 EULA 未接受时拒绝启动；真实联网下载、光影渲染和开服仍待分别验收。</dd></div>
+          <div><dt>世界与备份</dt><dd>已有历史 GUI 验收覆盖世界目录导入、ZIP 导出、备份与确认恢复，并保留恢复前快照。CLI 还提供克隆等操作；相关合成存档验收不等同于实际游戏内游玩。</dd></div>
+          <div><dt>资源与服务端</dt><dd>资源包、光影包及本地服务器已有 GUI 管理入口。0.1.3 的历史验收覆盖未托管资源文件保留、创建服务器及 EULA 未接受时拒绝启动；真实联网下载、光影渲染和开服仍待分别验收。</dd></div>
           <div><dt>运行环境</dt><dd>下载并校验所需 Java。Horizon 官方启动器组件的下载、签名校验和版本运行已验证，完整游戏流程尚未验证。</dd></div>
         </dl>
         <p class="section-links"><a href="https://github.com/LIghtJUNction/zmcl/blob/main/docs/FEATURES.md">完整功能与差距 ↗</a><a href="https://github.com/LIghtJUNction/zmcl/blob/main/docs/VALIDATION.md">验收记录 ↗</a></p>
@@ -108,17 +157,18 @@ zmcl launch survival --offline Player</code></pre>
           <img src="assets/create-0.1.2.png" width="1120" height="760" alt="zmcl v0.1.2 的 Linux 原生创建界面，显示建议的实例名称、Minecraft 版本、加载器选择和创建并安装选项。" loading="lazy">
           <figcaption>v0.1.2 · zgpui 0.1.5 原生 CPU 窗口 · 本机创建 fixture 验收 · <a href="https://github.com/LIghtJUNction/zmcl/commit/e86b5841532ef04cc74cea5585ae396150452408">源码 e86b584</a></figcaption>
         </figure>
-        <p class="note">0.1.2 的创建界面和 800×600 紧凑布局见<a href="https://github.com/LIghtJUNction/zmcl/blob/main/docs/reports/2026-11-20-gui-iteration.md">本轮验收报告 ↗</a>。</p>
+        <p class="note">0.1.2 的创建界面和 800×600 紧凑布局见<a href="https://github.com/LIghtJUNction/zmcl/blob/main/docs/reports/2026-11-20-gui-iteration.md">0.1.2 验收报告 ↗</a>。</p>
       </section>
 
       <section id="memory" aria-labelledby="memory-title">
         <h2 id="memory-title">资源占用</h2>
-        <p><strong>低于 10 MiB 的完整 GUI 内存目标仍未达到。</strong>下面列出 0.1.3 制品与完整进程树测量，并保留各自原身份的历史对照。</p>
-        <p class="note">v0.1.3 Linux 主程序为 1,473,752 bytes，下载包为 679,517 bytes；展开后 7 个常规文件共 1,527,273 bytes。应用源码为 <a href="https://github.com/LIghtJUNction/zmcl/commit/9ef89bb92d46d324172d6ea8b13054c81434e178">9ef89bb</a>，使用 zgpui 0.1.5。文件体积不含系统库、Java、游戏和缓存，也不等同于运行内存。</p>
+        <p><strong>低于 10 MiB 的完整 GUI 内存目标仍未达到。</strong>0.1.4 未新增整机内存对照；下面保留 0.1.3 及更早版本的原始测量，不改标为新版本结果。</p>
+        <p class="note">0.1.4 的 Linux 主程序为 1,504,616 字节，Windows 主程序为 1,382,912 字节。文件体积不含系统库、Java、游戏和缓存，也不等同于运行内存。</p>
+        <p class="note">历史 v0.1.3 Linux 主程序为 1,473,752 bytes，下载包为 679,517 bytes；展开后 7 个常规文件共 1,527,273 bytes。应用源码为 <a href="https://github.com/LIghtJUNction/zmcl/commit/9ef89bb92d46d324172d6ea8b13054c81434e178">9ef89bb</a>，使用 zgpui 0.1.5。文件体积不含系统库、Java、游戏和缓存，也不等同于运行内存。</p>
 
-        <h3>0.1.3 原生管理流程</h3>
+        <h3>历史 0.1.3 原生管理流程</h3>
         <table class="measurements">
-          <caption>最终二进制 · 六组管理流程 · 完整应用树观测峰值</caption>
+          <caption>历史 0.1.3 最终二进制 · 六组管理流程 · 完整应用树观测峰值</caption>
           <thead><tr><th scope="col">运行条件</th><th scope="col">RSS / PSS</th></tr></thead>
           <tbody>
             <tr><th scope="row">默认 PATH，含 mise 转发程序</th><td>59,884 / 48,651 KiB <span>包含 GUI、CLI、Python 与观察到的转发程序</span></td></tr>
@@ -180,7 +230,7 @@ zmcl launch survival --offline Player</code></pre>
           <li><strong>降低 GUI 内存。</strong>已接入 zgpui 0.1.5 的真实原生 CPU 后端；继续降低启动、重绘和按需 CLI / Python 的操作期开销，保持主进程与完整相关树的测量。</li>
           <li><strong>补齐图形界面。</strong>完善已有管理页面，接入更多仍只通过 CLI 提供的操作，并补足大存档、复杂整合包和真实服务端的窗口验收。</li>
           <li><strong>完善账号和内容来源。</strong>完成真实账号流程验收，再补齐 CurseForge、FTB、Packwiz 等来源及复杂整合包场景。</li>
-          <li><strong>扩展平台与协作能力。</strong>Windows/macOS 应用原生运行验收、签名自更新、无障碍、P2P 联机和云备份仍在待办中。Bedrock 尚未支持。</li>
+          <li><strong>扩展平台与协作能力。</strong>继续扩展 Windows 系统版本与真实游戏验收，补足 macOS 应用构建和桌面流程；签名自更新、无障碍、P2P 联机和云备份仍在待办中。Bedrock 尚未支持。</li>
         </ol>
         <p class="section-links"><a href="https://github.com/LIghtJUNction/zmcl/issues">报告问题 ↗</a><a href="https://github.com/LIghtJUNction/zmcl/blob/main/docs/ARCHITECTURE.md">架构说明 ↗</a></p>
       </section>

@@ -62,13 +62,31 @@ receipt 中的 `installed: false`、`published: false` 和签名状态表示该�
 
 便携包保留原有根目录和 `scripts/install.py` 入口。DEB 将程序放在 `/usr/bin/zmcl`，同时提供桌面入口、图标、许可证和说明文件。游戏实例、存档、账号资料及 Java 不打进启动器软件包。
 
-DEB 的 glibc 与 Fontconfig 下限来自实际二进制引用的符号；动态库名映射到 Debian 包名，遇到未映射的依赖会明确失败。还声明 curl、Python 与图标主题依赖。当前未从 GCC/GLIBCXX 符号推导 Debian 包版本下限，不能据此宣称任意旧系统兼容；真实安装和动态链接检查另行验收。Microsoft 凭据操作需要额外的 `libsecret-tools` 与桌面 Secret Service，Horizon 验签需要支持 Ed25519 的 OpenSSL。不能为了使安装通过而降低实际 ABI 下限。
+DEB 的 glibc 与 Fontconfig 下限来自实际二进制引用的符号；动态库名映射到 Debian 包名，遇到未映射的依赖会明确失败。还显式声明 curl、CA 证书（`ca-certificates`）、Python 与图标主题依赖，安装时禁用推荐包也会安装必需的 CA 证书。当前未从 GCC/GLIBCXX 符号推导 Debian 包版本下限，不能据此宣称任意旧系统兼容；真实安装和动态链接检查另行验收。Microsoft 凭据操作需要额外的 `libsecret-tools` 与桌面 Secret Service，Horizon 验签需要支持 Ed25519 的 OpenSSL。不能为了使安装通过而降低实际 ABI 下限。
 
 DEB 目前只接受数字形式的 `X.Y.Z` 版本，拒绝尚未转换的 SemVer 预发布或构建后缀，防止 Debian 与 SemVer 不同的排序规则改变升级顺序。GitHub 上将数字版本标为开发预览不会改变软件包版本本身。
 
 每个软件包在 `share/zmcl/distribution.json`（DEB 为 `/usr/share/zmcl/distribution.json`）提供应用、版本、格式、打包工具及固定官方发行页等说明。该文件用于展示安装来源，不授权自动改写程序，也不代替包管理器的所有权记录。
 
 Arch 继续使用仓库中维护的 AUR 配方，并消费 zdistro 生成的官方 tar.gz，以保留 `provides`、`conflicts` 与可选依赖声明。DEB 的成功打包不表示所有 Debian 或 Ubuntu 版本都能运行，实际系统版本与安装结果应单独记录。
+
+## 用户安装信息与更新入口
+
+用户安装器仍使用 Python 3.8 或更新。在解包目录执行 `python3 scripts/install.py install --prefix "目标目录"`；Windows 可使用 `py -3`。Linux 的程序目标为 `bin/zmcl`，Windows 为 `bin/zmcl.exe`。完成提示给出可验证的版本、位置、直接启动命令和更新方式。若 PATH 优先选择另一份程序，同时展示两个路径，不修改 PATH 或用户的 shell 配置，也不删除另一份安装。
+
+用户安装生成 `share/zmcl/installation.json`，字段为 `schema: 1`、`application: "zmcl"`、`version`、`channel: "portable"`、`executable`、`prefix` 和 `release_url`。版本优先使用经过 payload 摘要校验的发行元数据；合法旧包缺少完整信息时可以安装，但不能从目录名称推测版本。`install.json` 保留原有的严格列表格式，每项只含 `path` 和 `sha256`。带 distribution marker 的新便携安装明确管理程序、图标、桌面文件、distribution marker 与 installation receipt 五个文件；marker 和 receipt 的修改也会触发保护。
+
+GUI 的 Settings 展示当前程序版本、路径与安装来源，并提供手动 **Check for updates**。只有通过校验的 distribution marker 才用于识别对应的打包来源；缺失 marker 时，合法 portable receipt 可以说明用户安装，但不自动标记为 zdistro。损坏、悬挂链接或与当前程序不匹配的 marker 不会被另一份 receipt 覆盖。更新结果提供官方发行页与适合当前平台的资产信息，不自动替换文件；AUR 和 DEB 仍由各自包管理器更新。
+
+用户级升级检查旧清单与实际摘要，只覆盖确认受管且未修改的文件。卸载同样只移除匹配的受管文件；修改过的文件、非受管文件和已有游戏数据保留。详情与可复制命令见[安装说明](INSTALL.md)。
+
+## 0.1.4 实际发行验收
+
+0.1.4 从源码 [25c243a](https://github.com/LIghtJUNction/zmcl/commit/25c243a593b187b0f0835e740665e1fce96d3621) 生成 Linux x86_64 tar.gz、DEB 和 Windows amd64 ZIP。文件大小、摘要、二进制身份与完整流程记录在[发行报告](reports/2026-11-20-zdistro.md)和[结构化回执](validation/zdistro-release-0.1.4.json)；面向用户的入口为 [v0.1.4 发行页](https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.4)。
+
+Linux 在 Debian forky/sid 容器完成旧 0.1.3 升级、重装、卸载，以及带空格前缀、PATH 遮蔽、九组原生 GUI 夹具和数据保留检查。最小原始镜像没有 CA 证书；正常 apt 安装 DEB，即使使用 `--no-install-recommends`，也会安装所需证书。随后 GitHub HTTPS 请求返回 200、证书验证结果为 0；一次真实手动更新查询识别本机版本高于当时线上 0.1.3，查询没有修改二进制。
+
+[正式 Windows workflow 44739704182](https://github.com/LIghtJUNction/zmcl/actions/runs/44739704182)在原生 build 26100 runner 上完成 MSVC 构建、ZIP 打包、私有前缀安装、版本输出、Win32 窗口、五项受管文件与卸载数据保留检查。此结果不扩大为所有 Windows 版本、真实账号或实际游戏流程验收。首次 Windows 验证器 PATH 解析失败，以及 Linux 容器默认排除文档导致的首次完整性检查失败，均保留在原始记录；修正验证环境后的成功另行记录。
 
 ## 平台边界
 

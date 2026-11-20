@@ -1,0 +1,540 @@
+{
+  "schema": "zmcl.release-validation.v1",
+  "version": "0.1.4",
+  "date": "2026-11-20",
+  "timezone": "Asia/Taipei",
+  "status": "passed",
+  "source_commit": "25c243a593b187b0f0835e740665e1fce96d3621",
+  "github_recipe_commit": "9e3379feda599af90127785550335e66c99b80cf",
+  "release": {
+    "version": "0.1.4",
+    "source_commit": "25c243a593b187b0f0835e740665e1fce96d3621",
+    "release_id": 452713239,
+    "release_url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.4",
+    "tag": "v0.1.4",
+    "prerelease": true,
+    "draft": false,
+    "published_at": "2026-11-20T13:14:14Z",
+    "passed": true,
+    "public_downloads_verified": true,
+    "assets": [
+      {
+        "name": "SHA256SUMS",
+        "bytes": 378,
+        "sha256": "fad4f71ae5d07073829e5a9230312a1456e31e6a093f0eba31560e2ea62fb8b4",
+        "url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.4/SHA256SUMS",
+        "http_status": 200,
+        "authenticated_download": false,
+        "verified": true
+      },
+      {
+        "name": "zmcl-0.1.4-linux-x86_64.deb",
+        "bytes": 571108,
+        "sha256": "c19afcdd4e567ffcb580f60fbe5812d6915c12b484e9751518c3f0b790c5b7b8",
+        "url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.4/zmcl-0.1.4-linux-x86_64.deb",
+        "http_status": 200,
+        "authenticated_download": false,
+        "verified": true
+      },
+      {
+        "name": "zmcl-0.1.4-linux-x86_64.deb.sha256",
+        "bytes": 94,
+        "sha256": "013e4293d4c0c328894771c6891dca68b59eb04e4c87d94090e0dd6ca63a2787",
+        "url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.4/zmcl-0.1.4-linux-x86_64.deb.sha256",
+        "http_status": 200,
+        "authenticated_download": false,
+        "verified": true
+      },
+      {
+        "name": "zmcl-0.1.4-linux-x86_64.tar.gz",
+        "bytes": 700244,
+        "sha256": "8265e672ef7914362c1038b71ed382d18efafe49668d7791005713faa5f580f1",
+        "url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.4/zmcl-0.1.4-linux-x86_64.tar.gz",
+        "http_status": 200,
+        "authenticated_download": false,
+        "verified": true
+      },
+      {
+        "name": "zmcl-0.1.4-linux-x86_64.tar.gz.sha256",
+        "bytes": 97,
+        "sha256": "96666f5b55d8fd7b4e554211dd4d5177a9760bf0b86becf78e43e0eabfc673f3",
+        "url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.4/zmcl-0.1.4-linux-x86_64.tar.gz.sha256",
+        "http_status": 200,
+        "authenticated_download": false,
+        "verified": true
+      },
+      {
+        "name": "zmcl-0.1.4-validation.zip",
+        "bytes": 6082565,
+        "sha256": "98ac12d4a90280796dce824064f378437c476f838acc7b8dee56de69cda28394",
+        "url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.4/zmcl-0.1.4-validation.zip",
+        "http_status": 200,
+        "authenticated_download": false,
+        "verified": true
+      },
+      {
+        "name": "zmcl-0.1.4-windows-amd64.zip",
+        "bytes": 670411,
+        "sha256": "48bd7dc7ce0eb799fed225678b6a6d9c4ed518f7ee96482b2c5c1f0f516271cf",
+        "url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.4/zmcl-0.1.4-windows-amd64.zip",
+        "http_status": 200,
+        "authenticated_download": false,
+        "verified": true
+      },
+      {
+        "name": "zmcl-0.1.4-windows-amd64.zip.sha256",
+        "bytes": 95,
+        "sha256": "cba023ff36702cbeac3ffedf598ed3dbcb3fb9599cb022b68924afe6934a4968",
+        "url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.4/zmcl-0.1.4-windows-amd64.zip.sha256",
+        "http_status": 200,
+        "authenticated_download": false,
+        "verified": true
+      }
+    ],
+    "evidence_inventory_verified": true,
+    "previous_native_attempt": {
+      "outcome": "release_created_and_Linux_public_downloads_verified; validation ZIP readback exceeded 120s",
+      "record_preserved": true,
+      "release_recreated": false
+    },
+    "verification_environment": "Independent cloud workspace; anonymous standard HTTPS release URLs, default TLS verification"
+  },
+  "zdistro": {
+    "version": "0.1.0",
+    "source_commit": "6a54a137fc697d372b54ef85105315f2ce522b3d",
+    "zipapp_bytes": 30648,
+    "zipapp_sha256": "a30a4580254a6510c2019e3e7a684c31d4e435b69f32f33d3813ef6264544908",
+    "original_receipts_unchanged": true,
+    "receipt_semantics": "Original installed/published/signing fields describe zdistro actions; installation and public publication are recorded independently."
+  },
+  "binaries": {
+    "linux-x86_64": {
+      "bytes": 1504616,
+      "sha256": "586968d15c5187c0223d5223294ddcba585789d93934e6a37a3c7e1c516a3615"
+    },
+    "windows-amd64": {
+      "bytes": 1382912,
+      "sha256": "33164565b43bf2f9db63da8e61db2a211318ca2fa682fd29ef988e910612910f"
+    }
+  },
+  "source_validation": {
+    "rust_tests": {
+      "total": 114,
+      "application": 92,
+      "core": 22
+    },
+    "strict_clippy": true,
+    "core_no_default_features": true,
+    "application_without_gui": true,
+    "python_current_case_counts": {
+      "zdistro": 22,
+      "installer": 38,
+      "package": 15,
+      "windows_distribution": 14,
+      "runtime_installer": 11,
+      "worlds": 22,
+      "server": 12,
+      "aur_marker_checker": 12
+    },
+    "execution_scope": "The first integrated batch ran 131 Python cases; the final Windows validator ran 14 after its 3 added regressions; 12 AUR regressions ran separately. These are not one full-suite invocation.",
+    "evidence": [
+      "docs/validation/zdistro-gui-source-2026-11-20.json",
+      "docs/validation/windows-dumpbin-preflight-2026-11-20.json"
+    ],
+    "linux_final_build_recheck": {
+      "source": "25c243a593b187b0f0835e740665e1fce96d3621",
+      "command": "cargo build --release --locked --offline",
+      "clean_rebuild": false,
+      "binary_sha256": "586968d15c5187c0223d5223294ddcba585789d93934e6a37a3c7e1c516a3615",
+      "unchanged_runtime_build_inputs": true
+    }
+  },
+  "linux": {
+    "environment": "Disposable rootless Podman Debian user space with private Xvfb; host kernel shared. No real accounts, game downloads or host installation.",
+    "os_release": "PRETTY_NAME=\"Debian GNU/Linux forky/sid\"\nNAME=\"Debian GNU/Linux\"\nVERSION_CODENAME=forky\nID=debian\nHOME_URL=\"https://www.debian.org/\"\nSUPPORT_URL=\"https://www.debian.org/support\"\nBUG_REPORT_URL=\"https://bugs.debian.org/\"\n",
+    "kernel": "7.3.4-arch1-1",
+    "source_bundle_sha256": "1f308d001d03b4335610f25e567e06f64c5b3833ee3126f3698610bfff7bc2de",
+    "deb_install_upgrade_reinstall_uninstall_passed": true,
+    "synthetic_instance_and_save_preserved": true,
+    "portable_upgrade_uninstall_passed": true,
+    "baseline": {
+      "version": "0.1.3",
+      "deb_publicly_released": false,
+      "description": "Private old-DEB fixture from the exact public 0.1.3 source/binary; portable upgrade used the actual public 0.1.3 tar."
+    },
+    "doc_exclusion_exception": {
+      "apt_options": [
+        "-o",
+        "Dpkg::Options::=--path-include=/usr/share/doc/zmcl",
+        "-o",
+        "Dpkg::Options::=--path-include=/usr/share/doc/zmcl/*"
+      ],
+      "scope": "Only the disposable verification installs include zmcl documentation; default Docker extraction policy is unchanged.",
+      "image_policy": {
+        "docker": [
+          "path-exclude /usr/share/doc/*",
+          "path-exclude /usr/share/doc/kde/HTML/*/*",
+          "path-exclude /usr/share/gnome/help/*/*",
+          "path-exclude /usr/share/info/*",
+          "path-exclude /usr/share/linda/*",
+          "path-exclude /usr/share/lintian/overrides/*",
+          "path-exclude /usr/share/locale/*",
+          "path-exclude /usr/share/man/*",
+          "path-exclude /usr/share/omf/*/*-*.emf",
+          "path-include /usr/share/doc/*/copyright",
+          "path-include /usr/share/doc/kde/HTML/C/*",
+          "path-include /usr/share/gnome/help/*/C/*",
+          "path-include /usr/share/locale/all_languages",
+          "path-include /usr/share/locale/currency/*",
+          "path-include /usr/share/locale/l10n/*",
+          "path-include /usr/share/locale/languages",
+          "path-include /usr/share/locale/locale.alias",
+          "path-include /usr/share/omf/*/*-C.emf"
+        ],
+        "docker-apt-speedup": []
+      }
+    },
+    "gui": {
+      "scenarios": 9,
+      "screenshots": 11,
+      "automated_passed": true,
+      "visual_status": "passed_with_nonblocking_observation",
+      "nonblocking_observations": [
+        {
+          "id": "footer_status_ellipsis",
+          "files": [
+            "gui-deb/07-offline-800.png",
+            "gui-deb/09-invalid-800.png"
+          ],
+          "region": "Compact one-line bottom status summary",
+          "observed": "The duplicated error summary ends with an ellipsis.",
+          "full_message_available": "The complete corresponding error is visible in the main update card.",
+          "impact": "No loss of the complete error or access to Retry/Release page/Copy link was observed.",
+          "claim_limit": "This review does not claim that every text string in the window is untruncated."
+        }
+      ],
+      "fixture_boundary": {
+        "response_source": "Isolated PATH curl/open fixtures from update_smoke.py",
+        "published_version_labels_seen": [
+          "0.1.5",
+          "0.1.4",
+          "0.0.0"
+        ],
+        "labels_establish_online_release_availability": false,
+        "note": "All Published labels in these screenshots are fixture states. In particular, the screenshots do not establish that 0.1.5 was published online."
+      },
+      "original_automated_result_visual_field": "pending; original retained unchanged, separate independent visual review establishes the final result"
+    },
+    "minimal_debian": {
+      "passed": true,
+      "ca_certificates": {
+        "before_probe_exit_code": 0,
+        "installed_before": false,
+        "before_raw_status": [
+          "un"
+        ],
+        "trust_store_before": {
+          "exists": false,
+          "bytes": null
+        },
+        "installed_after": true,
+        "after_raw_status": [
+          "ii ",
+          "20260816+nmu1"
+        ],
+        "trust_store_after": {
+          "exists": true,
+          "bytes": 180744
+        },
+        "explicit_depends": "ca-certificates, curl, hicolor-icon-theme, libc6 (>= 2.39), libfontconfig1 (>= 2.17.0), libfreetype6, libgcc-s1, libx11-6, python3 (>= 3.8)",
+        "new_install_observed": true,
+        "baseline_was_modified_to_remove_ca": false
+      },
+      "official_release_https": {
+        "passed": true,
+        "curl_exit_code": 0,
+        "http_status": 200,
+        "ssl_verify_result": 0,
+        "effective_url": "https://github.com/LIghtJUNction/zmcl/releases",
+        "request_url": "https://github.com/LIghtJUNction/zmcl/releases",
+        "insecure_tls_used": false
+      },
+      "official_update_check": {
+        "passed": true,
+        "attempts": 1,
+        "exit_code": 0,
+        "status": "ahead",
+        "response": {
+          "current_version": "0.1.4",
+          "status": "ahead",
+          "available_version": "0.1.3",
+          "platform": "linux-x86_64",
+          "release_url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.3",
+          "message": "This build is newer than the published package. No downgrade is offered."
+        },
+        "stdout_log": "logs/real-update-check.stdout.log",
+        "stderr_log": "logs/real-update-check.stderr.log",
+        "fixture_helpers_used": false,
+        "http_status_exposed_by_cli": false,
+        "binary_unchanged": true
+      }
+    }
+  },
+  "windows": {
+    "passed": true,
+    "workflow": "https://github.com/LIghtJUNction/zmcl/actions/runs/44739704182",
+    "workflow_artifact_sha256": "129c55afaac7ee065d57b2b5545509b4ecc4c2dbf0da9891b58fe7b350d9e4c4",
+    "platform": "Windows-10-10.0.26100-SP0",
+    "target": "x86_64-pc-windows-msvc",
+    "toolchain": {
+      "channel": "1.100.0",
+      "components": "clippy,rustfmt",
+      "target": "x86_64-pc-windows-msvc"
+    },
+    "rustflags": "-C target-feature=+crt-static",
+    "native_gui": {
+      "details": {
+        "auto_closed": true,
+        "exit_code": 0,
+        "height": 649,
+        "sampled_colors": 185,
+        "scope": "Owned foreground Win32 client-area pixels; not exhaustive visual correctness.",
+        "screenshot": "windows-gui.png",
+        "sha256": "37160c91536258328915a7b5fd77dbae4d884e86999dfa61841c543bc2fbd92b",
+        "title": "zmcl — Minecraft Launcher",
+        "width": 968
+      },
+      "status": "passed"
+    },
+    "uninstall_preservation": {
+      "details": {
+        "inside_prefix": true,
+        "managed_files_removed": true,
+        "outside_prefix": true,
+        "synthetic_game_data_preserved": true
+      },
+      "status": "passed"
+    },
+    "scope": "Native MSVC build, direct DLL import check, real zdistro ZIP, private-prefix installation, Win32 startup/screenshot/automatic exit, uninstall. No real Microsoft account or Minecraft launch; no all-Windows-version claim."
+  },
+  "aur": {
+    "publication": {
+      "version": "0.1.4-1",
+      "passed": true,
+      "steps": [
+        {
+          "command": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "git",
+            "write-tree"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "git",
+            "fetch",
+            "origin"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "git",
+            "rev-parse",
+            "origin/main"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "git",
+            "reset",
+            "--soft"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "git",
+            "status",
+            "--porcelain"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "git",
+            "ls-remote",
+            "origin"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "git",
+            "diff",
+            "--cached"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "git",
+            "diff",
+            "--name-only"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "git",
+            "remote",
+            "get-url"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "git",
+            "remote",
+            "set-url"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "git",
+            "add",
+            "--"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "git",
+            "commit",
+            "-m"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "git",
+            "push",
+            "origin"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "git",
+            "ls-remote",
+            "origin"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "git",
+            "status",
+            "--porcelain"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "commit": "a769068256b4aa0803ab08b7f0691a8a4024a464",
+      "previous_commit": "60c9ad8e1be8204c6a4e0024c83a4a5851ada0f5",
+      "remote_commit": "a769068256b4aa0803ab08b7f0691a8a4024a464",
+      "package_url": "https://aur.archlinux.org/packages/zmcl-bin",
+      "git_url": "https://aur.archlinux.org/zmcl-bin.git",
+      "github_recipe_commit": "9e3379feda599af90127785550335e66c99b80cf",
+      "clean": true
+    },
+    "prepublication_package": {
+      "bytes": 690170,
+      "sha256": "8d60991a2a565470977e01995e49ab73e7e7de4c93a392f74c785a0ef82e8d47"
+    },
+    "public_build": {
+      "passed": true,
+      "original_receipt_sha256": "2cd3a1b7b227846d455a79d623d6ce1c2575ce7272905234ffb249d64b0f2987",
+      "package_bytes": 690179,
+      "package_sha256": "ff0f432be8bf5130f89577e00db8a79559d602eb791a8bfc23ae0e57b5723399",
+      "download_authenticated": false,
+      "http_status": 200,
+      "evidence": "docs/validation/aur-install-0.1.4-2026-11-20.json",
+      "namcap": {
+        "errors": 0,
+        "warnings": [
+          "curl may not be needed",
+          "python may not be needed"
+        ],
+        "reason_dependencies_retained": "Used by on-demand external helpers."
+      }
+    },
+    "host_acceptance": {
+      "passed": true,
+      "previous_version": "0.1.3-1",
+      "installed_version": "0.1.4-1",
+      "managed_entries": 21,
+      "altered_entries": 0,
+      "normal_pacman_transaction": true,
+      "installed_binary_sha256": "586968d15c5187c0223d5223294ddcba585789d93934e6a37a3c7e1c516a3615",
+      "official_update_status": "current",
+      "official_available_version": "0.1.4",
+      "network_fixtures_used": false,
+      "native_gui_screenshots": 3,
+      "visual_review_passed": true,
+      "evidence": "docs/validation/aur-install-0.1.4-2026-11-20.json",
+      "public_evidence_sha256": "8cfe8b873de879519b87fb643f7605747e95c9449b71aee34b5a85cfd24a7cf8",
+      "original_host_receipt_sha256": "1f16cf41eda0ea41021736b92f743979e8ff1fe4706656d8c1c2f64e670c264a"
+    }
+  },
+  "evidence_archive": {
+    "name": "zmcl-0.1.4-validation.zip",
+    "bytes": 6082565,
+    "sha256": "98ac12d4a90280796dce824064f378437c476f838acc7b8dee56de69cda28394",
+    "files": 161,
+    "google_drive_url": "https://drive.google.com/file/d/1KVIRzVDwVN_6wXd55-CWL5wsd4qt0aK0/view",
+    "drive_size_and_parent_verified": true
+  },
+  "limitations": [
+    "No macOS application package.",
+    "Windows native startup validation does not establish account/game flows, all GUI operations or all Windows versions.",
+    "Linux prebuilt minimum glibc 2.39 and Fontconfig 2.17.0; Debian forky/sid userspace shares the host kernel, not all Debian/Ubuntu versions.",
+    "No new complete-GUI memory benchmark or whole-GUI improvement claim; <10 MiB remains unmet.",
+    "Packages are unsigned. Updates are explicit user checks and follow the original installation method."
+  ],
+  "website_browser_screenshot_validation_performed": false
+}

@@ -11,42 +11,51 @@ python3 site/check.py
 python3 -m http.server 8080 --bind 127.0.0.1 --directory site
 ~~~
 
-Check desktop and mobile widths, section links, the source-build disclosure, command-copy feedback and keyboard focus. The copy helper selects the command if clipboard access is unavailable.
+Check desktop and mobile widths, the three current asset links, installation disclosures, command-copy feedback and keyboard focus. The copy helper selects the command if clipboard access is unavailable.
 
-## Current release and installation status
+## Current release: 0.1.4
 
-The page describes the official Linux x86_64 v0.1.2 development preview and the published AUR zmcl-bin 0.1.2-1 recipe. The fixed prerelease link is `/releases/tag/v0.1.2`. Its 679,358-byte archive contains the 1,473,144-byte executable whose runtime source matches `e86b5841532ef04cc74cea5585ae396150452408`, with zgpui 0.1.5 at `4aba3ba83815253fb7e4013baa8bcf894439d32d`. The packager ran at `dc9e586ed541cc3e1d75661c54caacdd021834a9`; packaging identity and application source identity are recorded separately.
+The primary download section presents exactly three official assets for the development preview:
 
-The prebuilt ABI requirements are glibc >=2.39 and Fontconfig >=2.17.0. Python >=3.8 and curl run only for requested operations. The Linux executable has no direct OpenGL dependency. These requirements are not a compatibility claim for every Linux distribution.
+| Target | File | Bytes | SHA-256 |
+| --- | --- | ---: | --- |
+| Linux x86_64 user installation | `zmcl-0.1.4-linux-x86_64.tar.gz` | 700244 | `8265e672ef7914362c1038b71ed382d18efafe49668d7791005713faa5f580f1` |
+| Debian x86_64 system package | `zmcl-0.1.4-linux-x86_64.deb` | 571108 | `c19afcdd4e567ffcb580f60fbe5812d6915c12b484e9751518c3f0b790c5b7b8` |
+| Windows amd64 user installation | `zmcl-0.1.4-windows-amd64.zip` | 670411 | `48bd7dc7ce0eb799fed225678b6a6d9c4ed518f7ee96482b2c5c1f0f516271cf` |
 
-The AUR source commit is `16b688237f8c54b47085a16279535db8f6c5c553`. The first post-publication RPC, yay and paru queries returned cached 0.1.1-1 metadata; at 18:44 Asia/Taipei, current/legacy RPC, yay and paru all returned 0.1.2-1. A fresh public clone independently downloaded the source, built the package and passed payload validation. Its first extraction attempt failed because the shared host ran out of disk space; the original failure and successful retry remain separate. Normal pacman upgrade from 0.1.1-1 to 0.1.2-1 and four installed native-window fixture groups passed. The installed executable matches the official binary, and all 19 package entries passed integrity checks. See `docs/validation/aur-install-0.1.2-2026-11-20.json` and `docs/validation/installed-gui-0.1.2-2026-11-20.json`. Historical receipts retain their original versions.
+The fixed release page is `/releases/tag/v0.1.4`; all asset paths use `/releases/download/v0.1.4/`. Source is `25c243a593b187b0f0835e740665e1fce96d3621`. Linux executable identity is 1504616 bytes / `586968d15c5187c0223d5223294ddcba585789d93934e6a37a3c7e1c516a3615`; Windows executable identity is 1382912 bytes / `33164565b43bf2f9db63da8e61db2a211318ca2fa682fd29ef988e910612910f`. These file sizes do not measure runtime memory.
 
-The final Linux build passed four creation fixtures and six management workflows. Windows has a complete GUI cross-build and PE inspection, but no native application run in this acceptance record. The macOS application build and desktop flow remain unverified. Actual Windows/macOS framework probes do not expand the application acceptance scope. The page offers only the Linux x86_64 package.
+Linux requirements remain glibc >=2.39, Fontconfig >=2.17.0, FreeType and X11/XWayland. Python >=3.8, curl and CA certificates are used by installation and requested helper operations. The native Linux CPU executable has no direct OpenGL dependency. The DEB explicitly requires CA certificates even with `--no-install-recommends`; this is not a compatibility claim for every stable Debian or Ubuntu release.
 
-## Screenshots and measurement identities
+AUR zmcl-bin 0.1.4-1 is publicly available at source commit `a769068256b4aa0803ab08b7f0691a8a4024a464`. Public recipe verification is distinct from installation acceptance: the fresh public clone build, normal host upgrade and installed native update-window acceptance have passed. The real official check reports current 0.1.4. Previous AUR versions and their original identities stay in `historical_releases`; they are not the current primary download route.
 
-The displayed 1120×760 v0.1.2 creation window is the original native capture from the final Linux build and local creation fixture. `assets/create-0.1.2.png` reuses the exact Git blob of `docs/validation/images/zmcl-0.1.2-create.png` without image editing. Its caption records zgpui 0.1.5 and source `e86b584`; installed AUR upgrade and native fixture acceptance are separately recorded as passed. The old v0.1.1 backup image stays in the repository. Current creation and compact-layout evidence is linked through `docs/reports/2026-11-20-gui-iteration.md`.
-
-The new `iteration_measurements` array in `data.json` contains two separate prerelease comparisons. The empty-library redraw workload used three interleaved pairs and observed median GUI CPU totals of 2.65 to 1.47 seconds, a 44.53% reduction. The 2,000-world workload used two pairs and observed returned-Library GUI PSS+SwapPss medians of 7,940 to 6,110 KiB, a 23.05% reduction. Each entry retains its own binary identities, scope, aggregation and public source record. These are different candidates, and neither measurement used the final v0.1.2 binary.
-
-The legacy field `current_release_measurement` is retained for schema compatibility, with an explicit historical flag and label. Its artifact version remains 0.1.1 and all original values remain unchanged: empty-home idle RSS/PSS are 9,784/4,647 KiB; drawing RSS reaches 13,192 KiB; management startup reaches 16,972 KiB; and management actions reach 60,860/49,269 KiB RSS/PSS across the application and its CLI/Python children. These are historical measurements, not current v0.1.2 results.
-
-The historical `measurement` and `measurements` records retain zmcl 0.1.0 source `033776287ab10aab90f46fd5b65309fecb9b8711` and the fixed official XMCL v0.73.1 comparison. The v0.1.1 release metadata is also retained in `historical_releases`. Display-server costs, swap, incomplete samples and observer cost remain explicit in the linked reports. The full GUI target below 10 MiB remains unmet, and whole-operation process-tree peaks did not consistently improve.
-
-## Claim review
+## Acceptance and boundaries
 
 | Claim | Evidence | Scope |
 | --- | --- | --- |
-| Current Linux archive and executable identity | Fixed v0.1.2 release, archive checksum and embedded release.json | Exact file bytes and hashes; not runtime memory |
-| AUR 0.1.2-1 is published and installed on the acceptance host | Public recipe commit 16b6882; independent build and installation receipts | Normal single-package upgrade and four installed native-window fixtures; no clean-chroot or all-distribution claim |
-| Creation and management controls work in the final Linux build | docs/validation/gui-iteration-0.1.2-2026-11-20.json | Four creation fixtures and six management workflows; synthetic states where recorded |
-| Redraw CPU and large-list steady memory improved in measured candidates | Separate renderer-iteration and large-library-iteration JSON records | Two distinct prerelease comparisons; no final-binary, FPS or all-states claim |
-| Historical game menus and measurements remain valid evidence | Versioned records in docs/VALIDATION.md and docs/PERFORMANCE.md | Original builds, game/loader/account modes and test conditions |
-| Cross-platform implementation is complete for the whole application | Platform matrix in the GUI iteration report | Not established; framework probes and application acceptance are separate |
-| Full XMCL feature coverage | Fixed v0.73.1 matrix in docs/FEATURES.md | Incomplete |
+| Three 0.1.4 asset identities and reproducible user commands | `docs/validation/zdistro-release-0.1.4.json`, `docs/INSTALL.md` | Exact files, hashes, source and named platforms |
+| Linux DEB upgrade, reinstall and uninstall | `docs/reports/2026-11-20-zdistro.md` | Debian forky/sid container, real 0.1.3 to 0.1.4 upgrade and data preservation |
+| Portable installation and interface | Same release report and structured receipt | Prefix with spaces, PATH shadowing, nine native GUI fixture groups; no real account or game claim |
+| Minimal Debian can verify official HTTPS | Same release receipt | Initially missing CA certificates, normal apt installation of required CA, HTTP 200 and certificate verification result 0 |
+| Manual update checking does not alter the executable | Same release receipt | One real query before publication reported local 0.1.4 ahead of online 0.1.3; binary unchanged |
+| Windows native packaging and window | [workflow 44739704182](https://github.com/LIghtJUNction/zmcl/actions/runs/44739704182) | MSVC, ZIP, private prefix, version, Win32 window, five managed files, uninstall and data preservation on build 26100 |
+| Full Windows version matrix, actual Windows games and accounts | Not established by this run | Keep separate from native runner packaging/window acceptance |
+| macOS distribution, signed automatic updates and complete XMCL coverage | Not established | Remain planned |
 
-Writing review follows the user-selected Research-Paper-Writing-Skills: one message per paragraph, evidence next to quantitative claims and explicit experimental boundaries. Keep the page arranged around installation, first use, actual functions, the real window, resource costs and remaining work.
+The first Windows validator PATH lookup failure and Linux container documentation-exclusion failure retain their own original records. The successful corrected acceptance does not overwrite them. The user-facing page should remain about choosing, installing and updating the program; implementation-level failure analysis belongs in the report.
+
+## Historical screenshots and measurements
+
+The displayed 1120×760 creation window is still the original v0.1.2 native capture. `assets/create-0.1.2.png` reuses the exact Git blob of `docs/validation/images/zmcl-0.1.2-create.png` without image editing. Its caption keeps zgpui 0.1.5 and source `e86b584`. It must not be relabelled as a 0.1.4 screenshot.
+
+The complete previous 0.1.3 release object is preserved in `historical_releases`, including source `9ef89bb`, 679517-byte tar, 1473752-byte binary and AUR recipe `60c9ad8`. The 0.1.3 management measurements retain their environments, binary identities, missing samples and peak lower-bound interpretation. No new whole-application memory comparison was made for 0.1.4.
+
+The `iteration_measurements` array contains two separate 0.1.2 prerelease comparisons. Three interleaved empty-library redraw pairs observed median GUI CPU totals of 2.65 to 1.47 seconds, a 44.53% reduction. Two 2000-world pairs observed returned-Library GUI PSS+SwapPss medians of 7940 to 6110 KiB, a 23.05% reduction. Neither comparison used the final 0.1.2 binary; they cannot become 0.1.4, FPS or all-state claims.
+
+The legacy `current_release_measurement` field is retained for schema compatibility with its explicit historical flag and label. Its artifact version remains 0.1.1 and all original values remain unchanged. The `measurement` and `measurements` records retain zmcl 0.1.0 source `033776287ab10aab90f46fd5b65309fecb9b8711` and the fixed official XMCL v0.73.1 comparison. The full GUI target below 10 MiB remains unmet.
 
 ## Publish
 
-The repository's official Pages workflow validates and uploads `site/`. Do not use remote acceptance CI for routine checks. Relative asset paths support both `/zmcl/` on Pages and a local HTTP root. Keep the public build, actual upgrade and installed-window results tied to their specific artifact identities. Never publish account data, private paths, raw session logs or user saves.
+The official Pages workflow validates and uploads `site/`. Run the local checker after the release report and structured receipt are present. Relative asset paths support both `/zmcl/` on Pages and a local HTTP root. Publish the page only after the three release assets are publicly downloadable; AUR publication is a separate fact.
+
+Writing follows the user-selected Research-Paper-Writing-Skills: one message per paragraph, evidence next to quantitative claims, and explicit validation boundaries. Keep the page arranged around download selection, first use, actual functions, the real window, resource costs and remaining work. Never publish private paths, raw session logs, account data or user saves.

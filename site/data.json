@@ -7,53 +7,139 @@
     "updated": "2026-11-20",
     "stage": "development",
     "release": {
-      "version": "0.1.3",
+      "version": "0.1.4",
       "type": "prerelease",
-      "url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.3",
-      "platform": "linux-x86_64",
-      "source_commit": "9ef89bb92d46d324172d6ea8b13054c81434e178",
-      "minimum_direct_elf_glibc": "2.39",
-      "minimum_fontconfig": "2.17.0",
-      "requires_opengl": false,
+      "url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.4",
+      "platforms": [
+        "linux-x86_64",
+        "windows-amd64"
+      ],
+      "source_commit": "25c243a593b187b0f0835e740665e1fce96d3621",
+      "minimum_python": "3.8",
+      "linux_runtime": {
+        "minimum_direct_elf_glibc": "2.39",
+        "minimum_fontconfig": "2.17.0",
+        "requires_opengl": false,
+        "window_system": "X11 or XWayland",
+        "helpers": [
+          "curl",
+          "CA certificates",
+          "Python >=3.8"
+        ],
+        "deb_ca_certificates": "explicit required dependency",
+        "validation_environment": "Debian forky/sid container",
+        "compatibility_scope": "Not a claim for every stable Debian, Ubuntu, or Linux distribution"
+      },
       "native_backend": {
         "library": "zgpui",
         "version": "0.1.5",
         "commit": "4aba3ba83815253fb7e4013baa8bcf894439d32d",
         "renderer": "native Linux CPU"
       },
-      "archive_bytes": 679517,
-      "archive_sha256": "b15024e99dd1275db15020ef26669f24aaad9026d948dd6683cacac5c7647e0e",
-      "binary_bytes": 1473752,
-      "binary_sha256": "02620a8ec4fac34e63fcbe483268149b2ed4032ac2d7bf42975ff6b19b72a1aa",
-      "payload_regular_files": 7,
-      "payload_regular_file_bytes": 1527273,
-      "packager_commit": "9ef89bb92d46d324172d6ea8b13054c81434e178",
-      "download_url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.3/zmcl-0.1.3-linux-x86_64.tar.gz",
-      "checksum_url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.3/zmcl-0.1.3-linux-x86_64.tar.gz.sha256",
+      "packager": {
+        "application": "zdistro",
+        "version": "0.1.0",
+        "commit": "6a54a137fc697d372b54ef85105315f2ce522b3d",
+        "wrapper_source_commit": "25c243a593b187b0f0835e740665e1fce96d3621",
+        "runtime_dependency": false
+      },
+      "artifacts": [
+        {
+          "filename": "zmcl-0.1.4-linux-x86_64.tar.gz",
+          "platform": "linux-x86_64",
+          "format": "tar.gz",
+          "bytes": 700244,
+          "sha256": "8265e672ef7914362c1038b71ed382d18efafe49668d7791005713faa5f580f1",
+          "url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.4/zmcl-0.1.4-linux-x86_64.tar.gz"
+        },
+        {
+          "filename": "zmcl-0.1.4-linux-x86_64.deb",
+          "platform": "linux-x86_64",
+          "format": "deb",
+          "bytes": 571108,
+          "sha256": "c19afcdd4e567ffcb580f60fbe5812d6915c12b484e9751518c3f0b790c5b7b8",
+          "url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.4/zmcl-0.1.4-linux-x86_64.deb"
+        },
+        {
+          "filename": "zmcl-0.1.4-windows-amd64.zip",
+          "platform": "windows-amd64",
+          "format": "zip",
+          "bytes": 670411,
+          "sha256": "48bd7dc7ce0eb799fed225678b6a6d9c4ed518f7ee96482b2c5c1f0f516271cf",
+          "url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.4/zmcl-0.1.4-windows-amd64.zip"
+        }
+      ],
+      "binaries": [
+        {
+          "platform": "linux-x86_64",
+          "bytes": 1504616,
+          "sha256": "586968d15c5187c0223d5223294ddcba585789d93934e6a37a3c7e1c516a3615"
+        },
+        {
+          "platform": "windows-amd64",
+          "bytes": 1382912,
+          "sha256": "33164565b43bf2f9db63da8e61db2a211318ca2fa682fd29ef988e910612910f"
+        }
+      ],
+      "validation": {
+        "report": "docs/reports/2026-11-20-zdistro.md",
+        "evidence": "docs/validation/zdistro-release-0.1.4.json",
+        "linux": {
+          "environment": "Debian forky/sid container",
+          "deb": [
+            "real 0.1.3 to 0.1.4 upgrade",
+            "reinstall",
+            "uninstall",
+            "data preservation"
+          ],
+          "portable": [
+            "prefix containing spaces",
+            "PATH shadowing",
+            "nine native GUI fixture groups",
+            "data preservation"
+          ],
+          "minimal_deb_https": {
+            "initial_ca_certificates": "absent",
+            "apt_no_install_recommends_installed_required_ca": true,
+            "github_http_status": 200,
+            "certificate_verification_result": 0,
+            "real_update_query": "local 0.1.4 ahead of then-published 0.1.3",
+            "query_time_scope": "before the 0.1.4 release was published",
+            "binary_unchanged": true
+          }
+        },
+        "windows": {
+          "environment": "native Windows runner build 26100",
+          "workflow": "https://github.com/LIghtJUNction/zmcl/actions/runs/44739704182",
+          "status": "passed",
+          "checks": [
+            "MSVC build",
+            "ZIP",
+            "private-prefix install",
+            "version output",
+            "Win32 window",
+            "exact five managed files",
+            "uninstall with data preservation"
+          ],
+          "scope": "Not a claim for all Windows versions, real account sign-in, or actual game execution"
+        },
+        "real_account_or_game_retested": false,
+        "new_runtime_memory_comparison": false,
+        "macos_package_available": false,
+        "initial_failures": "Original Windows validator PATH lookup and Linux container document-exclusion failures retained separately from corrected acceptance"
+      },
       "aur": {
         "package": "zmcl-bin",
-        "version": "0.1.3-1",
+        "version": "0.1.4-1",
         "url": "https://aur.archlinux.org/packages/zmcl-bin",
-        "source_commit": "60c9ad8e1be8204c6a4e0024c83a4a5851ada0f5",
+        "source_commit": "a769068256b4aa0803ab08b7f0691a8a4024a464",
         "publication_status": "published",
+        "public_recipe_verified": true,
         "fresh_public_build_validation": "passed",
         "installed_upgrade_and_window_validation": "passed",
-        "validation_note": "Normal pacman upgrade from 0.1.2-1 to 0.1.3-1 passed; official executable SHA-256 and all 19 package entries match. Six installed native management fixture flows passed. No real sign-in or game/server launch was added.",
-        "initial_rpc_helper_version": "0.1.2-1",
-        "latest_rpc_helper_status": "verified",
-        "metadata_verification": {
-          "checked_at": "2026-11-20T11:46:59Z",
-          "sources": [
-            "current RPC",
-            "yay -Si",
-            "paru -Si"
-          ],
-          "version": "0.1.3-1"
-        },
-        "validation_evidence": "docs/validation/aur-install-0.1.3-2026-11-20.json",
-        "installed_gui_evidence": "docs/validation/installed-gui-0.1.3-2026-11-20.json"
-      },
-      "minimum_python": "3.8"
+        "note": "Fresh public clone, anonymous download and makepkg passed. Normal pacman upgrade from 0.1.3-1 to 0.1.4-1 passed with 21 entries and zero altered files. Installed native GUI and separate CLI reported current 0.1.4 against the official endpoint; no response fixtures, real accounts or game launch were used.",
+        "validation_evidence": "docs/validation/aur-install-0.1.4-2026-11-20.json"
+      }
     }
   },
   "measurement": {
@@ -188,8 +274,8 @@
       "name": "完整桌面与平台体验",
       "state": "planned",
       "label": "待完成",
-      "summary": "Windows 完整 GUI 交叉构建已通过；Windows 应用原生运行、macOS 应用构建与桌面流程仍待验收。Bedrock、手柄/Big Picture、完整主题、多语言与无障碍、签名自更新继续保留在待办范围。",
-      "evidence": "docs/FEATURES.md"
+      "summary": "0.1.4 已通过 Windows 原生 MSVC 构建、ZIP 打包、安装、窗口启动与卸载；范围为 build 26100 原生 runner。真实账号、游戏、完整 GUI 操作、其他 Windows 版本及 macOS 应用仍需验收。Bedrock、手柄/Big Picture、完整主题、多语言与无障碍、签名自更新继续保留在待办范围。",
+      "evidence": "docs/validation/zdistro-release-0.1.4.json"
     }
   ],
   "measurements": [
@@ -493,6 +579,55 @@
         },
         "validation_evidence": "docs/validation/aur-install-0.1.2-2026-11-20.json",
         "installed_gui_evidence": "docs/validation/installed-gui-0.1.2-2026-11-20.json"
+      },
+      "minimum_python": "3.8"
+    },
+    {
+      "version": "0.1.3",
+      "type": "prerelease",
+      "url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.3",
+      "platform": "linux-x86_64",
+      "source_commit": "9ef89bb92d46d324172d6ea8b13054c81434e178",
+      "minimum_direct_elf_glibc": "2.39",
+      "minimum_fontconfig": "2.17.0",
+      "requires_opengl": false,
+      "native_backend": {
+        "library": "zgpui",
+        "version": "0.1.5",
+        "commit": "4aba3ba83815253fb7e4013baa8bcf894439d32d",
+        "renderer": "native Linux CPU"
+      },
+      "archive_bytes": 679517,
+      "archive_sha256": "b15024e99dd1275db15020ef26669f24aaad9026d948dd6683cacac5c7647e0e",
+      "binary_bytes": 1473752,
+      "binary_sha256": "02620a8ec4fac34e63fcbe483268149b2ed4032ac2d7bf42975ff6b19b72a1aa",
+      "payload_regular_files": 7,
+      "payload_regular_file_bytes": 1527273,
+      "packager_commit": "9ef89bb92d46d324172d6ea8b13054c81434e178",
+      "download_url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.3/zmcl-0.1.3-linux-x86_64.tar.gz",
+      "checksum_url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.3/zmcl-0.1.3-linux-x86_64.tar.gz.sha256",
+      "aur": {
+        "package": "zmcl-bin",
+        "version": "0.1.3-1",
+        "url": "https://aur.archlinux.org/packages/zmcl-bin",
+        "source_commit": "60c9ad8e1be8204c6a4e0024c83a4a5851ada0f5",
+        "publication_status": "published",
+        "fresh_public_build_validation": "passed",
+        "installed_upgrade_and_window_validation": "passed",
+        "validation_note": "Normal pacman upgrade from 0.1.2-1 to 0.1.3-1 passed; official executable SHA-256 and all 19 package entries match. Six installed native management fixture flows passed. No real sign-in or game/server launch was added.",
+        "initial_rpc_helper_version": "0.1.2-1",
+        "latest_rpc_helper_status": "verified",
+        "metadata_verification": {
+          "checked_at": "2026-11-20T11:46:59Z",
+          "sources": [
+            "current RPC",
+            "yay -Si",
+            "paru -Si"
+          ],
+          "version": "0.1.3-1"
+        },
+        "validation_evidence": "docs/validation/aur-install-0.1.3-2026-11-20.json",
+        "installed_gui_evidence": "docs/validation/installed-gui-0.1.3-2026-11-20.json"
       },
       "minimum_python": "3.8"
     }

@@ -1,0 +1,219 @@
+{
+  "schema": 1,
+  "application": "zmcl",
+  "version": "0.1.4",
+  "date": "2026-11-20",
+  "result": "passed",
+  "app_source_commit": "25c243a593b187b0f0835e740665e1fce96d3621",
+  "public_verification": {
+    "aur_repository": "https://aur.archlinux.org/zmcl-bin.git",
+    "aur_commit": "a769068256b4aa0803ab08b7f0691a8a4024a464",
+    "recipe_sha256": {
+      "PKGBUILD": "f92c2dbe51381c7ef525cde1a6aaa55f9c609620f106786ec82f6cc6a66f6b8b",
+      ".SRCINFO": "8f32d2394b9b742b9a9367cbd02d36d58cec9ef148a0cd561c1c1d97d7eb2152",
+      "zmcl.desktop": "62d26944cd3c4aaaf2dd68668332527883b02bca734c893b510996ba19589082"
+    },
+    "download": {
+      "url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.4/zmcl-0.1.4-linux-x86_64.tar.gz",
+      "bytes": 700244,
+      "sha256": "8265e672ef7914362c1038b71ed382d18efafe49668d7791005713faa5f580f1",
+      "curl_status_and_size": [
+        "200",
+        "700244"
+      ],
+      "credentials_supplied": false
+    },
+    "fresh_package": {
+      "filename": "zmcl-bin-0.1.4-1-x86_64.pkg.tar.zst",
+      "bytes": 690179,
+      "sha256": "ff0f432be8bf5130f89577e00db8a79559d602eb791a8bfc23ae0e57b5723399"
+    },
+    "checks": [
+      {
+        "name": "clone",
+        "exitcode": 0
+      },
+      {
+        "name": "public-download",
+        "exitcode": 0
+      },
+      {
+        "name": "verify-sources",
+        "exitcode": 0
+      },
+      {
+        "name": "makepkg",
+        "exitcode": 0
+      },
+      {
+        "name": "namcap-recipe",
+        "exitcode": 0
+      },
+      {
+        "name": "namcap-package",
+        "exitcode": 0
+      },
+      {
+        "name": "package-check",
+        "exitcode": 0
+      }
+    ],
+    "namcap": {
+      "errors": [],
+      "warnings": [
+        "zmcl-bin W: Dependency included, but may not be needed ('curl')",
+        "zmcl-bin W: Dependency included, but may not be needed ('python')"
+      ]
+    },
+    "release_json_sha256": "de319e7278c3d3ea5db209a2cff335f264d938fe118a2c4ce4042ac1caa3a726"
+  },
+  "host_upgrade": {
+    "completed": true,
+    "transaction": "completed",
+    "command": "sudo -n pacman -U --noconfirm <verified fresh public package>",
+    "before": {
+      "package": "zmcl-bin 0.1.3-1",
+      "binary_sha256": "02620a8ec4fac34e63fcbe483268149b2ed4032ac2d7bf42975ff6b19b72a1aa",
+      "binary_bytes": 1473752,
+      "version": "zmcl 0.1.3"
+    },
+    "after": {
+      "package": "zmcl-bin 0.1.4-1",
+      "version": "zmcl 0.1.4",
+      "binary_bytes": 1504616,
+      "binary_sha256": "586968d15c5187c0223d5223294ddcba585789d93934e6a37a3c7e1c516a3615",
+      "distribution_sha256": "1bd4dba8f92e8578b33644657649546a2186ec31a9d7fc3c3a28c419325bc8f8"
+    },
+    "installed_identity_verified": true,
+    "files": {
+      "command": "pacman -Qkk zmcl-bin",
+      "exitcode": 0,
+      "output": "zmcl-bin: 21 total files, 0 altered files",
+      "total": 21,
+      "altered": 0
+    },
+    "desktop": {
+      "path": "/usr/share/applications/zmcl.desktop",
+      "exitcode": 0,
+      "stdout": "",
+      "stderr": "",
+      "bytes": 157,
+      "sha256": "62d26944cd3c4aaaf2dd68668332527883b02bca734c893b510996ba19589082"
+    },
+    "scope": "Only zmcl-bin was upgraded with a normal pacman transaction. No package database lock was removed and no dependency synchronization was requested."
+  },
+  "official_update": {
+    "fixtures_used": false,
+    "current_version": "0.1.4",
+    "status": "current",
+    "available_version": "0.1.4",
+    "platform": "linux-x86_64",
+    "release_url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.4",
+    "message": "You have the latest published package for this platform.",
+    "exitcode": 0
+  },
+  "gui": {
+    "completed": true,
+    "window_system": "private Xvfb",
+    "binary": "/usr/bin/zmcl",
+    "curl": "/usr/bin/curl",
+    "fixtures_used": false,
+    "data_root": "private temporary directory supplied with --root",
+    "visual_review": {
+      "result": "passed",
+      "reviewed_screenshots": 3,
+      "scope": "Direct review of the three unedited Linux screenshots. Initial installed identity and actual official current results at 1120x760 and 800x600."
+    },
+    "screenshots": [
+      {
+        "file": "01-installed-settings-1120.png",
+        "bytes": 55714,
+        "sha256": "566a53cb297617c769e917bf7d03f32fc4f2a535774b641f9b2347da6a1000f6",
+        "width": 1120,
+        "height": 760,
+        "reviewed": true,
+        "observed_state": "Launcher updates; check available only on explicit action",
+        "visible_identity": [
+          "zmcl 0.1.4",
+          "Arch package · zdistro",
+          "/usr/bin/zmcl",
+          "linux-x86_64"
+        ],
+        "update_guidance": "Update with your Arch package manager.",
+        "layout_result": "Version, distribution identity, status message, buttons and guidance are readable without overlap."
+      },
+      {
+        "file": "02-official-update-1120.png",
+        "bytes": 54029,
+        "sha256": "5cd0aff0a52fa48bb5db9b56100e6d5f82b7f4f693bd48bc13505799aa141bf3",
+        "width": 1120,
+        "height": 760,
+        "reviewed": true,
+        "observed_state": "Up to date; Published 0.1.4",
+        "visible_identity": [
+          "zmcl 0.1.4",
+          "Arch package · zdistro",
+          "/usr/bin/zmcl",
+          "linux-x86_64"
+        ],
+        "update_guidance": "Update with your Arch package manager.",
+        "layout_result": "Version, distribution identity, status message, buttons and guidance are readable without overlap."
+      },
+      {
+        "file": "03-official-update-800.png",
+        "bytes": 42542,
+        "sha256": "c5b313177c42fb25bb054a2e7f1c8785d03d6503114f8ab45def18aa66007085",
+        "width": 800,
+        "height": 600,
+        "reviewed": true,
+        "observed_state": "Up to date; Published 0.1.4",
+        "visible_identity": [
+          "zmcl 0.1.4",
+          "Arch package · zdistro",
+          "/usr/bin/zmcl",
+          "linux-x86_64"
+        ],
+        "update_guidance": "Update with your Arch package manager.",
+        "layout_result": "Version, distribution identity, status message, buttons and guidance are readable without overlap."
+      }
+    ]
+  },
+  "preservation_scope": "Package contents were restricted to the validated /usr payload. GUI checks used their own temporary data root. No existing game, world, account, Java, cache, or unrelated application data was migrated, deleted, or used for test fixtures.",
+  "limits": [
+    "This is native Linux Arch package acceptance on the test host, not a universal Arch compatibility claim.",
+    "No real game launch or account login was performed in this acceptance.",
+    "No new performance or memory measurement was made."
+  ],
+  "original_receipts": [
+    {
+      "phase": "fresh_public_package",
+      "relative_path": "public-014-fresh1/public-verification.json",
+      "bytes": 6007,
+      "sha256": "2cd3a1b7b227846d455a79d623d6ce1c2575ce7272905234ffb249d64b0f2987"
+    },
+    {
+      "phase": "host_upgrade",
+      "relative_path": "public-014-fresh1/host-upgrade/result.json",
+      "bytes": 5386,
+      "sha256": "1f16cf41eda0ea41021736b92f743979e8ff1fe4706656d8c1c2f64e670c264a"
+    },
+    {
+      "phase": "real_network_gui",
+      "relative_path": "public-014-fresh1/host-upgrade/gui/result.json",
+      "bytes": 1239,
+      "sha256": "28af60004ce65892dc8abe5fb3fb354e970e22b04ed54dcea62a3b9f776a6a54"
+    },
+    {
+      "phase": "installed_desktop",
+      "relative_path": "public-014-fresh1/host-upgrade/desktop-check.json",
+      "bytes": 198,
+      "sha256": "6ca2d4cc4e3a825a5b756ffd41a89d0bf99f3ead10cf47251bd27313f838cc37"
+    },
+    {
+      "phase": "package_file_log",
+      "relative_path": "public-014-fresh1/host-upgrade/package-file-check.log",
+      "bytes": 42,
+      "sha256": "b3baf61166d63e8b86f58c74fcb09cca9e40a1148b83e756c3bb41026e7e8a69"
+    }
+  ]
+}
