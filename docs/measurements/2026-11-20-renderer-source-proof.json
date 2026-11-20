@@ -1,0 +1,23 @@
+{
+"schema": 1,
+"verified_at_utc": "2026-11-20T10:11:35.530433+00:00",
+"result": "verified",
+"method": "Replay the public patch onto its public base using a separate, initially nonexistent GIT_INDEX_FILE; no shared index is passed to read-tree/apply/write-tree.",
+"base_commit": "9fd4ba83ff50a66e4842b1b52e4610057fe7c8ee",
+"base_tree": "8ff4c4802e091fda9851195ddb8d6a8e31c0b729",
+"base_public_api_verification": {"sha":"9fd4ba83ff50a66e4842b1b52e4610057fe7c8ee","html_url":"https://github.com/LIghtJUNction/zgpui/commit/9fd4ba83ff50a66e4842b1b52e4610057fe7c8ee","tree":"8ff4c4802e091fda9851195ddb8d6a8e31c0b729","api_url":"https://api.github.com/repos/LIghtJUNction/zgpui/git/commits/9fd4ba83ff50a66e4842b1b52e4610057fe7c8ee","verified_via":"GitHub connector read-only Git Commit API"},
+"local_measured_candidate_commit": "c54cf244ccbda5f5822ae521b0facd5481071464",
+"candidate_tree": "66d747ea25352762a8145e344cb779b187fd8c1c",
+"expected_tree": "66d747ea25352762a8145e344cb779b187fd8c1c",
+"replayed_tree": "66d747ea25352762a8145e344cb779b187fd8c1c",
+"trees_equal": true,
+"patch_repository_path": "docs/measurements/patches/2026-11-20-zgpui-renderer-candidate.patch",
+"patch_sha256": "46c07f10cbc3cfb5dde48c4c0a4ab2c543db89be3f5f696c82e5883328c9e9f1",
+"patch_bytes": 34390,
+"changed_files": ["Cargo.toml","native/draw.c","native/draw_software.c","native/linux.c","native/macos.m","native/windows.c","native/zgpui.h","scripts/check_native.py","scripts/test_fonts.py","scripts/test_software.py","scripts/test_software_rect.py","src/native.rs"],
+"source_urls": {"base_framework":"https://github.com/LIghtJUNction/zgpui/commit/9fd4ba83ff50a66e4842b1b52e4610057fe7c8ee","optimized_framework":null},
+"source_url_notes": {"optimized_framework":"The measured c54cf24 candidate is local and is not an accessible public commit; reproduce its exact Git tree from the public base plus the referenced patch."},
+"index_verification": {"separate_temporary_index":true,"temporary_index_cleaned":true,"shared_index_sha256_before":{"application":"c4529df9e1b13bb44db2d4f00696e3e5798aa69e77560f13be6e9491536e3bff","framework":"0027118055580b1e0ad6dc28fe36148b29eb5b0ca183bc93beebdc9890730526"},"shared_index_sha256_after":{"application":"c4529df9e1b13bb44db2d4f00696e3e5798aa69e77560f13be6e9491536e3bff","framework":"0027118055580b1e0ad6dc28fe36148b29eb5b0ca183bc93beebdc9890730526"},"shared_indexes_unchanged":true},
+"replay_commands": ["GIT_INDEX_FILE=<new-temporary-index> git read-tree 9fd4ba83ff50a66e4842b1b52e4610057fe7c8ee","GIT_INDEX_FILE=<same-temporary-index> git apply --cached --check <patch>","GIT_INDEX_FILE=<same-temporary-index> git apply --cached <patch>","GIT_INDEX_FILE=<same-temporary-index> git write-tree"],
+"no_new_build_or_measurement": true
+}

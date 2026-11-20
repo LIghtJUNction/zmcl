@@ -1,0 +1,671 @@
+diff --git a/Cargo.toml b/Cargo.toml
+index 231243b..a773f66 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -10,7 +10,7 @@ description = "Bounded no_std UI scenes with optional native GPU and CPU windows
+ readme = "README.md"
+ keywords = ["gui", "ui", "no-std", "layout", "project-z"]
+ categories = ["gui", "no-std"]
+-include = ["/src/**", "/native/**", "/build.rs", "/examples/**", "/benches/**", "/README.md", "/docs/**", "/LICENSE", "/Cargo.toml", "/scripts/check_x11.py", "/scripts/test_software.py", "/scripts/test_software_x11.py", "/scripts/test_fonts.py", "/scripts/check_native.py"]
++include = ["/src/**", "/native/**", "/build.rs", "/examples/**", "/benches/**", "/README.md", "/docs/**", "/LICENSE", "/Cargo.toml", "/scripts/check_x11.py", "/scripts/test_software.py", "/scripts/test_software_rect.py", "/scripts/test_software_x11.py", "/scripts/test_fonts.py", "/scripts/check_native.py"]
+ 
+ [features]
+ default = []
+diff --git a/native/draw.c b/native/draw.c
+index 749abb4..d48535a 100644
+--- a/native/draw.c
++++ b/native/draw.c
+@@ -117,7 +117,14 @@ float zgpui_text(const char *text,float x,float y,int size,int bold,uint32_t val
+     glTexCoord2f(0,0);glVertex2f(x,y);glTexCoord2f(1,0);glVertex2f(x+item->width,y);
+     glTexCoord2f(1,1);glVertex2f(x+item->width,y+item->height);glTexCoord2f(0,1);glVertex2f(x,y+item->height);glEnd();glDisable(GL_TEXTURE_2D);return item->advance;
+ }
+-float zgpui_measure(const char *text,int size,int bold){if(!*text)return 0;Text *item=get_text(text,size,bold);return item?item->advance:0;}
++float zgpui_measure(const char *text,int size,int bold){
++    if(!text||!*text)return 0;
++    for(int i=0;i<CACHE_COUNT;i++)
++        if(cache[i].text&&cache[i].size==size&&cache[i].bold==bold&&!strcmp(cache[i].text,text)){
++            cache[i].stamp=++clock_tick;return cache[i].advance;
++        }
++    return zgpui_text_advance(text,size,bold);
++}
+ void zgpui_clip(int x,int y,int width,int height){glEnable(GL_SCISSOR_TEST);glScissor(x,screen_height-y-height,width>0?width:0,height>0?height:0);}
+ void zgpui_unclip(void){glDisable(GL_SCISSOR_TEST);}
+ void zgpui_clear_text_cache(void){for(int i=0;i<CACHE_COUNT;i++)drop(&cache[i]);clock_tick=0;}
+diff --git a/native/draw_software.c b/native/draw_software.c
+index ce244b2..26ef953 100644
+--- a/native/draw_software.c
++++ b/native/draw_software.c
+@@ -85,19 +85,60 @@ void zgpui_begin(int width, int height, uint32_t background) {
+     for (size_t i = 0; i < count; ++i) pixels[i] = background >> 8;
+     frame_ready = 1;
+ }
++/* The fully covered part of a scanline needs no distance-field work. */
++static void fill_span(int row, int first, int last, uint32_t color) {
++    uint32_t *dst = pixels + (size_t)row * (size_t)screen_width + (size_t)first;
++    unsigned int alpha = color & 255u;
++    if (alpha == 255u) {
++        uint32_t value = color >> 8;
++        for (int col = first; col < last; ++col) *dst++ = value;
++        return;
++    }
++    unsigned int inverse = 255u - alpha;
++    unsigned int red = (color >> 24) * alpha + 127u;
++    unsigned int green = ((color >> 16) & 255u) * alpha + 127u;
++    unsigned int blue = ((color >> 8) & 255u) * alpha + 127u;
++    for (int col = first; col < last; ++col, ++dst) {
++        unsigned int r = (red + ((*dst >> 16) & 255u) * inverse) / 255u;
++        unsigned int g = (green + ((*dst >> 8) & 255u) * inverse) / 255u;
++        unsigned int b = (blue + (*dst & 255u) * inverse) / 255u;
++        *dst = (r << 16) | (g << 8) | b;
++    }
++}
++static unsigned int rect_coverage(float qx, float qy, float radius) {
++    float ox = fmaxf(qx, 0), oy = fmaxf(qy, 0);
++    float distance = sqrtf(ox * ox + oy * oy) + fminf(fmaxf(qx, qy), 0) - radius;
++    return (unsigned int)(clamp(0.5f - distance, 0, 1) * 255.0f + 0.5f);
++}
+ void zgpui_rect(float x, float y, float width, float height, float radius, uint32_t color) {
+     int b[4];
+     if (!(color & 255u) || !isfinite(radius) || !bounds(x, y, x + width, y + height, b)) return;
+     radius = clamp(radius, 0, fminf(width, height) * 0.5f);
+     float cx = x + width * 0.5f, cy = y + height * 0.5f;
+     float hx = width * 0.5f - radius, hy = height * 0.5f - radius;
++    float full = radius - 0.5f;
+     for (int row = b[1]; row < b[3]; ++row) {
+-        for (int col = b[0]; col < b[2]; ++col) {
+-            float qx = fabsf(col + 0.5f - cx) - hx, qy = fabsf(row + 0.5f - cy) - hy;
+-            float ox = fmaxf(qx, 0), oy = fmaxf(qy, 0);
+-            float distance = sqrtf(ox * ox + oy * oy) + fminf(fmaxf(qx, qy), 0) - radius;
+-            blend(col, row, color, (unsigned int)(clamp(0.5f - distance, 0, 1) * 255.0f + 0.5f));
++        float qy = fabsf(row + 0.5f - cy) - hy;
++        int first = b[0], last = b[0];
++        if (qy <= full) {
++            /* In the middle rows the span reaches the straight edges; in the
++               corner rows the central rectangle stays entirely inside the arc. */
++            float half = hx + (qy <= 0 ? full : fminf(full, 0));
++            if (half >= 0) {
++                first = (int)ceilf(clamp(cx - half - 0.5f, (float)b[0], (float)b[2]));
++                last = (int)floorf(clamp(cx + half - 0.5f, (float)b[0] - 1, (float)b[2] - 1)) + 1;
++                if (last < first) last = first;
++                /* Keep the original rounding at fractional boundaries. Coverage
++                   cannot decrease towards the center of a rounded rectangle. */
++                while (first < last && rect_coverage(fabsf(first + 0.5f - cx) - hx, qy, radius) != 255u) ++first;
++                while (last > first && rect_coverage(fabsf(last - 0.5f - cx) - hx, qy, radius) != 255u) --last;
++            }
+         }
++        for (int col = b[0]; col < first; ++col)
++            blend(col, row, color, rect_coverage(fabsf(col + 0.5f - cx) - hx, qy, radius));
++        fill_span(row, first, last, color);
++        for (int col = last; col < b[2]; ++col)
++            blend(col, row, color, rect_coverage(fabsf(col + 0.5f - cx) - hx, qy, radius));
+     }
+ }
+ void zgpui_line(float x1, float y1, float x2, float y2, float width, uint32_t color) {
+@@ -208,8 +249,14 @@ float zgpui_text(const char *text, float x, float y, int size, int bold, uint32_
+ }
+ float zgpui_measure(const char *text, int size, int bold) {
+     if (!text || !*text) return 0;
+-    Text *item = get_text(text, size, bold);
+-    return item ? item->advance : 0;
++    /* Probing widths must not allocate masks or evict visible text. */
++    for (int i = 0; i < CACHE_COUNT; ++i)
++        if (cache[i].text && cache[i].size == size && cache[i].bold == bold &&
++            strcmp(cache[i].text, text) == 0) {
++            cache[i].stamp = ++clock_tick;
++            return cache[i].advance;
++        }
++    return zgpui_text_advance(text, size, bold);
+ }
+ void zgpui_clip(int x, int y, int width, int height) {
+     long long right = (long long)x + (width > 0 ? width : 0);
+diff --git a/native/linux.c b/native/linux.c
+index 36357e0..4cad229 100644
+--- a/native/linux.c
++++ b/native/linux.c
+@@ -284,13 +284,28 @@ static uint32_t codepoint(const unsigned char **p){
+     uint32_t c=*(*p)++;if(c<0x80)return c;unsigned int count=c<0xe0?1:c<0xf0?2:3;c&=(1u<<(6-count))-1;
+     while(count--&&**p){c=(c<<6)|(*(*p)++&63);}return c;
+ }
++float zgpui_text_advance(const char *text,int size,int bold){
++    if(!text||!*text||size<1||size>96)return 0;
++    FT_Face regular=face_for('A',size,bold);if(!regular)return 0;
++    double width=0;const unsigned char *p=(const unsigned char*)text;
++    while(*p){
++        uint32_t cp=codepoint(&p);
++        FT_Face f=FT_Get_Char_Index(regular,cp)?regular:face_for(cp,size,bold);
++        /* Default loading provides the same hinted advance without rendering. */
++        if(f&&!FT_Load_Char(f,cp,FT_LOAD_DEFAULT))width+=(double)(f->glyph->advance.x>>6);
++    }
++    return (float)width;
++}
+ ZgpuiBitmap zgpui_rasterize(const char *text,int size,int bold){
+     ZgpuiBitmap out={0};if(size<1||size>96)return out;FT_Face regular=face_for('A',size,bold);if(!regular)return out;
+     int ascent=(int)(regular->size->metrics.ascender>>6),descent=(int)(-regular->size->metrics.descender>>6);
+-    int width=2,height=ascent+descent+2;const unsigned char *p=(const unsigned char*)text;
+-    while(*p){uint32_t cp=codepoint(&p);FT_Face f=FT_Get_Char_Index(regular,cp)?regular:face_for(cp,size,bold);if(f&&!FT_Load_Char(f,cp,FT_LOAD_RENDER))width+=(int)(f->glyph->advance.x>>6);}
+-    if(width<1||width>8192||height>256)return out;out.pixels=calloc((size_t)width,height);if(!out.pixels)return out;out.width=width;out.height=height;out.advance=(float)(width-2);
+-    int x=1;p=(const unsigned char*)text;
++    float advance=zgpui_text_advance(text,size,bold);
++    if(advance<0||advance>8190)return out;
++    int width=(int)advance+2,height=ascent+descent+2;
++    if(width<1||height<1||height>256)return out;
++    out.pixels=calloc((size_t)width,height);if(!out.pixels)return out;
++    out.width=width;out.height=height;out.advance=advance;
++    int x=1;const unsigned char *p=(const unsigned char*)text;
+     while(*p){uint32_t cp=codepoint(&p);FT_Face f=FT_Get_Char_Index(regular,cp)?regular:face_for(cp,size,bold);if(!f||FT_Load_Char(f,cp,FT_LOAD_RENDER))continue;FT_GlyphSlot g=f->glyph;
+         for(unsigned int row=0;row<g->bitmap.rows;row++)for(unsigned int col=0;col<g->bitmap.width;col++){int dx=x+g->bitmap_left+(int)col,dy=ascent-g->bitmap_top+(int)row+1;if(dx>=0&&dx<width&&dy>=0&&dy<height)out.pixels[(size_t)dy*width+dx]=g->bitmap.buffer[row*(unsigned int)g->bitmap.pitch+col];}
+         x+=(int)(g->advance.x>>6);
+diff --git a/native/macos.m b/native/macos.m
+index fe5dc04..8477244 100644
+--- a/native/macos.m
++++ b/native/macos.m
+@@ -77,6 +77,19 @@ int zgpui_event(ZgpuiWindow *w,ZgpuiEvent *out,int timeout){
+     }
+ }
+ void zgpui_clipboard(ZgpuiWindow *w,const char *text){(void)w;@autoreleasepool{NSPasteboard *p=[NSPasteboard generalPasteboard];[p clearContents];[p setString:[NSString stringWithUTF8String:text] forType:NSPasteboardTypeString];}}
++float zgpui_text_advance(const char *text,int size,int bold){
++    if(!text||!*text||size<1||size>96)return 0;
++    @autoreleasepool{
++        NSString *string=[NSString stringWithUTF8String:text];if(!string)return 0;
++        NSFont *font=font_for(font_family,size,bold);if(!font)return 0;
++        NSAttributedString *attributed=[[[NSAttributedString alloc]initWithString:string
++            attributes:@{NSFontAttributeName:font}]autorelease];
++        CTLineRef line=CTLineCreateWithAttributedString((CFAttributedStringRef)attributed);
++        if(!line)return 0;
++        float advance=(float)CTLineGetTypographicBounds(line,NULL,NULL,NULL);
++        CFRelease(line);return advance;
++    }
++}
+ ZgpuiBitmap zgpui_rasterize(const char *text,int size,int bold){
+     ZgpuiBitmap out={0};@autoreleasepool{
+         NSString *string=[NSString stringWithUTF8String:text];if(!string)return out;
+diff --git a/native/windows.c b/native/windows.c
+index 7b99734..5513af8 100644
+--- a/native/windows.c
++++ b/native/windows.c
+@@ -71,9 +71,17 @@ static LRESULT CALLBACK procedure(HWND h,UINT message,WPARAM wp,LPARAM lp){
+ }
+ ZgpuiWindow *zgpui_open(const char *title,int width,int height,char *error,size_t capacity){
+     SetProcessDPIAware();ZgpuiWindow *w=calloc(1,sizeof(*w));if(!w)return NULL;
+-    HINSTANCE instance=GetModuleHandleW(NULL);WNDCLASSW cls={0};cls.style=CS_OWNDC;cls.lpfnWndProc=procedure;cls.hInstance=instance;cls.hIcon=LoadIconW(instance,MAKEINTRESOURCEW(1));if(!cls.hIcon)cls.hIcon=LoadIconW(NULL,IDI_APPLICATION);cls.hCursor=LoadCursorW(NULL,IDC_ARROW);cls.lpszClassName=L"ProjectZNativeUI";RegisterClassW(&cls);
+-    wchar_t wide[256];MultiByteToWideChar(CP_UTF8,0,title,-1,wide,256);RECT rect={0,0,width,height};AdjustWindowRect(&rect,WS_OVERLAPPEDWINDOW,FALSE);
++    HINSTANCE instance=GetModuleHandleW(NULL);WNDCLASSW cls={0};cls.style=CS_OWNDC;cls.lpfnWndProc=procedure;cls.hInstance=instance;cls.hIcon=LoadIconW(instance,MAKEINTRESOURCEW(1));if(!cls.hIcon)cls.hIcon=LoadIconW(NULL,MAKEINTRESOURCEW(32512));cls.hCursor=LoadCursorW(NULL,MAKEINTRESOURCEW(32512));cls.lpszClassName=L"ProjectZNativeUI";RegisterClassW(&cls);
++    int count=MultiByteToWideChar(CP_UTF8,MB_ERR_INVALID_CHARS,title,-1,NULL,0);
++    if(count<=0){snprintf(error,capacity,"Invalid UTF-8 window title.");free(w);return NULL;}
++    wchar_t *wide=calloc((size_t)count,sizeof(wchar_t));
++    if(!wide){snprintf(error,capacity,"Cannot allocate the window title.");free(w);return NULL;}
++    if(!MultiByteToWideChar(CP_UTF8,MB_ERR_INVALID_CHARS,title,-1,wide,count)){
++        snprintf(error,capacity,"Cannot convert the window title.");free(wide);free(w);return NULL;
++    }
++    RECT rect={0,0,width,height};AdjustWindowRect(&rect,WS_OVERLAPPEDWINDOW,FALSE);
+     w->window=CreateWindowExW(0,cls.lpszClassName,wide,WS_OVERLAPPEDWINDOW,CW_USEDEFAULT,CW_USEDEFAULT,rect.right-rect.left,rect.bottom-rect.top,NULL,NULL,instance,w);
++    free(wide);
+     if(!w->window){snprintf(error,capacity,"Win32 window creation failed (%lu).",GetLastError());free(w);return NULL;}
+     w->dc=GetDC(w->window);PIXELFORMATDESCRIPTOR format={0};format.nSize=sizeof(format);format.nVersion=1;format.dwFlags=PFD_DRAW_TO_WINDOW|PFD_SUPPORT_OPENGL|PFD_DOUBLEBUFFER;format.iPixelType=PFD_TYPE_RGBA;format.cColorBits=24;format.cAlphaBits=8;
+     int selected=ChoosePixelFormat(w->dc,&format);
+@@ -94,6 +102,23 @@ void zgpui_clipboard(ZgpuiWindow *w,const char *text){
+     wchar_t *p=GlobalLock(data);if(!p){GlobalFree(data);return;}MultiByteToWideChar(CP_UTF8,0,text,-1,p,count);GlobalUnlock(data);
+     if(OpenClipboard(w->window)){EmptyClipboard();if(!SetClipboardData(CF_UNICODETEXT,data))GlobalFree(data);CloseClipboard();}else GlobalFree(data);
+ }
++float zgpui_text_advance(const char *text,int size,int bold){
++    if(!text||!*text||size<1||size>96)return 0;
++    int count=MultiByteToWideChar(CP_UTF8,MB_ERR_INVALID_CHARS,text,-1,NULL,0);
++    if(count<=0)return 0;
++    wchar_t *wide=calloc((size_t)count,sizeof(wchar_t));if(!wide)return 0;
++    if(!MultiByteToWideChar(CP_UTF8,MB_ERR_INVALID_CHARS,text,-1,wide,count)){free(wide);return 0;}
++    HDC dc=CreateCompatibleDC(NULL);if(!dc){free(wide);return 0;}
++    HFONT font=make_font(font_family,size,bold);
++    if(!font){DeleteDC(dc);free(wide);return 0;}
++    HGDIOBJ previous=SelectObject(dc,font);float advance=0;
++    if(previous&&previous!=HGDI_ERROR){
++        SIZE extent={0};
++        if(GetTextExtentPoint32W(dc,wide,count-1,&extent))advance=(float)extent.cx;
++        SelectObject(dc,previous);
++    }
++    DeleteObject(font);DeleteDC(dc);free(wide);return advance;
++}
+ ZgpuiBitmap zgpui_rasterize(const char *text,int size,int bold){
+     ZgpuiBitmap out={0};int count=MultiByteToWideChar(CP_UTF8,0,text,-1,NULL,0);if(count<=0||count>8192)return out;wchar_t *wide=calloc(count,sizeof(wchar_t));if(!wide)return out;MultiByteToWideChar(CP_UTF8,0,text,-1,wide,count);
+     HDC dc=CreateCompatibleDC(NULL);if(!dc){free(wide);return out;}HFONT font=make_font(font_family,size,bold);if(!font){DeleteDC(dc);free(wide);return out;}HGDIOBJ previous=SelectObject(dc,font);
+diff --git a/native/zgpui.h b/native/zgpui.h
+index e446206..eccf288 100644
+--- a/native/zgpui.h
++++ b/native/zgpui.h
+@@ -13,6 +13,8 @@ void zgpui_clipboard(ZgpuiWindow *window,const char *text);
+ void zgpui_size(ZgpuiWindow *window,int *width,int *height);
+ /* Copies the family; failure leaves the old font and text cache intact. */
+ int zgpui_set_font_family(ZgpuiWindow *window,const char *family,char *error,size_t error_size);
++/* Same advance as rasterize, without allocating a bitmap or GPU texture. */
++float zgpui_text_advance(const char *text,int size,int bold);
+ ZgpuiBitmap zgpui_rasterize(const char *text,int size,int bold);
+ void zgpui_font_shutdown(void);
+ /* Requires the owning renderer context; preserves geometry and framebuffer. */
+diff --git a/scripts/check_native.py b/scripts/check_native.py
+index 7845c0e..9499791 100755
+--- a/scripts/check_native.py
++++ b/scripts/check_native.py
+@@ -82,6 +82,7 @@ def main():
+         run(sys.executable, "scripts/test_fonts.py", "-v")
+     if software:
+         run(sys.executable, "scripts/test_software.py", "-v")
++        run(sys.executable, "scripts/test_software_rect.py")
+     if args.package:
+         run("cargo", "package", *common)
+     target = Path(env.get("CARGO_TARGET_DIR", "target"))
+diff --git a/scripts/test_fonts.py b/scripts/test_fonts.py
+index 366aa58..ef0166c 100644
+--- a/scripts/test_fonts.py
++++ b/scripts/test_fonts.py
+@@ -78,6 +78,27 @@ static uint64_t bitmap_hash(ZgpuiBitmap b) {
+     assert(ink>0);
+     return h;
+ }
++static void measurement(void) {
++    const char *samples[]={"Window Backup Play 012345", "Minecraft 世界 备份 启动器",
++        "日本語 한국어", "Cafe\xcc\x81 \xce\xa9 \xd0\x96", "AV fi ffi"};
++    for(int bold=0;bold<2;bold++)for(int size=12;size<=32;size+=10)
++        for(size_t i=0;i<sizeof(samples)/sizeof(samples[0]);i++){
++            float advance=zgpui_text_advance(samples[i],size,bold);
++            ZgpuiBitmap bitmap=zgpui_rasterize(samples[i],size,bold);
++            assert(bitmap_hash(bitmap));
++            assert(advance==bitmap.advance && advance==zgpui_measure(samples[i],size,bold));
++            free(bitmap.pixels);
++        }
++    char long_text[16001];memset(long_text,'W',sizeof(long_text)-1);long_text[16000]=0;
++    /* The bitmap limit must not turn an overflowing label into zero width. */
++    assert(zgpui_text_advance(long_text,20,0)>8192);
++    assert(zgpui_measure(long_text,20,0)>8192);
++    ZgpuiBitmap large=zgpui_rasterize(long_text,20,0);assert(!large.pixels);
++    assert(zgpui_text_advance("",20,0)==0);
++    assert(zgpui_text_advance("invalid",0,0)==0);
++    zgpui_gpu_destroy();zgpui_font_shutdown();
++    assert(config_loads==config_destroys);
++}
+ static void matching(void) {
+     const uint32_t samples[]={0x41,0xe9,0x3a9,0x416,0x9aa8,0x6f22,0x3042,0xac00};
+     for(size_t s=0;s<sizeof(samples)/sizeof(samples[0]);s++) {
+@@ -222,7 +243,8 @@ static void window_probe(void) {
+ }
+ int main(int argc,char **argv) {
+     assert(argc==2);
+-    if(!strcmp(argv[1],"matching"))matching();
++    if(!strcmp(argv[1],"measurement"))measurement();
++    else if(!strcmp(argv[1],"matching"))matching();
+     else if(!strcmp(argv[1],"caching"))caching();
+     else if(!strcmp(argv[1],"shared-weight"))shared_weight();
+     else if(!strcmp(argv[1],"host-config"))host_config();
+@@ -349,6 +371,9 @@ class LinuxFontTests(unittest.TestCase):
+         env.update(environment or {})
+         subprocess.run([str(self.binary),case],check=True,env=env,timeout=60)
+ 
++    def test_measurement_matches_real_glyph_advance(self):
++        self.run_case("measurement")
++
+     def test_locale_matching_uses_system_defaults(self):
+         for environment in [
+             {"LANG":"C.UTF-8"},
+diff --git a/scripts/test_software.py b/scripts/test_software.py
+index d1f2665..72fe1bf 100755
+--- a/scripts/test_software.py
++++ b/scripts/test_software.py
+@@ -25,7 +25,10 @@ void *__wrap_mmap(void *at,size_t bytes,int prot,int flags,int fd,off_t offset)
+     if(fail_next_mapping) { --fail_next_mapping; errno=ENOMEM; return MAP_FAILED; }
+     return __real_mmap(at,bytes,prot,flags,fd,offset);
+ }
+-static int raster_calls;
++static int raster_calls, metric_calls;
++float zgpui_text_advance(const char *text,int size,int bold) {
++    (void)text;(void)size;(void)bold;++metric_calls;return 1.5f;
++}
+ ZgpuiBitmap zgpui_rasterize(const char *text,int size,int bold) {
+     (void)text;(void)size;(void)bold;
+     ++raster_calls;
+@@ -81,12 +84,17 @@ static void text(void) {
+     zgpui_begin(8,8,0x000000ff);
+     assert(zgpui_text("same",1,1,15,0,0x0000ffff)==1.5f&&raster_calls==1);
+     assert(!memcmp(saved,zgpui_software_pixels(&w,&h),sizeof(saved)));
+-    assert(zgpui_measure("same",16,0)==1.5f&&raster_calls==2);
++    assert(zgpui_measure("same",16,0)==1.5f&&raster_calls==1&&metric_calls==1);
+     for(int i=0;i<200;i++){char key[32];snprintf(key,sizeof(key),"text-%d",i);zgpui_measure(key,15,0);}
+-    int before=raster_calls;zgpui_measure("same",15,0);assert(raster_calls==before+1);
++    assert(raster_calls==1&&metric_calls==201);
++    /* Width probes preserve the mask used by the next visible frame. */
++    zgpui_text("same",1,1,15,0,0xffffffff);assert(raster_calls==1);
++    for(int i=0;i<200;i++){char key[32];snprintf(key,sizeof(key),"text-%d",i);zgpui_text(key,0,0,15,0,0xffffffff);}
++    int before=raster_calls;
++    zgpui_text("same",1,1,15,0,0xffffffff);assert(raster_calls==before+1);
+     zgpui_gpu_destroy();zgpui_gpu_destroy();
+     zgpui_begin(8,8,0x000000ff);
+-    before=raster_calls;zgpui_measure("same",15,0);assert(raster_calls==before+1);
++    before=raster_calls;zgpui_measure("same",15,0);assert(raster_calls==before);
+ }
+ static void resize(void) {
+     zgpui_begin(8,8,0x000000ff);
+diff --git a/scripts/test_software_rect.py b/scripts/test_software_rect.py
+new file mode 100644
+index 0000000..db88493
+--- /dev/null
++++ b/scripts/test_software_rect.py
+@@ -0,0 +1,211 @@
++#!/usr/bin/env python3
++"""Pixel-exact CPU rectangle regression and an isolated drawing CPU benchmark.
++
++The reference is the pre-optimization signed-distance implementation. The default
++test uses ASan/UBSan. --benchmark builds without sanitizers and alternates order;
++its CPU timings describe only the fixed 1120x760 scene, not whole GUI throughput.
++"""
++import argparse
++import json
++import os
++from pathlib import Path
++import statistics
++import subprocess
++import tempfile
++import unittest
++
++ROOT = Path(__file__).resolve().parents[1]
++SOURCE = r"""
++#define _POSIX_C_SOURCE 200809L
++#define _DEFAULT_SOURCE 1
++#include "zgpui.h"
++#include <assert.h>
++#include <math.h>
++#include <stdint.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <time.h>
++
++/* Rectangle tests never render text. Also support the metrics-only text API. */
++ZgpuiBitmap zgpui_rasterize(const char *text,int size,int bold) {
++    (void)text;(void)size;(void)bold;return (ZgpuiBitmap){0};
++}
++float zgpui_text_advance(const char *text,int size,int bold) {
++    (void)text;(void)size;(void)bold;return 0;
++}
++#include "draw_software.c"
++
++static void reference_rect(float x,float y,float width,float height,float radius,uint32_t color) {
++    int b[4];
++    if (!(color & 255u) || !isfinite(radius) || !bounds(x,y,x+width,y+height,b)) return;
++    radius=clamp(radius,0,fminf(width,height)*0.5f);
++    float cx=x+width*0.5f,cy=y+height*0.5f;
++    float hx=width*0.5f-radius,hy=height*0.5f-radius;
++    for(int row=b[1];row<b[3];++row) {
++        for(int col=b[0];col<b[2];++col) {
++            float qx=fabsf(col+0.5f-cx)-hx,qy=fabsf(row+0.5f-cy)-hy;
++            float ox=fmaxf(qx,0),oy=fmaxf(qy,0);
++            float distance=sqrtf(ox*ox+oy*oy)+fminf(fmaxf(qx,qy),0)-radius;
++            blend(col,row,color,(unsigned int)(clamp(0.5f-distance,0,1)*255.0f+0.5f));
++        }
++    }
++}
++typedef struct {float x,y,w,h,r;uint32_t color;} Shape;
++static uint32_t random_state=0x173f567bu;
++static uint32_t random_u32(void) {
++    random_state^=random_state<<13;random_state^=random_state>>17;random_state^=random_state<<5;
++    return random_state;
++}
++static void compare(Shape s,int clip_x,int clip_y,int clip_w,int clip_h) {
++    const size_t count=(size_t)screen_width*(size_t)screen_height;
++    uint32_t *expected=malloc(count*sizeof(uint32_t));assert(expected);
++    for(size_t i=0;i<count;++i) pixels[i]=((uint32_t)i*2654435761u)&0xffffffu;
++    zgpui_clip(clip_x,clip_y,clip_w,clip_h);
++    reference_rect(s.x,s.y,s.w,s.h,s.r,s.color);
++    memcpy(expected,pixels,count*sizeof(uint32_t));
++    for(size_t i=0;i<count;++i) pixels[i]=((uint32_t)i*2654435761u)&0xffffffu;
++    zgpui_rect(s.x,s.y,s.w,s.h,s.r,s.color);
++    for(size_t i=0;i<count;++i) {
++        if(pixels[i]!=expected[i]) {
++            fprintf(stderr,"pixel %zu,%zu: %06x != %06x; shape %.9g %.9g %.9g %.9g %.9g %08x; clip %d %d %d %d\n",
++                i%(size_t)screen_width,i/(size_t)screen_width,pixels[i],expected[i],
++                s.x,s.y,s.w,s.h,s.r,s.color,clip_x,clip_y,clip_w,clip_h);
++            abort();
++        }
++    }
++    free(expected);
++}
++static void verify(void) {
++    zgpui_begin(96,80,0);
++    const Shape cases[]={
++        {0,0,96,80,0,0x123456ff},{1,2,91,75,12,0x8ab4f8ff},
++        {1.25f,2.75f,88.5f,72.125f,13.1f,0xa2b3c47f},
++        {-18.25f,-7.75f,107.5f,82.625f,20.3f,0x12345655},
++        {0.5f,0.5f,90,76,0.25f,0xffffffff},
++        {1,2,90,74,0.49999f,0x123456fe},{1,2,90,74,0.50001f,0x12345601},
++        {0.125f,0.875f,95.5f,79.75f,38.5f,0xff224488},
++        {20.25f,10.5f,35.75f,35.75f,100,0x8040c0ff},
++        {20.25f,10.5f,35.75f,35.75f,-1,0x8040c0ff},
++        {1.4f,3.2f,0.4f,0.3f,0,0xffffffff},{2,2,1,1,0.5f,0xffffffff},
++        {-10,-10,500,500,12,0x12345680},{-50,-50,100,100,50,0xffffffff},
++        {3,4,80,68,7,0},{3,4,0,68,7,0xffffffff},
++        {3,4,80,-1,7,0xffffffff},{NAN,0,80,70,0,0xffffffff},
++        {0,0,INFINITY,70,0,0xffffffff},{0,0,80,70,NAN,0xffffffff},
++        {-1e10f,-1e10f,2e10f,2e10f,5,0x12345680}
++    };
++    const int clips[][4]={{0,0,96,80},{7,11,53,43},{-9,-7,46,58},{95,79,1,1},{100,100,50,50}};
++    for(size_t c=0;c<sizeof(cases)/sizeof(cases[0]);++c)
++        for(size_t k=0;k<sizeof(clips)/sizeof(clips[0]);++k)
++            compare(cases[c],clips[k][0],clips[k][1],clips[k][2],clips[k][3]);
++    for(int i=0;i<4096;++i) {
++        Shape s={
++            (float)(int)(random_u32()%18001)/128.0f-40,
++            (float)(int)(random_u32()%15001)/128.0f-30,
++            (float)(random_u32()%18001)/128.0f,
++            (float)(random_u32()%15001)/128.0f,
++            (float)(random_u32()%12001)/256.0f,
++            random_u32()
++        };
++        compare(s,(int)(random_u32()%91)-12,(int)(random_u32()%79)-12,
++            (int)(random_u32()%120),(int)(random_u32()%104));
++    }
++    zgpui_gpu_destroy();
++    puts("{\"pixel_cases\":4201,\"mismatched_pixels\":0}");
++}
++typedef void (*RectFn)(float,float,float,float,float,uint32_t);
++static volatile uint64_t benchmark_guard;
++static void scene(RectFn rect) {
++    rect(0,0,236,760,0,0x17191dff);
++    rect(258,24,838,710,18,0x202329ff);
++    for(int row=0;row<3;++row) {
++        rect(282,56+row*180,790,158,12,0x2c3038ff);
++        rect(306,80+row*180,118,110,10,0x8ab4f8ff);
++        rect(914,155+row*180,132,36,12,0x8ab4f880);
++    }
++    rect(16.25f,24.75f,204.5f,48.25f,12,0x263650ff);
++    rect(20,690,196,42,12,0x8ab4f8ff);
++}
++static double cpu_seconds(void) {
++    struct timespec t;assert(!clock_gettime(CLOCK_PROCESS_CPUTIME_ID,&t));
++    return (double)t.tv_sec+(double)t.tv_nsec/1e9;
++}
++static void benchmark(int optimized,int frames) {
++    RectFn rect=optimized?zgpui_rect:reference_rect;
++    zgpui_begin(1120,760,0x111315ff);scene(rect);
++    double start=cpu_seconds();
++    for(int i=0;i<frames;++i) {
++        zgpui_begin(1120,760,0x111315ff);scene(rect);
++        benchmark_guard+=pixels[(size_t)(i%760)*1120+(size_t)(i%1120)];
++    }
++    double elapsed=cpu_seconds()-start;
++    printf("{\"cpu_seconds\":%.9f,\"guard\":%llu}\n",elapsed,(unsigned long long)benchmark_guard);
++    zgpui_gpu_destroy();
++}
++int main(int argc,char **argv) {
++    if(argc==2&&!strcmp(argv[1],"test")){verify();return 0;}
++    if(argc==3&&(!strcmp(argv[1],"optimized")||!strcmp(argv[1],"reference"))) {
++        int frames=atoi(argv[2]);assert(frames>0&&frames<=10000);
++        benchmark(!strcmp(argv[1],"optimized"),frames);return 0;
++    }
++    return 2;
++}
++"""
++
++def build(directory, sanitizer):
++    source = directory / "rect_fixture.c"
++    source.write_text(SOURCE)
++    binary = directory / "rect_fixture"
++    flags = ["-O1", "-g", "-fsanitize=address,undefined", "-fno-omit-frame-pointer"] if sanitizer else ["-O2"]
++    subprocess.run([
++        os.environ.get("CC", "cc"), "-std=c11", "-Wall", "-Wextra", "-Werror",
++        *flags, "-DZGPUI_SOFTWARE", "-I", str(ROOT / "native"),
++        str(source), "-lm", "-o", str(binary),
++    ], check=True)
++    return binary
++
++class SoftwareRectangleTests(unittest.TestCase):
++    def test_matches_reference_at_every_pixel(self):
++        with tempfile.TemporaryDirectory(prefix="zgpui-rect-test-") as temporary:
++            binary = build(Path(temporary), True)
++            subprocess.run([str(binary), "test"], check=True, env={
++                **os.environ, "ASAN_OPTIONS": "detect_leaks=1:halt_on_error=1",
++                "UBSAN_OPTIONS": "halt_on_error=1",
++            })
++
++def benchmark(frames, rounds):
++    with tempfile.TemporaryDirectory(prefix="zgpui-rect-bench-") as temporary:
++        binary = build(Path(temporary), False)
++        measurements = {"reference": [], "optimized": []}
++        guards = set()
++        for round_index in range(rounds):
++            order = ("reference", "optimized") if round_index % 2 == 0 else ("optimized", "reference")
++            for mode in order:
++                sample = json.loads(subprocess.check_output([str(binary), mode, str(frames)], text=True))
++                measurements[mode].append(sample["cpu_seconds"])
++                guards.add(sample["guard"])
++        if len(guards) != 1:
++            raise RuntimeError("Benchmark checksums differ")
++        baseline = statistics.median(measurements["reference"])
++        optimized = statistics.median(measurements["optimized"])
++        print(json.dumps({
++            "scope": "fixed CPU rectangle scene; includes framebuffer clear; no text, X11 or event loop",
++            "size": [1120, 760], "frames_per_sample": frames, "rounds": rounds,
++            "clock": "CLOCK_PROCESS_CPUTIME_ID", "compiler_flags": "-O2 -std=c11",
++            "order": "alternating", "samples_cpu_seconds": measurements,
++            "median_cpu_seconds": {"reference": baseline, "optimized": optimized},
++            "reference_over_optimized": baseline / optimized, "guard": next(iter(guards)),
++        }, indent=2))
++
++if __name__ == "__main__":
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--benchmark", action="store_true")
++    parser.add_argument("--frames", type=int, default=80)
++    parser.add_argument("--rounds", type=int, default=5)
++    args = parser.parse_args()
++    if args.frames < 1 or args.frames > 10000 or args.rounds < 1 or args.rounds > 100:
++        parser.error("frames must be 1..10000 and rounds must be 1..100")
++    if args.benchmark:
++        benchmark(args.frames, args.rounds)
++    else:
++        unittest.main(argv=[__file__])
+diff --git a/src/native.rs b/src/native.rs
+index 51b50e8..7160373 100644
+--- a/src/native.rs
++++ b/src/native.rs
+@@ -445,17 +445,97 @@ impl Canvas<'_> {
+         bold: bool,
+         color: u32,
+     ) {
+-        if self.measure(text, size, bold) <= max_width {
+-            self.text(text, x, y, size, bold, color);
+-            return;
+-        }
+-        let mut cut = text.to_owned();
+-        while !cut.is_empty() && self.measure(&(cut.clone() + "…"), size, bold) > max_width {
+-            cut.pop();
+-        }
+-        self.text(&(cut + "…"), x, y, size, bold, color);
++        let fitted = fit_ellipsis(text, max_width, |value| self.measure(value, size, bold));
++        self.text(&fitted, x, y, size, bold, color);
+     }
+ }
++/// Find a measured, UTF-8-safe prefix with logarithmically many width probes.
++/// Shaping can make prefix widths nonmonotonic; the result is always a prefix
++/// whose complete form including the ellipsis was measured to fit.
++fn fit_ellipsis(
++    text: &str,
++    max_width: f32,
++    mut measure: impl FnMut(&str) -> f32,
++) -> std::borrow::Cow<'_, str> {
++    use std::borrow::Cow;
++    if text.is_empty() || max_width.is_nan() || max_width <= 0. {
++        return Cow::Borrowed("");
++    }
++    if measure(text) <= max_width {
++        return Cow::Borrowed(text);
++    }
++    let ellipsis_width = measure("…");
++    if ellipsis_width.is_nan() || ellipsis_width > max_width {
++        return Cow::Borrowed("");
++    }
++    let (mut low, mut high) = (0, text.len());
++    let mut candidate = String::with_capacity(text.len().min(256) + 3);
++    while low < high {
++        let mut end = low + (high - low).div_ceil(2);
++        while !text.is_char_boundary(end) {
++            end += 1;
++        }
++        candidate.clear();
++        candidate.push_str(&text[..end]);
++        candidate.push('…');
++        if measure(&candidate) <= max_width {
++            low = end;
++        } else {
++            high = text[..end].char_indices().next_back().map_or(0, |(i, _)| i);
++        }
++    }
++    candidate.clear();
++    candidate.push_str(&text[..low]);
++    candidate.push('…');
++    Cow::Owned(candidate)
++}
++
++#[cfg(test)]
++mod ellipsis_tests {
++    use super::fit_ellipsis;
++    use std::borrow::Cow;
++
++    #[test]
++    fn fits_without_allocating_and_respects_tiny_widths() {
++        let width = |value: &str| value.chars().count() as f32;
++        assert!(matches!(
++            fit_ellipsis("hello", 5., width),
++            Cow::Borrowed("hello")
++        ));
++        assert_eq!(fit_ellipsis("hello", 0.5, width), "");
++        assert_eq!(fit_ellipsis("hello", 1., width), "…");
++        assert_eq!(fit_ellipsis("hello", -1., width), "");
++        assert_eq!(fit_ellipsis("hello", f32::NAN, width), "");
++    }
++
++    #[test]
++    fn bounds_long_text_probes_and_keeps_unicode_valid() {
++        for text in ["a".repeat(100_000), "世界🚀e\u{301}".repeat(2_000)] {
++            let mut calls = 0;
++            let fitted = fit_ellipsis(&text, 18., |s| {
++                calls += 1;
++                s.chars().count() as f32
++            });
++            assert!(fitted.ends_with('…'));
++            assert!(fitted.chars().count() <= 18);
++            assert!(text.starts_with(fitted.trim_end_matches('…')));
++            assert!(calls <= usize::BITS + 2, "{calls} width probes");
++        }
++    }
++
++    #[test]
++    fn returns_a_measured_fit_when_shaping_widths_are_not_monotonic() {
++        let width = |value: &str| match value {
++            "abcdefgh" => 10.,
++            "abcdef…" => 2.,
++            _ => value.chars().count() as f32,
++        };
++        let fitted = fit_ellipsis("abcdefgh", 3., width);
++        assert!(width(&fitted) <= 3.);
++        assert!(fitted.ends_with('…'));
++    }
++}
++
+ impl Drop for Canvas<'_> {
+     fn drop(&mut self) {
+         unsafe { zgpui_unclip() }

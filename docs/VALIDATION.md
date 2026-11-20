@@ -1,5 +1,17 @@
 # zmcl 开发与验收报告
 
+## v0.1.2 源码验收
+
+应用源码 [e86b584](https://github.com/LIghtJUNction/zmcl/commit/e86b5841532ef04cc74cea5585ae396150452408) 已通过 **97 项 Rust 测试（78 应用 + 19 核心）**、fmt、严格 Clippy、Linux GUI release、Windows GNU 完整 GUI 跨编译，以及 Linux 原生窗口四组创建和六项管理流程。[脱敏验收记录](validation/gui-iteration-0.1.2-2026-11-20.json)逐文件证明冻结工作树与公开提交的运行源码等价，保留实际构建基线，不倒写构建身份。
+
+Linux 程序为 **1,473,144 字节**，SHA-256 `71bf4017072703a91359ea84e2493db218d9962456ece2060d0f2e42b3500c32`；Windows GNU 程序为 **1,366,528 字节**，SHA-256 `45e96c55b703977331f75feb757714dcbba3df6b146330d8d2758937711a45f5`。后者是跨编译产物，尚未运行于 Windows；macOS 尚无本轮应用构建与运行结果。
+
+本轮新建实例、解释器发现、隐藏日志重绘、管理页容量释放和框架字体/矩形路径的机制、性能对照、截图与不足见[完整迭代报告](reports/2026-11-20-gui-iteration.md)。zgpui 0.1.5 已完成真正的跨平台发行门禁，但上游探针不代替应用实机验收。此节记录源码验收；0.1.2 安装包、AUR 与安装后记录在完成后单独追加。
+
+![0.1.2 创建与安装界面](validation/images/zmcl-0.1.2-create.png)
+
+以下 0.1.1 与 0.1.0 记录保持原始版本、二进制和实测范围。
+
 ## v0.1.1 发行验收
 
 报告日期：2026-11-20（Asia/Taipei）。本版应用源码固定为 [35eb8a3](https://github.com/LIghtJUNction/zmcl/commit/35eb8a3242a6ba637266ba1480354138389c9cb0)，实际使用 zgpui 0.1.2 / `5b268da910639abd2fb8e581acb4f6eed50b7516` 的原生 CPU 后端。核心保持 `no_std + alloc`。

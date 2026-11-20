@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "version": "0.1.5",
+  "source_commit": "4aba3ba83815253fb7e4013baa8bcf894439d32d",
+  "crate_sha256": "7a5597b9018e724bcab318e8e52de11f70e1686262692d32d84b1fce30044300",
+  "crate_bytes": 88287,
+  "crate_files": 38,
+  "yanked": false,
+  "published_at": "2026-11-20T10:00:19.388748Z",
+  "registry_and_index_match": true,
+  "vcs_clean": true,
+  "formal_run_id": 44713398127,
+  "formal_url": "https://github.com/LIghtJUNction/zgpui/actions/runs/44713398127",
+  "initial_attempt": "Cancelled after Linux software runner remained at system package installation; no product check failure was observed.",
+  "retry": "Retried through the GitHub failed-jobs operation; all 12 final jobs succeeded."
+}

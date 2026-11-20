@@ -23,11 +23,13 @@ AUR 安装 GitHub 发布的 Linux x86_64 预编译程序，附带桌面入口与
 
 重型操作使用按需退出的系统程序，未把整套浏览器运行时装进启动器。因此，“Rust 依赖都来自 Project Z”不等于没有系统依赖：curl、Python、图形库、Java 和可选 OpenSSL 仍需明确计算。游戏内存、Java 安装、游戏资源和 Horizon 官方发行包不属于 zmcl 本身的可执行文件。
 
-已发布 v0.1.0 的 Linux GUI 主程序为 **1,412,176 字节（1.35 MiB）**。分发包、安装文件和内存使用分别测量，详见[性能报告](docs/PERFORMANCE.md)。GUI 的 `--exit-after-launch` 选项会在启动命令成功返回游戏 PID 后退出；已实际验证启动器退出后 Java 进程继续存活。命令行启动本身也无需保留常驻服务。
+0.1.2 验收构建的 Linux GUI 主程序为 **1,473,144 字节（1.40 MiB）**。分发包、安装文件和内存使用分别测量，详见[性能报告](docs/PERFORMANCE.md)。GUI 的 `--exit-after-launch` 选项会在启动命令成功返回游戏 PID 后退出；已实际验证启动器退出后 Java 进程继续存活。命令行启动本身也无需保留常驻服务。
 
 性能对照使用固定 XMCL 0.73.1、完整进程树、重复样本，并同时记录 RSS、PSS、SwapPss 和宿主内存压力。软件渲染结果不能替代硬件 GPU 实测，现阶段功能范围也不同。
 
-主线已接入统一后的 `zgpui` 0.1.2：实际窗口、输入和绘制调用来自 `zgpui::native`，启用 `native` 和 `linux-software`，不保留旧包别名。Library 的 Manage 入口提供世界、备份与资源管理，侧栏提供本地服务器管理。源码能力与当前 AUR 发行版本分别记录，详见[架构说明](docs/ARCHITECTURE.md)和[功能记录](docs/FEATURES.md)。
+主线已接入正式发布的 `zgpui` 0.1.5：实际窗口、输入和绘制调用来自 `zgpui::native`，启用 `native` 和 `linux-software`，不保留旧包别名。Library 的 Manage 入口提供世界、备份与资源管理，侧栏提供本地服务器管理。新建实例支持异步官方版本选择、自动避开重名、五种加载器和默认创建后安装。隐藏 Activity 不再为每段日志触发重绘，离开管理页会释放其列表内容与容量。九个页面标题已通过 `zi18n` 借用静态英文，完整多语言仍待后续。
+
+本轮限定测试中，空库重绘 CPU 时间中位数下降 **44.5%**；2000 个世界的两对交错测试中，返回 Library 后 GUI 的 PSS+SwapPss 下降 **23.0%**，RSS 下降 **14.5%**。两项来自不同冻结候选，不能相加，也不代表最终发行二进制在所有状态的结果。完整进程树、显示服务与换页边界见[本轮报告](docs/reports/2026-11-20-gui-iteration.md)。源码能力与当前 AUR 发行版本分别记录，详见[架构说明](docs/ARCHITECTURE.md)和[功能记录](docs/FEATURES.md)。
 
 ## 构建与运行
 
@@ -40,9 +42,9 @@ cargo build --release --locked
 ./target/release/zmcl gui --exit-after-launch
 ```
 
-只有 CLI 时可用 `cargo build --release --locked --no-default-features`。启动器支持 `--root DIR` 或 `ZMCL_HOME` 选择数据目录；运行 `zmcl doctor` 查看系统程序与 Java 状态。默认数据目录为 Linux 的 XDG data/zmcl、macOS 的 Application Support/zmcl、Windows 的 LocalAppData/zmcl。
+只有 CLI 时可用 `cargo build --release --locked --no-default-features`。启动器支持 `--root DIR` 或 `ZMCL_HOME` 选择数据目录；运行 `zmcl doctor` 查看系统程序与 Java 状态。文件助手要求 Python 3.8+；Windows 会尝试 `py -3`、`python`、`python3`，其他平台尝试 `python3`、`python`。`ZMCL_PYTHON` 可指定一个解释器可执行文件路径，含空格的路径作为单个参数处理。默认数据目录为 Linux 的 XDG data/zmcl、macOS 的 Application Support/zmcl、Windows 的 LocalAppData/zmcl。
 
-已记录的真实游戏与桌面验收在 Linux x86_64 完成。预编译包的 glibc 和 Fontconfig 下限由实际 ELF 符号生成，见包内 release.json；源码支持的条件分支不代表预编译程序兼容同样的旧运行库。较旧发行版可在本机构建，并验证运行条件。符号要求不能替代完整发行版兼容性验收；其他平台的实现分支和启动计划测试也不等于对应系统已经通过真实桌面验收。
+已记录的真实游戏与桌面验收在 Linux x86_64 完成。预编译包的 glibc 和 Fontconfig 下限由实际 ELF 符号生成，见包内 release.json；源码支持的条件分支不代表预编译程序兼容同样的旧运行库。较旧发行版可在本机构建，并验证运行条件。符号要求不能替代完整发行版兼容性验收；Windows GNU 完整 GUI 已正常跨编译；zgpui 0.1.5 的 Windows/macOS 原生探针已在对应系统运行。zmcl 应用本身的 Windows/macOS 实机安装、窗口与游戏启动仍未验收。
 
 ## 常用操作
 
@@ -144,6 +146,7 @@ zmcl horizon launch INSTALL_ID
 
 - [架构和边界](docs/ARCHITECTURE.md)
 - [XMCL 功能对照与验收记录](docs/FEATURES.md)
+- [0.1.2 GUI、跨平台与性能迭代](docs/reports/2026-11-20-gui-iteration.md)
 - [实际安装、启动与恢复验收](docs/VALIDATION.md)
 - [资源占用及测量方法](docs/PERFORMANCE.md)
 - [维护与传播规则](AGENTS.md)

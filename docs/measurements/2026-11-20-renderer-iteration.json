@@ -1,0 +1,2329 @@
+{
+  "schema": 1,
+  "memory_unit": "KiB",
+  "cpu_percent_denominator": "One logical CPU core; sampled CPU tick deltas divided by sampled phase elapsed time.",
+  "aggregation": "Median of three trial medians, with trial ranges and largest observed peak reported separately. PSS+SwapPss is summed per sample before statistics.",
+  "variants": {
+    "baseline": {
+      "version": "0.1.1",
+      "revision": "35eb8a3242a6ba637266ba1480354138389c9cb0 + zgpui 5b268da910639abd2fb8e581acb4f6eed50b7516",
+      "binary_sha256": "a28998952b42d09f652ac95da47ddb15930cd556b6fa4e9b7e7ebbd23a4ac2e9",
+      "binary_bytes": 1439712,
+      "identity_consistent_across_runs": true
+    },
+    "optimized": {
+      "version": "0.1.1 renderer candidate",
+      "revision": "03dae9cd9c4d291547653255015e126d0d7141e6 application + zgpui c54cf244ccbda5f5822ae521b0facd5481071464; manifest 0.1.3 path pin",
+      "binary_sha256": "bd8773968ccbb000bb9f153d800d9e225d7a99d978960a8b9013f3b141584925",
+      "binary_bytes": 1444024,
+      "identity_consistent_across_runs": true
+    }
+  },
+  "scenario": "Fresh empty launcher root; visible library, idle, forced full-window Expose and settled idle",
+  "scope": "Main GUI and full related process family/session; Xvfb measured separately before/during",
+  "conditions": {
+    "trials": 1,
+    "warmup": 20,
+    "samples": 11,
+    "idle_interval": 1,
+    "sample_interval": 0.005,
+    "drawing_seconds": 6,
+    "expose_hz": 60,
+    "settle": 3,
+    "width": 1120,
+    "height": 760,
+    "cpu_clock_ticks_per_second": 100,
+    "os_caches_flushed": false
+  },
+  "system": {
+    "os": "Linux",
+    "arch": "x86_64",
+    "kernel": "7.3.4-arch1-1",
+    "logical_cpus": 24,
+    "page_bytes": 4096
+  },
+  "environment": {
+    "display": "Owned Xvfb 1280x800x24; 1120x760 application window",
+    "data": "Fresh empty launcher root per run",
+    "XDG_SESSION_TYPE": "x11",
+    "WAYLAND_DISPLAY": null,
+    "LIBGL_ALWAYS_SOFTWARE": "1",
+    "SDL_VIDEO_DRIVER": "x11"
+  },
+  "script_hashes": {
+    "benchmark_script_sha256": "49918d1c3d6b77184923050ab97c90145dac3088b1303079ed7f591e0b057c49",
+    "bench_linux_sha256": "966d565c205804f6bc0f4093dd431a4597f678fe3546d06630c8b1272b9baaba"
+  },
+  "conditions_consistent_across_runs": true,
+  "script_hashes_consistent_across_runs": true,
+  "run_order": [
+    "baseline-1",
+    "optimized-1",
+    "baseline-2",
+    "optimized-2",
+    "baseline-3",
+    "optimized-3"
+  ],
+  "environment_pressure": {
+    "continuous_host_memory_load_or_psi_recorded": false,
+    "start_mem_available_kib_range": [
+      3758088,
+      4392336
+    ],
+    "start_system_swap_used_kib_range": [
+      20069636,
+      20590276
+    ],
+    "runs_with_main_swap": [
+      "optimized-2"
+    ],
+    "runs_with_display_swap": [
+      "optimized-2"
+    ],
+    "no_system_wide_cache_flush_or_cpu_isolation": true,
+    "external_workload_not_quantified_in_these_files": true
+  },
+  "limitations": [
+    "Sampled maxima are observed lower bounds, not a guarantee for all application states.",
+    "Processes born and exited wholly between /proc reads can be missed; sequential reads are not atomic.",
+    "RSS sums can count shared pages more than once; PSS and SwapPss remain separate raw measurements.",
+    "VmHWM is the kernel main-process lifetime RSS counter, not peak PSS or a process-tree counter; its accounting can differ from smaps_rollup.",
+    "Xvfb is measured before and during the app and reported separately; it remains real system cost.",
+    "The Python observer and X11 driver are test-process work, excluded from launcher and display totals.",
+    "CPU totals require stable sampled identities; common-process CPU during churn is only a lower bound.",
+    "This is a shared development host with no system-wide cache flush or CPU isolation.",
+    "Expose request frequency does not prove rendered FPS.",
+    "Empty-library activity does not cover file operations, login, downloads or Java/game memory.",
+    "The six runs are three adjacent baseline/candidate pairs on one shared Linux/Xvfb host; this is not randomized or confidence-interval analysis.",
+    "The configured 5 ms sampling sleep is added to sequential read overhead; observed drawing intervals are reported separately.",
+    "Optimized run 2 includes application and Xvfb swap; lower resident RSS or PSS alone cannot establish lower allocated memory.",
+    "Application source revisions differ only in documentation/site/packaging files according to git diff --stat; framework revisions and binaries differ.",
+    "CPU reduction applies to the complete empty-library window under this Expose workload, not FPS, interactive latency, file/login/download work, or Windows/macOS runtime performance.",
+    "Rectangle microbenchmark figures are not included or extrapolated to whole-window speedup."
+  ],
+  "audit": {
+    "input_samples": 3863,
+    "all_runs_completed": true,
+    "sampling_errors": [],
+    "reported_summary_mismatches": 0,
+    "all_requested_memory_readouts_present": true,
+    "unread_process_occurrences": 0,
+    "all_sampled_process_sets_stable": true,
+    "main_and_tree_equal_at_every_sample": true,
+    "raw_paths_process_ids_commands_included": false,
+    "note": "Complete sampled readouts do not rule out short-lived processes or memory/CPU events wholly between samples.",
+    "original_public_audit_sha256": "0f6821e82ac6ce402add952bd6233032b70e51718935442f8df576915299a7fc"
+  },
+  "source_urls": {
+    "baseline_application": "https://github.com/LIghtJUNction/zmcl/tree/35eb8a3242a6ba637266ba1480354138389c9cb0",
+    "baseline_framework": "https://github.com/LIghtJUNction/zgpui/tree/5b268da910639abd2fb8e581acb4f6eed50b7516",
+    "optimized_application": "https://github.com/LIghtJUNction/zmcl/tree/03dae9cd9c4d291547653255015e126d0d7141e6",
+    "optimized_framework": null
+  },
+  "column_definitions": {
+    "memory_metrics": [
+      "rss",
+      "pss",
+      "swap",
+      "swap_pss",
+      "pss_plus_swap_pss"
+    ],
+    "display_server_before_app_metrics": [
+      "rss",
+      "pss",
+      "swap",
+      "swap_pss"
+    ],
+    "memory_stats": [
+      "median",
+      "observed_sampled_peak"
+    ],
+    "cpu_seconds_and_percent_scopes": [
+      "main",
+      "process_tree",
+      "display_server"
+    ],
+    "complete_sample_count_scopes": [
+      "main",
+      "process_tree",
+      "display_server"
+    ],
+    "sampling_stats": [
+      "sample_span_seconds",
+      "observed_interval_median_ms",
+      "observed_interval_max_ms",
+      "read_duration_median_ms"
+    ],
+    "aggregate_memory_stats": [
+      "median_of_trial_medians",
+      "minimum_trial_median",
+      "maximum_trial_median",
+      "largest_observed_peak",
+      "median_of_trial_peaks"
+    ],
+    "aggregate_cpu_stats": [
+      "median",
+      "minimum",
+      "maximum"
+    ],
+    "percent_change": "Positive means candidate larger; negative means candidate smaller. Null when baseline is zero."
+  },
+  "runs": [
+    {
+      "run": "baseline-1",
+      "pair": 1,
+      "recorded_at_utc": "2026-11-20T09:25:23Z",
+      "input_sha256": {
+        "activity_measurements": "c42a906744a2eeaaa6a17834f629bdc5a0d711fcee4a80a0761e87713509ead3",
+        "raw_trial": "988ccac94d81439935955c3b058759f43d52f162cfde1f2a4cfcc5a2cfad74d0"
+      },
+      "memory_at_start_kib": {
+        "MemTotal": 16090532,
+        "MemAvailable": 4279720,
+        "SwapTotal": 47535828,
+        "SwapFree": 26945552
+      },
+      "window_visible_ms": 154.261286996,
+      "sampling_cpu_seconds": 2.974236668,
+      "controller_cpu_during_drawing_seconds": 2.870343312,
+      "total_samples": 643,
+      "expose": {
+        "requests": 360,
+        "elapsed_seconds": 6.000088344,
+        "requested_hz": 60
+      },
+      "observed_related_processes": 1,
+      "main_vm_hwm_max_kib": 16548,
+      "display_server_before_app_kib": [
+        37428,
+        31395,
+        0,
+        0
+      ],
+      "phases": {
+        "idle": {
+          "samples": 11,
+          "process_count_range": [
+            1,
+            1
+          ],
+          "complete_samples": [
+            11,
+            11,
+            11
+          ],
+          "incomplete_main_status_samples": 0,
+          "main_and_tree_memory_kib": [
+            [
+              9964,
+              9964
+            ],
+            [
+              4099,
+              5015
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              4099,
+              5015
+            ]
+          ],
+          "display_memory_kib": [
+            [
+              38872,
+              38872
+            ],
+            [
+              24105,
+              32493
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              24105,
+              32493
+            ]
+          ],
+          "cpu_seconds": [
+            0,
+            0,
+            0
+          ],
+          "cpu_one_core_percent": [
+            0,
+            0,
+            0
+          ],
+          "sampling": [
+            10.058058276,
+            1005.039630007,
+            1011.348642001,
+            4.969859991
+          ]
+        },
+        "drawing": {
+          "samples": 621,
+          "process_count_range": [
+            1,
+            1
+          ],
+          "complete_samples": [
+            621,
+            621,
+            621
+          ],
+          "incomplete_main_status_samples": 0,
+          "main_and_tree_memory_kib": [
+            [
+              9840,
+              13168
+            ],
+            [
+              4895,
+              8229
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              4895,
+              8229
+            ]
+          ],
+          "display_memory_kib": [
+            [
+              38812,
+              38812
+            ],
+            [
+              32490,
+              32502
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              32490,
+              32502
+            ]
+          ],
+          "cpu_seconds": [
+            2.65,
+            2.65,
+            0.47
+          ],
+          "cpu_one_core_percent": [
+            44.150786858,
+            44.150786858,
+            7.830516914
+          ],
+          "sampling": [
+            6.002158033,
+            9.594592004,
+            15.694238988,
+            4.499460003
+          ]
+        },
+        "settled": {
+          "samples": 11,
+          "process_count_range": [
+            1,
+            1
+          ],
+          "complete_samples": [
+            11,
+            11,
+            11
+          ],
+          "incomplete_main_status_samples": 0,
+          "main_and_tree_memory_kib": [
+            [
+              9840,
+              9840
+            ],
+            [
+              4895,
+              4898
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              4895,
+              4898
+            ]
+          ],
+          "display_memory_kib": [
+            [
+              38812,
+              38812
+            ],
+            [
+              32483,
+              32502
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              32483,
+              32502
+            ]
+          ],
+          "cpu_seconds": [
+            0,
+            0,
+            0
+          ],
+          "cpu_one_core_percent": [
+            0,
+            0,
+            0
+          ],
+          "sampling": [
+            1.07700703,
+            108.259067005,
+            111.904559992,
+            8.204126992
+          ]
+        }
+      }
+    },
+    {
+      "run": "optimized-1",
+      "pair": 1,
+      "recorded_at_utc": "2026-11-20T09:26:04Z",
+      "input_sha256": {
+        "activity_measurements": "c2e1cfb7649354686df770dedff4c96cf81cb3898f33c6176c512ddcadb2e243",
+        "raw_trial": "62af985e2feffc64a1f27f4a175bbd685ca4aa46df1534279a5a8b225862a8fb"
+      },
+      "memory_at_start_kib": {
+        "MemTotal": 16090532,
+        "MemAvailable": 4321204,
+        "SwapTotal": 47535828,
+        "SwapFree": 27190992
+      },
+      "window_visible_ms": 147.272952003,
+      "sampling_cpu_seconds": 2.872903201,
+      "controller_cpu_during_drawing_seconds": 2.752007537,
+      "total_samples": 665,
+      "expose": {
+        "requests": 360,
+        "elapsed_seconds": 6.000145862,
+        "requested_hz": 60
+      },
+      "observed_related_processes": 1,
+      "main_vm_hwm_max_kib": 16744,
+      "display_server_before_app_kib": [
+        37688,
+        31590,
+        0,
+        0
+      ],
+      "phases": {
+        "idle": {
+          "samples": 11,
+          "process_count_range": [
+            1,
+            1
+          ],
+          "complete_samples": [
+            11,
+            11,
+            11
+          ],
+          "incomplete_main_status_samples": 0,
+          "main_and_tree_memory_kib": [
+            [
+              9932,
+              9944
+            ],
+            [
+              5062,
+              5074
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              5062,
+              5074
+            ]
+          ],
+          "display_memory_kib": [
+            [
+              39156,
+              39160
+            ],
+            [
+              32769,
+              32794
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              32769,
+              32794
+            ]
+          ],
+          "cpu_seconds": [
+            0,
+            0,
+            0
+          ],
+          "cpu_one_core_percent": [
+            0,
+            0,
+            0
+          ],
+          "sampling": [
+            10.072565747,
+            1005.807039001,
+            1013.542186003,
+            5.235395001
+          ]
+        },
+        "drawing": {
+          "samples": 643,
+          "process_count_range": [
+            1,
+            1
+          ],
+          "complete_samples": [
+            643,
+            643,
+            643
+          ],
+          "incomplete_main_status_samples": 0,
+          "main_and_tree_memory_kib": [
+            [
+              9932,
+              13260
+            ],
+            [
+              4893,
+              8264
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              4893,
+              8264
+            ]
+          ],
+          "display_memory_kib": [
+            [
+              39156,
+              39156
+            ],
+            [
+              32536,
+              32746
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              32536,
+              32746
+            ]
+          ],
+          "cpu_seconds": [
+            1.41,
+            1.41,
+            0.44
+          ],
+          "cpu_one_core_percent": [
+            23.483973746,
+            23.483973746,
+            7.328332233
+          ],
+          "sampling": [
+            6.004094602,
+            9.256965997,
+            13.384078004,
+            4.15051599
+          ]
+        },
+        "settled": {
+          "samples": 11,
+          "process_count_range": [
+            1,
+            1
+          ],
+          "complete_samples": [
+            11,
+            11,
+            11
+          ],
+          "incomplete_main_status_samples": 0,
+          "main_and_tree_memory_kib": [
+            [
+              9460,
+              9460
+            ],
+            [
+              4577,
+              4582
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              4577,
+              4582
+            ]
+          ],
+          "display_memory_kib": [
+            [
+              38556,
+              38556
+            ],
+            [
+              31871,
+              31944
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              31871,
+              31944
+            ]
+          ],
+          "cpu_seconds": [
+            0,
+            0,
+            0
+          ],
+          "cpu_one_core_percent": [
+            0,
+            0,
+            0
+          ],
+          "sampling": [
+            1.075790947,
+            107.263214501,
+            111.436826002,
+            9.565567991
+          ]
+        }
+      }
+    },
+    {
+      "run": "baseline-2",
+      "pair": 2,
+      "recorded_at_utc": "2026-11-20T09:26:45Z",
+      "input_sha256": {
+        "activity_measurements": "21b63a0f0b51f4cdbd34091dff285bde2ba9ac0bcd94282d4a34d1fe111b37ab",
+        "raw_trial": "27a79b2c3166104d5f22f165f244122cd066f14b7175b94cf0261fdfd0bc6b4d"
+      },
+      "memory_at_start_kib": {
+        "MemTotal": 16090532,
+        "MemAvailable": 4392336,
+        "SwapTotal": 47535828,
+        "SwapFree": 27282772
+      },
+      "window_visible_ms": 150.687485992,
+      "sampling_cpu_seconds": 2.93830657,
+      "controller_cpu_during_drawing_seconds": 2.79610168,
+      "total_samples": 656,
+      "expose": {
+        "requests": 360,
+        "elapsed_seconds": 6.000079659,
+        "requested_hz": 60
+      },
+      "observed_related_processes": 1,
+      "main_vm_hwm_max_kib": 17016,
+      "display_server_before_app_kib": [
+        37644,
+        31570,
+        0,
+        0
+      ],
+      "phases": {
+        "idle": {
+          "samples": 11,
+          "process_count_range": [
+            1,
+            1
+          ],
+          "complete_samples": [
+            11,
+            11,
+            11
+          ],
+          "incomplete_main_status_samples": 0,
+          "main_and_tree_memory_kib": [
+            [
+              9688,
+              9688
+            ],
+            [
+              4153,
+              5028
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              4153,
+              5028
+            ]
+          ],
+          "display_memory_kib": [
+            [
+              39060,
+              39060
+            ],
+            [
+              20564,
+              32682
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              20564,
+              32682
+            ]
+          ],
+          "cpu_seconds": [
+            0,
+            0,
+            0
+          ],
+          "cpu_one_core_percent": [
+            0,
+            0,
+            0
+          ],
+          "sampling": [
+            10.074047632,
+            1006.501049495,
+            1010.953834993,
+            7.708396995
+          ]
+        },
+        "drawing": {
+          "samples": 634,
+          "process_count_range": [
+            1,
+            1
+          ],
+          "complete_samples": [
+            634,
+            634,
+            634
+          ],
+          "incomplete_main_status_samples": 0,
+          "main_and_tree_memory_kib": [
+            [
+              9704,
+              13032
+            ],
+            [
+              4913,
+              8241
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              4913,
+              8241
+            ]
+          ],
+          "display_memory_kib": [
+            [
+              39060,
+              39060
+            ],
+            [
+              32638,
+              32654
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              32638,
+              32654
+            ]
+          ],
+          "cpu_seconds": [
+            2.64,
+            2.64,
+            0.45
+          ],
+          "cpu_one_core_percent": [
+            44.008081791,
+            44.008081791,
+            7.501377578
+          ],
+          "sampling": [
+            5.99889814,
+            9.280236001,
+            15.69262601,
+            4.157903997
+          ]
+        },
+        "settled": {
+          "samples": 11,
+          "process_count_range": [
+            1,
+            1
+          ],
+          "complete_samples": [
+            11,
+            11,
+            11
+          ],
+          "incomplete_main_status_samples": 0,
+          "main_and_tree_memory_kib": [
+            [
+              9704,
+              9704
+            ],
+            [
+              4904,
+              4913
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              4904,
+              4913
+            ]
+          ],
+          "display_memory_kib": [
+            [
+              39060,
+              39060
+            ],
+            [
+              32653,
+              32654
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              32653,
+              32654
+            ]
+          ],
+          "cpu_seconds": [
+            0,
+            0,
+            0
+          ],
+          "cpu_one_core_percent": [
+            0,
+            0,
+            0
+          ],
+          "sampling": [
+            1.100204873,
+            110.771310996,
+            112.342260007,
+            10.434185999
+          ]
+        }
+      }
+    },
+    {
+      "run": "optimized-2",
+      "pair": 2,
+      "recorded_at_utc": "2026-11-20T09:27:26Z",
+      "input_sha256": {
+        "activity_measurements": "6aa74a46d4a010c64a861608374e0a0482b7649b36652ef28079b5ef9d871df7",
+        "raw_trial": "b386852013301554f89d81a5170a0f94603604fd5b757a3cb9bce2cdd49c4936"
+      },
+      "memory_at_start_kib": {
+        "MemTotal": 16090532,
+        "MemAvailable": 4339480,
+        "SwapTotal": 47535828,
+        "SwapFree": 27306104
+      },
+      "window_visible_ms": 148.485240992,
+      "sampling_cpu_seconds": 2.887597663,
+      "controller_cpu_during_drawing_seconds": 2.778946834,
+      "total_samples": 659,
+      "expose": {
+        "requests": 360,
+        "elapsed_seconds": 6.000062281,
+        "requested_hz": 60
+      },
+      "observed_related_processes": 1,
+      "main_vm_hwm_max_kib": 17280,
+      "display_server_before_app_kib": [
+        37712,
+        31614,
+        0,
+        0
+      ],
+      "phases": {
+        "idle": {
+          "samples": 11,
+          "process_count_range": [
+            1,
+            1
+          ],
+          "complete_samples": [
+            11,
+            11,
+            11
+          ],
+          "incomplete_main_status_samples": 0,
+          "main_and_tree_memory_kib": [
+            [
+              9724,
+              9916
+            ],
+            [
+              5026,
+              5203
+            ],
+            [
+              0,
+              1428
+            ],
+            [
+              0,
+              1428
+            ],
+            [
+              5055,
+              5203
+            ]
+          ],
+          "display_memory_kib": [
+            [
+              38904,
+              39024
+            ],
+            [
+              32265,
+              32638
+            ],
+            [
+              0,
+              11876
+            ],
+            [
+              0,
+              11876
+            ],
+            [
+              32478,
+              32638
+            ]
+          ],
+          "cpu_seconds": [
+            0,
+            0,
+            0
+          ],
+          "cpu_one_core_percent": [
+            0,
+            0,
+            0
+          ],
+          "sampling": [
+            10.068641303,
+            1006.05227951,
+            1010.287911005,
+            6.476417999
+          ]
+        },
+        "drawing": {
+          "samples": 637,
+          "process_count_range": [
+            1,
+            1
+          ],
+          "complete_samples": [
+            637,
+            637,
+            637
+          ],
+          "incomplete_main_status_samples": 0,
+          "main_and_tree_memory_kib": [
+            [
+              8524,
+              11852
+            ],
+            [
+              3734,
+              7062
+            ],
+            [
+              1260,
+              1268
+            ],
+            [
+              1260,
+              1268
+            ],
+            [
+              4994,
+              8322
+            ]
+          ],
+          "display_memory_kib": [
+            [
+              30988,
+              31060
+            ],
+            [
+              24522,
+              24594
+            ],
+            [
+              7916,
+              9420
+            ],
+            [
+              7916,
+              9420
+            ],
+            [
+              32438,
+              32438
+            ]
+          ],
+          "cpu_seconds": [
+            1.47,
+            1.47,
+            0.44
+          ],
+          "cpu_one_core_percent": [
+            24.499980314,
+            24.499980314,
+            7.333327441
+          ],
+          "sampling": [
+            6.000004821,
+            9.365074504,
+            22.440433997,
+            4.255239997
+          ]
+        },
+        "settled": {
+          "samples": 11,
+          "process_count_range": [
+            1,
+            1
+          ],
+          "complete_samples": [
+            11,
+            11,
+            11
+          ],
+          "incomplete_main_status_samples": 0,
+          "main_and_tree_memory_kib": [
+            [
+              7484,
+              7484
+            ],
+            [
+              2750,
+              2757
+            ],
+            [
+              1260,
+              1260
+            ],
+            [
+              1260,
+              1260
+            ],
+            [
+              4010,
+              4017
+            ]
+          ],
+          "display_memory_kib": [
+            [
+              29228,
+              29228
+            ],
+            [
+              22541,
+              22543
+            ],
+            [
+              7604,
+              7604
+            ],
+            [
+              7604,
+              7604
+            ],
+            [
+              30145,
+              30147
+            ]
+          ],
+          "cpu_seconds": [
+            0,
+            0,
+            0
+          ],
+          "cpu_one_core_percent": [
+            0,
+            0,
+            0
+          ],
+          "sampling": [
+            1.069542459,
+            104.992973007,
+            112.663701002,
+            4.912670003
+          ]
+        }
+      }
+    },
+    {
+      "run": "baseline-3",
+      "pair": 3,
+      "recorded_at_utc": "2026-11-20T09:28:06Z",
+      "input_sha256": {
+        "activity_measurements": "c964134c689f84bed3c6f405467d79b3879e85d1aa6ae62aa3848a3e72671ae9",
+        "raw_trial": "55bdc052f5884947d14b1181f55acee7b0eefb4725eb31c3c6f4aec34842f250"
+      },
+      "memory_at_start_kib": {
+        "MemTotal": 16090532,
+        "MemAvailable": 3758088,
+        "SwapTotal": 47535828,
+        "SwapFree": 27466192
+      },
+      "window_visible_ms": 145.364270997,
+      "sampling_cpu_seconds": 3.05874072,
+      "controller_cpu_during_drawing_seconds": 2.980823844,
+      "total_samples": 618,
+      "expose": {
+        "requests": 360,
+        "elapsed_seconds": 6.0000624,
+        "requested_hz": 60
+      },
+      "observed_related_processes": 1,
+      "main_vm_hwm_max_kib": 16740,
+      "display_server_before_app_kib": [
+        37744,
+        31353,
+        0,
+        0
+      ],
+      "phases": {
+        "idle": {
+          "samples": 11,
+          "process_count_range": [
+            1,
+            1
+          ],
+          "complete_samples": [
+            11,
+            11,
+            11
+          ],
+          "incomplete_main_status_samples": 0,
+          "main_and_tree_memory_kib": [
+            [
+              9780,
+              9840
+            ],
+            [
+              5145,
+              5195
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              5145,
+              5195
+            ]
+          ],
+          "display_memory_kib": [
+            [
+              38996,
+              39172
+            ],
+            [
+              32568,
+              32734
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              32568,
+              32734
+            ]
+          ],
+          "cpu_seconds": [
+            0,
+            0,
+            0
+          ],
+          "cpu_one_core_percent": [
+            0,
+            0,
+            0
+          ],
+          "sampling": [
+            10.053177502,
+            1004.974916505,
+            1006.720459001,
+            4.934262994
+          ]
+        },
+        "drawing": {
+          "samples": 596,
+          "process_count_range": [
+            1,
+            1
+          ],
+          "complete_samples": [
+            596,
+            596,
+            596
+          ],
+          "incomplete_main_status_samples": 0,
+          "main_and_tree_memory_kib": [
+            [
+              9724,
+              13052
+            ],
+            [
+              4954,
+              8286
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              4954,
+              8286
+            ]
+          ],
+          "display_memory_kib": [
+            [
+              38960,
+              38960
+            ],
+            [
+              32472,
+              32489
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              32472,
+              32489
+            ]
+          ],
+          "cpu_seconds": [
+            2.69,
+            2.69,
+            0.49
+          ],
+          "cpu_one_core_percent": [
+            44.826143354,
+            44.826143354,
+            8.165356968
+          ],
+          "sampling": [
+            6.000962382,
+            9.94899901,
+            15.1778,
+            4.858768996
+          ]
+        },
+        "settled": {
+          "samples": 11,
+          "process_count_range": [
+            1,
+            1
+          ],
+          "complete_samples": [
+            11,
+            11,
+            11
+          ],
+          "incomplete_main_status_samples": 0,
+          "main_and_tree_memory_kib": [
+            [
+              9588,
+              9588
+            ],
+            [
+              4804,
+              4828
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              4804,
+              4828
+            ]
+          ],
+          "display_memory_kib": [
+            [
+              38880,
+              38884
+            ],
+            [
+              32423,
+              32427
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              32423,
+              32427
+            ]
+          ],
+          "cpu_seconds": [
+            0,
+            0,
+            0
+          ],
+          "cpu_one_core_percent": [
+            0,
+            0,
+            0
+          ],
+          "sampling": [
+            1.057923657,
+            105.610101004,
+            108.180700001,
+            5.723155991
+          ]
+        }
+      }
+    },
+    {
+      "run": "optimized-3",
+      "pair": 3,
+      "recorded_at_utc": "2026-11-20T09:28:47Z",
+      "input_sha256": {
+        "activity_measurements": "cd3ee78c93d32d0e191bfa03ecc49c9d1d538055c8bc95b4ac06dd75190d21be",
+        "raw_trial": "577ef2fb55a9f6ad3708a16cc94ef3d9b7a521e0b07f60d6cd892a980e300463"
+      },
+      "memory_at_start_kib": {
+        "MemTotal": 16090532,
+        "MemAvailable": 4156252,
+        "SwapTotal": 47535828,
+        "SwapFree": 26963908
+      },
+      "window_visible_ms": 154.085274,
+      "sampling_cpu_seconds": 3.040219961,
+      "controller_cpu_during_drawing_seconds": 2.969629899,
+      "total_samples": 622,
+      "expose": {
+        "requests": 360,
+        "elapsed_seconds": 6.000132855,
+        "requested_hz": 60
+      },
+      "observed_related_processes": 1,
+      "main_vm_hwm_max_kib": 16980,
+      "display_server_before_app_kib": [
+        37596,
+        31335,
+        0,
+        0
+      ],
+      "phases": {
+        "idle": {
+          "samples": 11,
+          "process_count_range": [
+            1,
+            1
+          ],
+          "complete_samples": [
+            11,
+            11,
+            11
+          ],
+          "incomplete_main_status_samples": 0,
+          "main_and_tree_memory_kib": [
+            [
+              9792,
+              9792
+            ],
+            [
+              5134,
+              5138
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              5134,
+              5138
+            ]
+          ],
+          "display_memory_kib": [
+            [
+              39048,
+              39048
+            ],
+            [
+              32601,
+              32625
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              32601,
+              32625
+            ]
+          ],
+          "cpu_seconds": [
+            0,
+            0,
+            0
+          ],
+          "cpu_one_core_percent": [
+            0,
+            0,
+            0
+          ],
+          "sampling": [
+            10.055573454,
+            1004.841823997,
+            1010.391807999,
+            4.748735009
+          ]
+        },
+        "drawing": {
+          "samples": 600,
+          "process_count_range": [
+            1,
+            1
+          ],
+          "complete_samples": [
+            600,
+            600,
+            600
+          ],
+          "incomplete_main_status_samples": 0,
+          "main_and_tree_memory_kib": [
+            [
+              9792,
+              13120
+            ],
+            [
+              4990,
+              8325
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              4990,
+              8325
+            ]
+          ],
+          "display_memory_kib": [
+            [
+              39048,
+              39048
+            ],
+            [
+              32560,
+              32586
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              32560,
+              32586
+            ]
+          ],
+          "cpu_seconds": [
+            1.66,
+            1.66,
+            0.51
+          ],
+          "cpu_one_core_percent": [
+            27.622463313,
+            27.622463313,
+            8.486419452
+          ],
+          "sampling": [
+            6.00960161,
+            9.717031004,
+            18.969205994,
+            4.613347002
+          ]
+        },
+        "settled": {
+          "samples": 11,
+          "process_count_range": [
+            1,
+            1
+          ],
+          "complete_samples": [
+            11,
+            11,
+            11
+          ],
+          "incomplete_main_status_samples": 0,
+          "main_and_tree_memory_kib": [
+            [
+              9636,
+              9636
+            ],
+            [
+              4810,
+              4830
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              4810,
+              4830
+            ]
+          ],
+          "display_memory_kib": [
+            [
+              38992,
+              38992
+            ],
+            [
+              32346,
+              32507
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              32346,
+              32507
+            ]
+          ],
+          "cpu_seconds": [
+            0,
+            0,
+            0
+          ],
+          "cpu_one_core_percent": [
+            0,
+            0,
+            0
+          ],
+          "sampling": [
+            1.051896529,
+            104.915967,
+            107.568436011,
+            4.801415998
+          ]
+        }
+      }
+    }
+  ],
+  "aggregate": {
+    "idle": {
+      "main_and_tree": {
+        "memory_kib": {
+          "rss": {
+            "baseline": [
+              9780,
+              9688,
+              9964,
+              9964,
+              9840
+            ],
+            "optimized": [
+              9792,
+              9724,
+              9932,
+              9944,
+              9916
+            ],
+            "change_percent": 0.122699387
+          },
+          "pss": {
+            "baseline": [
+              4153,
+              4099,
+              5145,
+              5195,
+              5028
+            ],
+            "optimized": [
+              5062,
+              5026,
+              5134,
+              5203,
+              5138
+            ],
+            "change_percent": 21.887791958
+          },
+          "swap": {
+            "baseline": [
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "optimized": [
+              0,
+              0,
+              0,
+              1428,
+              0
+            ],
+            "change_percent": null
+          },
+          "swap_pss": {
+            "baseline": [
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "optimized": [
+              0,
+              0,
+              0,
+              1428,
+              0
+            ],
+            "change_percent": null
+          },
+          "pss_plus_swap_pss": {
+            "baseline": [
+              4153,
+              4099,
+              5145,
+              5195,
+              5028
+            ],
+            "optimized": [
+              5062,
+              5055,
+              5134,
+              5203,
+              5138
+            ],
+            "change_percent": 21.887791958
+          }
+        },
+        "cpu_seconds": {
+          "baseline": [
+            0,
+            0,
+            0
+          ],
+          "optimized": [
+            0,
+            0,
+            0
+          ],
+          "change_percent": null
+        }
+      },
+      "display_server": {
+        "memory_kib": {
+          "rss": {
+            "baseline": [
+              38996,
+              38872,
+              39060,
+              39172,
+              39060
+            ],
+            "optimized": [
+              39048,
+              38904,
+              39156,
+              39160,
+              39048
+            ],
+            "change_percent": 0.13334701
+          },
+          "pss": {
+            "baseline": [
+              24105,
+              20564,
+              32568,
+              32734,
+              32682
+            ],
+            "optimized": [
+              32601,
+              32265,
+              32769,
+              32794,
+              32638
+            ],
+            "change_percent": 35.245799627
+          },
+          "swap": {
+            "baseline": [
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "optimized": [
+              0,
+              0,
+              0,
+              11876,
+              0
+            ],
+            "change_percent": null
+          },
+          "swap_pss": {
+            "baseline": [
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "optimized": [
+              0,
+              0,
+              0,
+              11876,
+              0
+            ],
+            "change_percent": null
+          },
+          "pss_plus_swap_pss": {
+            "baseline": [
+              24105,
+              20564,
+              32568,
+              32734,
+              32682
+            ],
+            "optimized": [
+              32601,
+              32478,
+              32769,
+              32794,
+              32638
+            ],
+            "change_percent": 35.245799627
+          }
+        },
+        "cpu_seconds": {
+          "baseline": [
+            0,
+            0,
+            0
+          ],
+          "optimized": [
+            0,
+            0,
+            0
+          ],
+          "change_percent": null
+        }
+      }
+    },
+    "drawing": {
+      "main_and_tree": {
+        "memory_kib": {
+          "rss": {
+            "baseline": [
+              9724,
+              9704,
+              9840,
+              13168,
+              13052
+            ],
+            "optimized": [
+              9792,
+              8524,
+              9932,
+              13260,
+              13120
+            ],
+            "change_percent": 0.699300699
+          },
+          "pss": {
+            "baseline": [
+              4913,
+              4895,
+              4954,
+              8286,
+              8241
+            ],
+            "optimized": [
+              4893,
+              3734,
+              4990,
+              8325,
+              8264
+            ],
+            "change_percent": -0.407083249
+          },
+          "swap": {
+            "baseline": [
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "optimized": [
+              0,
+              0,
+              1260,
+              1268,
+              0
+            ],
+            "change_percent": null
+          },
+          "swap_pss": {
+            "baseline": [
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "optimized": [
+              0,
+              0,
+              1260,
+              1268,
+              0
+            ],
+            "change_percent": null
+          },
+          "pss_plus_swap_pss": {
+            "baseline": [
+              4913,
+              4895,
+              4954,
+              8286,
+              8241
+            ],
+            "optimized": [
+              4990,
+              4893,
+              4994,
+              8325,
+              8322
+            ],
+            "change_percent": 1.567270507
+          }
+        },
+        "cpu_seconds": {
+          "baseline": [
+            2.65,
+            2.64,
+            2.69
+          ],
+          "optimized": [
+            1.47,
+            1.41,
+            1.66
+          ],
+          "change_percent": -44.528301887
+        }
+      },
+      "display_server": {
+        "memory_kib": {
+          "rss": {
+            "baseline": [
+              38960,
+              38812,
+              39060,
+              39060,
+              38960
+            ],
+            "optimized": [
+              39048,
+              30988,
+              39156,
+              39156,
+              39048
+            ],
+            "change_percent": 0.22587269
+          },
+          "pss": {
+            "baseline": [
+              32490,
+              32472,
+              32638,
+              32654,
+              32502
+            ],
+            "optimized": [
+              32536,
+              24522,
+              32560,
+              32746,
+              32586
+            ],
+            "change_percent": 0.141582025
+          },
+          "swap": {
+            "baseline": [
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "optimized": [
+              0,
+              0,
+              7916,
+              9420,
+              0
+            ],
+            "change_percent": null
+          },
+          "swap_pss": {
+            "baseline": [
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "optimized": [
+              0,
+              0,
+              7916,
+              9420,
+              0
+            ],
+            "change_percent": null
+          },
+          "pss_plus_swap_pss": {
+            "baseline": [
+              32490,
+              32472,
+              32638,
+              32654,
+              32502
+            ],
+            "optimized": [
+              32536,
+              32438,
+              32560,
+              32746,
+              32586
+            ],
+            "change_percent": 0.141582025
+          }
+        },
+        "cpu_seconds": {
+          "baseline": [
+            0.47,
+            0.45,
+            0.49
+          ],
+          "optimized": [
+            0.44,
+            0.44,
+            0.51
+          ],
+          "change_percent": -6.382978723
+        }
+      }
+    },
+    "settled": {
+      "main_and_tree": {
+        "memory_kib": {
+          "rss": {
+            "baseline": [
+              9704,
+              9588,
+              9840,
+              9840,
+              9704
+            ],
+            "optimized": [
+              9460,
+              7484,
+              9636,
+              9636,
+              9460
+            ],
+            "change_percent": -2.51442704
+          },
+          "pss": {
+            "baseline": [
+              4895,
+              4804,
+              4904,
+              4913,
+              4898
+            ],
+            "optimized": [
+              4577,
+              2750,
+              4810,
+              4830,
+              4582
+            ],
+            "change_percent": -6.496424923
+          },
+          "swap": {
+            "baseline": [
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "optimized": [
+              0,
+              0,
+              1260,
+              1260,
+              0
+            ],
+            "change_percent": null
+          },
+          "swap_pss": {
+            "baseline": [
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "optimized": [
+              0,
+              0,
+              1260,
+              1260,
+              0
+            ],
+            "change_percent": null
+          },
+          "pss_plus_swap_pss": {
+            "baseline": [
+              4895,
+              4804,
+              4904,
+              4913,
+              4898
+            ],
+            "optimized": [
+              4577,
+              4010,
+              4810,
+              4830,
+              4582
+            ],
+            "change_percent": -6.496424923
+          }
+        },
+        "cpu_seconds": {
+          "baseline": [
+            0,
+            0,
+            0
+          ],
+          "optimized": [
+            0,
+            0,
+            0
+          ],
+          "change_percent": null
+        }
+      },
+      "display_server": {
+        "memory_kib": {
+          "rss": {
+            "baseline": [
+              38880,
+              38812,
+              39060,
+              39060,
+              38884
+            ],
+            "optimized": [
+              38556,
+              29228,
+              38992,
+              38992,
+              38556
+            ],
+            "change_percent": -0.833333333
+          },
+          "pss": {
+            "baseline": [
+              32483,
+              32423,
+              32653,
+              32654,
+              32502
+            ],
+            "optimized": [
+              31871,
+              22541,
+              32346,
+              32507,
+              31944
+            ],
+            "change_percent": -1.884062433
+          },
+          "swap": {
+            "baseline": [
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "optimized": [
+              0,
+              0,
+              7604,
+              7604,
+              0
+            ],
+            "change_percent": null
+          },
+          "swap_pss": {
+            "baseline": [
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "optimized": [
+              0,
+              0,
+              7604,
+              7604,
+              0
+            ],
+            "change_percent": null
+          },
+          "pss_plus_swap_pss": {
+            "baseline": [
+              32483,
+              32423,
+              32653,
+              32654,
+              32502
+            ],
+            "optimized": [
+              31871,
+              30145,
+              32346,
+              32507,
+              31944
+            ],
+            "change_percent": -1.884062433
+          }
+        },
+        "cpu_seconds": {
+          "baseline": [
+            0,
+            0,
+            0
+          ],
+          "optimized": [
+            0,
+            0,
+            0
+          ],
+          "change_percent": null
+        }
+      }
+    }
+  },
+  "paired_drawing_main_cpu_reduction_percent": [
+    46.79245283,
+    44.318181818,
+    38.289962825
+  ],
+  "binary_size_change_bytes": 4312,
+  "binary_size_change_percent": 0.299504345,
+  "reported_cpu_tick_seconds": 0.01,
+  "source_reconstruction": {
+    "reason": "The measured framework revision was a detached local candidate, not a released tag or a remotely reachable commit.",
+    "base_commit": "9fd4ba83ff50a66e4842b1b52e4610057fe7c8ee",
+    "local_candidate_commit": "c54cf244ccbda5f5822ae521b0facd5481071464",
+    "expected_tree": "66d747ea25352762a8145e344cb779b187fd8c1c",
+    "patch": "patches/2026-11-20-zgpui-renderer-candidate.patch",
+    "patch_sha256": "46c07f10cbc3cfb5dde48c4c0a4ab2c543db89be3f5f696c82e5883328c9e9f1",
+    "verified_integration_review_commit": "1bb9f4b6738ffc2809e2bbb1b99d13bafa05dad2",
+    "review_commit_scope": "Later integration over 0.1.4 includes additional GPU fixes; do not relabel this measured binary as that integration."
+  }
+}

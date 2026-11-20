@@ -1,0 +1,288 @@
+{
+  "schema": 1,
+  "application": {
+    "name": "zmcl",
+    "version": "0.1.2",
+    "repository": "https://github.com/LIghtJUNction/zmcl"
+  },
+  "source_public_commit": "e86b5841532ef04cc74cea5585ae396150452408",
+  "source_public_tree": "4dc51b39a4b299f9f6a1b4ab06b119875db23520",
+  "source_public_url": "https://github.com/LIghtJUNction/zmcl/commit/e86b5841532ef04cc74cea5585ae396150452408",
+  "build_source": {
+    "actual_base_commit": "2b1218f70cf89fb042fd725d4ef92dcb4e67dfe9",
+    "working_tree_changes": [
+      "Cargo.lock",
+      "Cargo.toml",
+      "src/net.rs",
+      "vendor/zgpui"
+    ],
+    "runtime_source_sha256": "a6ebba3c231f9c1d736d31521955342c3967a65bcbb29bd841581985bc151348",
+    "runtime_file_count": 56,
+    "runtime_files_sha256": {
+      ".gitmodules": "eaaf3de4e6eba559054f14b6973a14f84d4a6c78cbb88b3d7b3d1307754205dc",
+      "Cargo.lock": "349678cf618002acac9f1ff4513ab25fe39038ac6fecf5d3661e225db76d4226",
+      "Cargo.toml": "9e3eb34ab758e258dbfc52759f9a7304a99fef21636273faa55bcb056fd56ccf",
+      "assets/zmcl.svg": "c6053bfef9e54d4d5506fe2575508355cae50133f18dc3f9692e3970d13915a5",
+      "crates/zmcl-core/Cargo.toml": "12bfc65b22aa3fbd5d3d9772a37bb657db45c1b22253582e3c207e839f597719",
+      "crates/zmcl-core/examples/manifest_inspect.rs": "47f2283909504ea4ca7593816d7faa4333ddd1f193ba981ed2922c25b44842ca",
+      "crates/zmcl-core/src/hash.rs": "637f6c1c68256a1cfe9a85c48c0ebfe1a8725468ee45cac2fcb908a66706a1c9",
+      "crates/zmcl-core/src/json.rs": "9aeb8a2b6d1f0acbac47137aa2309498e513b50472778f2c992ec65117abb1f7",
+      "crates/zmcl-core/src/lib.rs": "23fbaeaa71fa57ff150e6d8c66403cdf7b68a03095c449493ccb666e68fbb556",
+      "crates/zmcl-core/src/model.rs": "6c059e19041f595d2a74e748c55b13c439430b527b0423225217c7ccd6891c82",
+      "crates/zmcl-core/src/path.rs": "fc2c3c57b58a361a89e17e431c5bbeffa95625c145779c4477c9b1e9a07fc38d",
+      "crates/zmcl-core/src/plan.rs": "d14827a8b7e419ef5a7ca60abcf15c435e0e5d7502383bf20c295e00dd4028d8",
+      "src/app.rs": "04a5d27f84c045b52932d345b2a37cc8eec4a157891497f2d7465a57097ecf22",
+      "src/archive.rs": "520a8e1e002c9ea137b91ddfbd5058217b2411f41a4f60b46b71d9da26195269",
+      "src/auth.rs": "90ba68137f5f5ddb254a42025038ba1e784b5d91e78d4e8ca88bcd8f05281744",
+      "src/auth/device.py": "51e89e89b0f7145bf05355399ea481bdc8a33f2428e182e7a6fdf1e5f00394cb",
+      "src/auth/secrets.py": "6b7e6b31e1b51297e5a67e4be14dc7b30278855fba370b58af5c579d8b75fbf5",
+      "src/backup.rs": "b4ad0d89a5aa9323a81999acc86a23be42835b91fb964e1ba9b33467c87dc183",
+      "src/backup/archive.py": "787f7b533bdcc7ad9b392f53fb1159d60eb4bf5ff3b46ab7453eec06af541cbe",
+      "src/backup/test_archive.py": "65ed86b58a0279e55a6372e82e5c4ea87dfa0e5d29d3b656530c59f143f59250",
+      "src/content.rs": "47977ffc7e67fbd3025b850277c7e8f004d347191010d5a9e8c4c065ad387baf",
+      "src/content/archive.py": "fd452aad566aab8c9265417822419e87a80457f4eb9b691a71732b2548e1b466",
+      "src/content/management.rs": "91dcd833f56b649426c54f1be12d77decee7499ccecb2fd345a6d0d03cfc89e4",
+      "src/content/management_tests.rs": "7039c59d20cd999625b12a2641f94d612ba8b00b156f2607689c883f039ae86e",
+      "src/content/test_archive.py": "6e62869f41e24d5a26a7cac6bb5925195a631881979f2840b58f3d6247a82948",
+      "src/content/transaction.rs": "59e6473c02cd36da7f715490e2e1bd564a26786166b40c615268b40ceb17f308",
+      "src/gui.rs": "faecbed61a1da6553f96cfab7950d7d282997b828f0e2ab4a5a7ace70b93117c",
+      "src/gui/create_smoke.py": "b9f5d2a16612eb215bea73580d805c6fad2e01d627af2ecabd04c46aa4d19e00",
+      "src/gui/manage_smoke.py": "27d739c873782820937cba76ab2162adca1a86ceaba1d58d97cf1bf8400a32f3",
+      "src/gui/smoke.py": "3a13f279d5cd467d7ec110e43ee21a357c6e6175ce62a8e9ff2d66d40f177537",
+      "src/gui/test_management.py": "93488bcacaebdf5d698db4b4117aac35f422bd5e8ef48e764097a911b766c097",
+      "src/gui/titles.rs": "208a12873a16806cedd6a28ee5c3011aa53abd05e3fc31d7ff27c582fe937863",
+      "src/horizon.rs": "c9148e950f09d958d45ab44b21306bf0f73b85fa0f18f293b2cbef6a1d5ee463",
+      "src/horizon/archive.py": "3c3801c15f020bdf9c11380b1bd64d745d2092f06431c3ab842d81dd98c5e5c3",
+      "src/horizon/fixtures/launcher-0.2.84.SHA256SUMS": "09384956be1b11561f19bab342b53d066cde238e379ae782abb6524bc7cbaddb",
+      "src/horizon/fixtures/launcher-0.2.84.SHA256SUMS.sig": "ef098c1ac86815c976217eca5552ea71b21f667a99da7fc3c20d910ed424963c",
+      "src/horizon/test_archive.py": "5cd26318a80427943780c8798aa40c7ef7062b887195ecfd8bbec708a82dd303",
+      "src/instance_manage.rs": "e8c0e0eb71d5bb9ab24d3f8e9633e66796ca1d99e1eef7f10c4302e89b62f37d",
+      "src/java.rs": "69ba426e97c3b939fae3a374d1a40e53c6bec80d2ba716430e9307aa098f95a7",
+      "src/java/extract.py": "04df46aedbb8ae990006ec189135ab6d8c8b61edba145f2f469b99658a060bfc",
+      "src/java/test_extract.py": "89885a77136cb3e8f7dd0cb8b7b43a21c19dbd75c6ab6c95940d765fa597b7c2",
+      "src/main.rs": "f701dd28ea0282c0ffe9dd88793cd513983c1e3ff1f4684b5b806c5f14c2e50c",
+      "src/net.rs": "891779fb42c981a7b302a5013455bd525a6f0ee53645f4b49de3409f7479bcc4",
+      "src/resources.rs": "048e953f22d402475ae037c6fc01eedf79f640bee44b4a66e471cfbecc386d85",
+      "src/resources/catalog.rs": "d0eba81dffa0d8054463b9b2367f02822e8e9905a915b562282d694ece9e73a9",
+      "src/resources/test_cli.py": "a96a9a2c06baa2922e9f7b8b6ea668580b47cd4de865cbfb1b61711273257b96",
+      "src/resources/transaction.rs": "ea1c5ca24b9ad6d21561628021d0c6762e7e525bd8ced0c1e59f8ed5aa065e4c",
+      "src/runtime.rs": "3d25637763720fbf97c3108c2c16f2cdbe4466941e9c981ba921c626b8a15f22",
+      "src/server.rs": "4cd0f9eaadc122970029d66c5dbd8f23cccda03cd66eaebfadde6e22c84622c5",
+      "src/server/process.py": "e651b71fe2bde0d8e0cc5ef95f73cbb5212a96ba168b7e465de4c8a6bcbf5eb4",
+      "src/server/test_process.py": "23e356a88f6572432938c96c14a67b4bc8425f861841c2221a875ac253831c0d",
+      "src/store.rs": "d699c232770a2aabf347e0ff33ff66d5435ef5a718a6318b880a3eee682fe781",
+      "src/util.rs": "d4ca97852d8eb344665e6ba55b41f6e184381cb59b964377a6c6f63f7123f304",
+      "src/worlds.rs": "13dc27c7039193ea81c71e2e1b90ffba9ff9912cbc1ce3008e29ae30d2a834f8",
+      "src/worlds/manage.py": "f70120823e228a568271d5d90733962f4a066891295daf5563392fdb1dc10d83",
+      "src/worlds/test_manage.py": "49352da58a59009c55741f8f2faad1c043cec7f18b2daaf69ee1a28da8ee6451"
+    },
+    "identity_note": "The binaries were built and tested from frozen working-tree changes above this base commit. The public source commit was created afterwards; it does not replace the recorded build baseline.",
+    "public_source_equivalence": {
+      "verified": true,
+      "runtime_files_checked": 56,
+      "dependency_gitlinks_checked": 4,
+      "public_commit_parent_matches_build_base": true,
+      "method": "Each frozen runtime file was rechecked against its recorded SHA-256, then its Git blob SHA-1 was compared with the public GitHub commit tree. All dependency gitlinks also matched.",
+      "scope": "Content equivalence of every recorded runtime input and dependency pin; this does not assert that the original build ran with the later public commit checked out.",
+      "public_tree_api": "https://api.github.com/repos/LIghtJUNction/zmcl/git/trees/4dc51b39a4b299f9f6a1b4ab06b119875db23520?recursive=1",
+      "fingerprint_method": "SHA-256 of UTF-8 JSON mapping repository-relative runtime filenames to file SHA-256 values, sorted keys, compact separators"
+    }
+  },
+  "dependencies": {
+    "zclap": {
+      "version": "0.1.4",
+      "source_commit": "4d87f3ae3743e81509d5ac5500909955667c860f",
+      "clean_during_acceptance": true
+    },
+    "zconv": {
+      "version": "0.4.0",
+      "source_commit": "0af1f7eb0766ff0ce9db5cee7c6184eff511a8c1",
+      "clean_during_acceptance": true
+    },
+    "zgpui": {
+      "version": "0.1.5",
+      "source_commit": "4aba3ba83815253fb7e4013baa8bcf894439d32d",
+      "clean_during_acceptance": true
+    },
+    "zi18n": {
+      "version": "0.1.0",
+      "source_commit": "b90984b48465a764bcb699ad2bb3251fa7020024",
+      "clean_during_acceptance": true
+    }
+  },
+  "artifacts": {
+    "linux": {
+      "filename": "zmcl",
+      "platform": "Linux x86_64",
+      "sha256": "71bf4017072703a91359ea84e2493db218d9962456ece2060d0f2e42b3500c32",
+      "bytes": 1473144,
+      "executed_version": "zmcl 0.1.2"
+    },
+    "windows_gnu": {
+      "filename": "zmcl.exe",
+      "target": "x86_64-pc-windows-gnu",
+      "sha256": "45e96c55b703977331f75feb757714dcbba3df6b146330d8d2758937711a45f5",
+      "bytes": 1366528,
+      "pe_subsystem": "Windows CUI (3)",
+      "import_dlls": [
+        "GDI32.dll",
+        "KERNEL32.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "ntdll.dll",
+        "OPENGL32.dll",
+        "api-ms-win-core-synch-l1-2-0.dll",
+        "USER32.dll",
+        "WS2_32.dll"
+      ],
+      "runtime_tested": false
+    }
+  },
+  "gates": {
+    "format": {
+      "passed": true,
+      "scope": "workspace format check without editing"
+    },
+    "rust_tests": {
+      "passed": true,
+      "application_passed": 78,
+      "core_passed": 19,
+      "total_passed": 97,
+      "failed": 0,
+      "ignored": 0,
+      "workspace": true,
+      "all_features": true,
+      "locked": true,
+      "offline": true
+    },
+    "clippy": {
+      "passed": true,
+      "workspace": true,
+      "all_targets": true,
+      "all_features": true,
+      "warnings_denied": true,
+      "locked": true,
+      "offline": true
+    },
+    "linux_release": {
+      "passed": true,
+      "full_gui": true,
+      "all_features": true,
+      "locked": true,
+      "offline": true
+    },
+    "windows_gnu_release": {
+      "passed": true,
+      "full_gui": true,
+      "all_features": true,
+      "locked": true,
+      "offline": true,
+      "standard_mingw_toolchain": true,
+      "temporary_unicode_defines": false,
+      "custom_rustflags": false,
+      "runtime_tested": false
+    },
+    "native_creation": {
+      "passed": true,
+      "case_count": 4,
+      "cases": [
+        {
+          "case": "Default name, filtered release selection and failed automatic install retain the saved instance",
+          "passed": true
+        },
+        {
+          "case": "Create-only preserves an uninstalled second instance with a unique suggested name",
+          "passed": true
+        },
+        {
+          "case": "Duplicate name is explained before submission and preserves both instances",
+          "passed": true
+        },
+        {
+          "case": "Installed-state fixture opens the account page from the main action without signing in or launching",
+          "passed": true
+        }
+      ],
+      "binary_matches_final_linux_artifact": true
+    },
+    "native_management": {
+      "passed": true,
+      "case_count": 6,
+      "cases": [
+        {
+          "case": "world import through native form",
+          "passed": true
+        },
+        {
+          "case": "GUI export and CLI ZIP import roundtrip",
+          "passed": true
+        },
+        {
+          "case": "GUI backup and confirmed restore with retained pre-restore snapshot",
+          "passed": true
+        },
+        {
+          "case": "resources page with retained unmanaged fixture",
+          "passed": true
+        },
+        {
+          "case": "server created in GUI without EULA acceptance",
+          "passed": true
+        },
+        {
+          "case": "synthetic installed server remains stopped with EULA false; inspect screenshot for visible error",
+          "passed": true
+        }
+      ],
+      "binary_matches_final_linux_artifact": true
+    }
+  },
+  "integrity": {
+    "runtime_sources_unchanged": true,
+    "dependencies_unchanged": true,
+    "index_unchanged": true,
+    "linux_binary_unchanged": true,
+    "windows_binary_unchanged": true
+  },
+  "visual_review": {
+    "reviewed_image_labels": [
+      "Default creation form at 1120x760",
+      "Compact duplicate-name creation form at 800x600",
+      "Server EULA rejection"
+    ],
+    "observations": [
+      "Default 1120x760 creation form clearly shows default name, selected Minecraft version, loader choice and Create & install",
+      "Compact 800x600 creation form shows duplicate-name guidance and disabled submission without overlap or clipping",
+      "Servers page shows the explicit EULA rejection after Start; fixture remains stopped"
+    ]
+  },
+  "acceptance_started_at_utc": "2026-11-20T10:01:21.040401+00:00",
+  "acceptance_completed_at_utc": "2026-11-20T10:03:33.939216+00:00",
+  "public_record_generated_at_utc": "2026-11-20T10:09:45.422503+00:00",
+  "scope": {
+    "gui_runtime": "Linux native X11 input on an isolated Xvfb display",
+    "test_data": "Isolated cached release manifest, synthetic world save, and synthetic installed states for account routing and server EULA rejection",
+    "game_download_in_this_run": false,
+    "microsoft_sign_in_in_this_run": false,
+    "java_or_game_started_in_this_run": false,
+    "real_server_started_in_this_run": false,
+    "eula_accepted": false,
+    "windows_runtime_tested": false,
+    "macos_runtime_tested": false,
+    "memory_benchmark_in_this_run": false,
+    "github_release_or_aur_install_validated_by_this_record": false,
+    "internationalization": "zi18n 0.1.0 is integrated for nine static English page titles. This is not validation of a complete multilingual user interface.",
+    "historical_game_evidence": "Earlier real Minecraft validation keeps its own original artifact identity and is not represented as a repeated run of this binary."
+  },
+  "privacy": {
+    "private_absolute_paths_included": false,
+    "raw_session_logs_included": false,
+    "process_identifiers_included": false
+  }
+}

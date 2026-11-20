@@ -125,7 +125,7 @@ A small Rust dependency graph does not remove operating-system dependencies. The
 |---|---|
 | Native GUI | Project Z native-window implementation, platform window libraries and OpenGL/driver stack; accepted on Linux X11/XWayland with a private Xvfb/software-driver setup |
 | HTTPS download | System `curl` |
-| Safe archive and metadata work | Python 3 standard-library helpers for ZIP/tar, gzip/NBT handling and operation-specific validation |
+| Safe archive and metadata work | Python 3.8+ standard-library helpers for ZIP/tar, gzip/NBT handling and operation-specific validation; one actual-interpreter resolver handles Windows `py -3`/`python`/`python3`, Unix `python3`/`python`, or the literal `ZMCL_PYTHON` executable path. Helpers use isolated UTF-8 execution; only successful discovery is cached. |
 | Horizon signature verification | System OpenSSL with Ed25519 support |
 | Account secrets | OS credential services and their platform adapters |
 | Minecraft Java | A compatible system or managed JRE; its memory is separate from launcher residency |
