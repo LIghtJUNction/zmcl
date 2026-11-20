@@ -5,18 +5,22 @@ version = 4
 [[package]]
 name = "zclap"
 version = "0.1.4"
+source = "git+https://github.com/LIghtJUNction/zclap.git#4d87f3ae3743e81509d5ac5500909955667c860f"
 
 [[package]]
 name = "zconv"
 version = "0.4.0"
+source = "git+https://github.com/LIghtJUNction/zconv.git#0af1f7eb0766ff0ce9db5cee7c6184eff511a8c1"
 
 [[package]]
 name = "zgpui"
 version = "0.1.5"
+source = "git+https://github.com/LIghtJUNction/zgpui.git#b4d5493e0cd985d00558c7be0b5726965ab5163a"
 
 [[package]]
 name = "zi18n"
 version = "0.1.0"
+source = "git+https://github.com/LIghtJUNction/zi18n.git#cdff8dea19e97268d296afa827767ea689420591"
 
 [[package]]
 name = "zmcl"

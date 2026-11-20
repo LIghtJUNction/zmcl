@@ -8,4 +8,4 @@ license = "MIT"
 repository = "https://github.com/LIghtJUNction/zmcl"
 
 [dependencies]
-zconv = { path = "../../vendor/zconv", version = "=0.4.0", default-features = false }
+zconv = {  version = "=0.4.0", default-features = false, git = "https://github.com/LIghtJUNction/zconv.git"}

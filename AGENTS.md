@@ -34,8 +34,11 @@ Cargo.lock in dependency order. Test affected behavior and publish each source
 commit before advancing aggregate pins. A notification alone does not complete
 propagation: record the exact blocker, consumer, owner and reusable commit.
 
-This repository consumes zconv, zclap and zgpui from pinned submodules.
-Do not edit those vendored repositories to hide an upstream incompatibility.
+Cross-repository Project Z dependencies use canonical GitHub Git sources and
+follow the latest default branches. Refresh Cargo.lock and internal source
+gitlinks together, retaining version metadata for external Cargo publication.
+Same-repository workspace paths remain local. Do not edit vendored repositories
+to hide an upstream incompatibility.
 The launch-planning crate remains no_std + alloc and has no OS side effects.
 
 ## Resource and data boundaries

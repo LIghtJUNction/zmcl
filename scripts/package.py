@@ -461,7 +461,7 @@ def verify_install(contents, payload, version):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--binary", type=Path,
-                        default=Path("target/release/zmcl" + (".exe" if os.name == "nt" else "")))
+                        help="Executable; defaults to Cargo's configured release directory")
     parser.add_argument("--output", type=Path, default=Path("dist"))
     parser.add_argument("--source-commit", help="Explicit application source identity for this binary")
     parser.add_argument("--expected-sha256", help="Refuse a different executable")
@@ -470,6 +470,11 @@ def main():
                         help="Test install/version/uninstall in private Linux temporary prefixes")
     parser.add_argument("--report", type=Path, help="Write the same JSON result to this external file")
     args = parser.parse_args()
+    if args.binary is None:
+        metadata = json.loads(subprocess.check_output(
+            ["cargo", "metadata", "--no-deps", "--format-version", "1", "--locked", "--offline"],
+            cwd=ROOT, text=True))
+        args.binary = Path(metadata["target_directory"]) / "release" / ("zmcl.exe" if os.name == "nt" else "zmcl")
     project = tomllib.loads((ROOT / "Cargo.toml").read_text())["package"]
     version = project["version"]
     repository = project["repository"].rstrip("/")

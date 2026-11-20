@@ -12,6 +12,7 @@ import re
 import shlex
 import shutil
 import stat
+import subprocess
 import sys
 import tempfile
 
@@ -428,13 +429,18 @@ def main(argv=None):
     parser.add_argument("action", choices=["install", "uninstall"])
     parser.add_argument("--prefix", type=Path, default=Path.home() / ".local")
     binary_name = "zmcl.exe" if os.name == "nt" else "zmcl"
-    default_binary = ROOT / binary_name
-    if not default_binary.is_file():
-        default_binary = ROOT / "target/release" / binary_name
-    parser.add_argument("--binary", type=Path, default=default_binary)
+    parser.add_argument("--binary", type=Path)
     args = parser.parse_args(argv)
     if args.action == "install":
-        install(args.prefix, args.binary)
+        binary = args.binary
+        if binary is None:
+            binary = ROOT / binary_name
+            if not binary.is_file():
+                metadata = json.loads(subprocess.check_output(
+                    ["cargo", "metadata", "--no-deps", "--format-version", "1", "--locked", "--offline"],
+                    cwd=ROOT, text=True))
+                binary = Path(metadata["target_directory"]) / "release" / binary_name
+        install(args.prefix, binary)
     else:
         uninstall(args.prefix)
 
