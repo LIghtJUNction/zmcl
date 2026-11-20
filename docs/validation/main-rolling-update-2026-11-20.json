@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "date": "2026-11-20",
+  "project": "zmcl",
+  "platform": "Linux x86_64",
+  "source": {
+    "integration_commit": "092fa0e5a8ba785670e5c13a844791b2781dc74c",
+    "integration_tree": "5609539d8aab43d66a80bf8c9a48985992ee6eb1",
+    "installer_commit": "63070b3ade3e5b8830bdda59478a902eb0823405",
+    "installer_tree": "abf0e6c0046eee153b7f67a08a2a1adff02d7886",
+    "preserved_feature_tip": "940cc27f9b2e7e3b7934c87259af846b84ff5497"
+  },
+  "branch_policy": {
+    "development_branch": "main",
+    "remote_branches": [
+      "main"
+    ],
+    "retired_branch": "fix/instance-lifecycle-20261120",
+    "feature_tip_is_ancestor_of_main": true,
+    "open_pull_requests_for_retired_branch": 0,
+    "prior_checkout_clean_and_idle_before_switch": true
+  },
+  "checks": {
+    "cargo_fmt": {
+      "passed": true
+    },
+    "cargo_test": {
+      "passed": true,
+      "application_tests": 66,
+      "core_tests": 19,
+      "total_tests": 85
+    },
+    "cargo_clippy": {
+      "passed": true,
+      "warnings_denied": true
+    },
+    "cli_lifecycle": {
+      "passed": true,
+      "commands": 21,
+      "expected_protection_failures": 3,
+      "synthetic_world": true,
+      "game_started": false
+    },
+    "installer_regressions": {
+      "passed": true,
+      "tests": 21,
+      "cases": [
+        "fresh install and reinstall",
+        "legacy-manifest upgrade",
+        "modified and unmanaged file protection",
+        "complete manifest and destination preflight",
+        "four-stage first-install and upgrade rollback",
+        "Ctrl-C during publication",
+        "backup retention after interrupted rollback",
+        "cross-process Linux lock exclusion and automatic release",
+        "game data preservation"
+      ]
+    },
+    "release_build": {
+      "passed": true
+    },
+    "packaged_binary_install": {
+      "passed": true,
+      "commands": 5,
+      "expected_protection_failures": 1,
+      "gui_started": false,
+      "game_started": false,
+      "private_prefixes_cleaned": true
+    }
+  },
+  "identities": {
+    "installer_sha256": "baa67ea001bd464fae3d5b96582e9f95ea7f54f5ce82f7c195365412247993c5",
+    "installer_tests_sha256": "f9257dc8caa5a570b969acf356047e0d42958bf6117f402daa316119e51a2fe9",
+    "release_binary": {
+      "bytes": 1437608,
+      "sha256": "9d57c3710a9d8c13af717c6b6022b0080e332a3a65887aa947a821aa486a60a2",
+      "source_commit": "092fa0e5a8ba785670e5c13a844791b2781dc74c"
+    },
+    "local_validation_archive": {
+      "bytes": 662564,
+      "sha256": "48b19faeb7f4c8418c6dc01b5f0b3af51f8cab0732b5dd7a4a5817b95ad4aa49",
+      "scope": "Local validation package using the new installer; public release and AUR publication are separate."
+    }
+  },
+  "limits": [
+    "Filesystem and package acceptance was run on Linux x86_64.",
+    "Tests cover recoverable exceptions and KeyboardInterrupt, not multi-file recovery after power loss or SIGKILL.",
+    "No new real-game, licensed-account, Windows/macOS or low-memory measurement was performed in this batch."
+  ]
+}
