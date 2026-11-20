@@ -469,6 +469,7 @@ enum Task {
         version: String,
         loader: String,
         loader_version: String,
+        install_after: bool,
     },
     Install(String),
     Launch {
@@ -669,6 +670,11 @@ impl Job {
             use std::os::unix::process::CommandExt;
             command.process_group(0);
         }
+        #[cfg(windows)]
+        {
+            use std::os::windows::process::CommandExt;
+            command.creation_flags(0x08000000); // CREATE_NO_WINDOW for GUI helpers.
+        }
         let mut child = command
             .spawn()
             .map_err(|e| format!("Could not start operation: {e}"))?;
@@ -798,6 +804,8 @@ enum Action {
     Start(Task),
     Select(String),
     New,
+    VersionPicker(bool),
+    SelectVersion(String),
     CloseForm,
     Cancel,
     Logs,
@@ -833,6 +841,10 @@ struct App {
     new_version: String,
     new_loader: usize,
     new_loader_version: String,
+    new_install: bool,
+    version_picker: bool,
+    version_query: String,
+    version_scroll: usize,
     offline: bool,
     username: String,
     query: String,
@@ -884,6 +896,10 @@ impl App {
             new_version: String::new(),
             new_loader: 0,
             new_loader_version: String::new(),
+            new_install: true,
+            version_picker: false,
+            version_query: String::new(),
+            version_scroll: 0,
             offline: false,
             username: String::new(),
             query: String::new(),
@@ -909,10 +925,37 @@ impl App {
         self.job.is_some() || !self.queue.is_empty()
     }
 
+    fn versions_pending(&self) -> bool {
+        self.job
+            .as_ref()
+            .is_some_and(|job| matches!(job.task, Task::Versions))
+            || self.queue.iter().any(|task| matches!(task, Task::Versions))
+    }
+
+    fn creation_issue(&self) -> Option<&'static str> {
+        let id = self.new_id.trim();
+        if !valid_id(id) {
+            Some("Use 1–64 letters, numbers, dashes or underscores for the name.")
+        } else if self
+            .instances
+            .iter()
+            .any(|instance| instance.id.eq_ignore_ascii_case(id))
+        {
+            Some("That name is already in your library. Choose another name.")
+        } else if self.new_version.trim().is_empty() {
+            Some("Choose a release or enter a Minecraft version.")
+        } else if self.new_loader >= 3 && self.new_loader_version.trim().is_empty() {
+            Some("Enter a Forge or NeoForge version that supports this Minecraft version.")
+        } else {
+            None
+        }
+    }
+
     fn poll(&mut self) -> bool {
         let mut changed = false;
         if let Some(job) = &mut self.job {
-            changed |= job.poll(&mut self.log);
+            let output_changed = job.poll(&mut self.log);
+            changed |= output_changed && self.show_logs;
             if job.finished() {
                 let job = self.job.take().expect("finished operation is present");
                 let result = if job.cancelled {
@@ -949,6 +992,10 @@ impl App {
                 } else if !job.task.silent() {
                     self.notice = match &job.task {
                         Task::Manage(task) => task.success().into(),
+                        Task::Create {
+                            install_after: true,
+                            ..
+                        } => "Instance created. Installing game files…".into(),
                         Task::Create { .. } => {
                             "Instance created. Install it when you are ready.".into()
                         }
@@ -1028,12 +1075,15 @@ impl App {
                         .and_then(|v| get_str(v, "release"))
                         .unwrap_or_default();
                     let array = root.get("versions").unwrap_or(root);
+                    if array.kind() != Kind::Array {
+                        return Err("Minecraft version list was not an array".into());
+                    }
                     Ok((
                         latest,
                         array
                             .array()
                             .filter(|v| get_str(*v, "type").as_deref() == Some("release"))
-                            .take(12)
+                            .take(1024)
                             .filter_map(|v| get_str(v, "id"))
                             .collect::<Vec<_>>(),
                     ))
@@ -1115,12 +1165,18 @@ impl App {
                 self.searched = true;
                 self.scroll = 0;
             }
-            Task::Create { id, .. } => {
+            Task::Create {
+                id, install_after, ..
+            } => {
                 self.selected = Some(id.clone());
                 self.form = false;
+                self.version_picker = false;
                 self.new_id.clear();
                 self.scroll = 0;
                 self.queue.push_back(Task::Instances);
+                if *install_after {
+                    self.queue.push_back(Task::Install(id.clone()));
+                }
             }
             Task::Install(_) | Task::AddMod { .. } => {
                 self.queue.extend([Task::Instances, Task::Storage]);
@@ -1165,6 +1221,7 @@ impl App {
                 self.page = page;
                 self.scroll = 0;
                 self.form = false;
+                self.version_picker = false;
                 self.show_logs = false;
                 self.management_form = None;
                 if matches!(page, Page::Manage | Page::Servers) {
@@ -1198,14 +1255,35 @@ impl App {
             }
             Action::New => {
                 self.form = true;
+                self.version_picker = false;
                 self.show_logs = false;
                 self.notice.clear();
                 self.error = false;
                 if self.new_version.is_empty() {
                     self.new_version = self.latest_release.clone();
                 }
+                if self.new_id.trim().is_empty() {
+                    self.new_id = suggested_instance_id(&self.instances);
+                }
+                if self.versions.is_empty() && !self.versions_pending() {
+                    self.queue.push_back(Task::Versions);
+                }
             }
-            Action::CloseForm => self.form = false,
+            Action::VersionPicker(open) => {
+                self.version_picker = open;
+                self.version_query.clear();
+                self.version_scroll = 0;
+            }
+            Action::SelectVersion(version) => {
+                self.new_version = version;
+                self.version_picker = false;
+                self.version_query.clear();
+                self.version_scroll = 0;
+            }
+            Action::CloseForm => {
+                self.form = false;
+                self.version_picker = false;
+            }
             Action::Cancel => {
                 self.queue.clear();
                 if let Some(job) = &mut self.job {
@@ -1224,6 +1302,8 @@ impl App {
         if let Some(Event::Scroll(delta)) = &event {
             let value = if self.show_logs {
                 &mut self.log_scroll
+            } else if self.form && self.version_picker {
+                &mut self.version_scroll
             } else {
                 &mut self.scroll
             };
@@ -1234,9 +1314,13 @@ impl App {
             };
         }
         if matches!(event, Some(Event::Key { code: 27, .. })) {
-            self.form = false;
-            self.show_logs = false;
-            self.management_form = None;
+            if self.form && self.version_picker {
+                self.version_picker = false;
+            } else {
+                self.form = false;
+                self.show_logs = false;
+                self.management_form = None;
+            }
         }
         self.ui.begin(event);
         let compact = c.width < 820.;
@@ -1387,7 +1471,7 @@ impl App {
             );
             centered(
                 c,
-                "Create an instance to choose a game version and loader.",
+                "Choose a version. Create, install, then play.",
                 x,
                 cy + 129.,
                 w,
@@ -1459,6 +1543,24 @@ impl App {
             .iter()
             .find(|item| Some(&item.id) == self.selected.as_ref())
         {
+            let needs_account = item.installed && !self.offline && self.selected_account.is_none();
+            c.ellipsis(
+                if !item.installed {
+                    "Next: install the game files. Your instance is already saved."
+                } else if needs_account {
+                    "Next: choose an account, or select Single-player mode."
+                } else if self.offline && !valid_username(&self.username) {
+                    "Next: enter a player name for local single-player."
+                } else {
+                    "Ready to play."
+                },
+                x,
+                y - 43.,
+                w,
+                12,
+                false,
+                MUTED,
+            );
             let offline_width = if w < 420. { 144. } else { 188. };
             let label = if self.offline {
                 "✓ Single-player mode"
@@ -1527,7 +1629,13 @@ impl App {
                 c,
                 112,
                 Rect::new(x, play_y, 150., 44.),
-                if item.installed {
+                if needs_account {
+                    if self.accounts.is_empty() {
+                        "Sign in to play"
+                    } else {
+                        "Choose account"
+                    }
+                } else if item.installed {
                     "Play Minecraft"
                 } else {
                     "Install instance"
@@ -1537,17 +1645,21 @@ impl App {
                     && !busy
                     && (!item.installed
                         || (self.offline && valid_username(&self.username))
-                        || (!self.offline && self.selected_account.is_some())),
+                        || !self.offline),
             ) {
-                action = Some(Action::Start(if item.installed {
-                    Task::Launch {
-                        id: item.id.clone(),
-                        offline: self.offline.then(|| self.username.trim().to_owned()),
-                        account: self.selected_account.clone(),
-                    }
+                action = Some(if needs_account {
+                    Action::Navigate(Page::Accounts)
                 } else {
-                    Task::Install(item.id.clone())
-                }));
+                    Action::Start(if item.installed {
+                        Task::Launch {
+                            id: item.id.clone(),
+                            offline: self.offline.then(|| self.username.trim().to_owned()),
+                            account: self.selected_account.clone(),
+                        }
+                    } else {
+                        Task::Install(item.id.clone())
+                    })
+                });
             }
             if item.installed
                 && w >= 420.
@@ -2159,7 +2271,7 @@ impl App {
             c,
             x,
             w,
-            "Make it yours.",
+            "Discover mods",
             "Find mods on Modrinth and add them to your selected instance.",
         );
         let busy = self.busy();
@@ -2297,7 +2409,7 @@ impl App {
             c,
             x,
             w,
-            "A whole new world.",
+            "Modpacks",
             "Bring a Modrinth modpack with you, or share your own.",
         );
         if self.ui.button(
@@ -2452,7 +2564,7 @@ impl App {
             c,
             x,
             w,
-            "Your identity.",
+            "Accounts",
             "Connect Microsoft to use your Minecraft account.",
         );
         let visible = self.accounts.len().min(if h > 900. {
@@ -2572,7 +2684,7 @@ impl App {
             c,
             x,
             w,
-            "Keep it simple.",
+            "Settings",
             "Check your setup and see what is stored on this device.",
         );
         if self.ui.button(
@@ -2682,12 +2794,12 @@ impl App {
 
     fn draw_form(&mut self, c: &mut Canvas<'_>) -> Option<Action> {
         c.rect(Rect::new(0., 0., c.width, c.height), 0., 0x000000b8);
-        let w = (c.width - 48.).min(530.);
-        let h = (c.height - 32.).min(555.);
+        let w = (c.width - 48.).min(600.);
+        let h = (c.height - 32.).min(620.);
         let x = (c.width - w) / 2.;
         let y = (c.height - h) / 2.;
         c.rect(Rect::new(x, y, w, h), 18., PANEL);
-        if w < 320. || h < 380. {
+        if w < 340. || h < 520. {
             c.ellipsis(
                 "Enlarge the window to create an instance.",
                 x + 20.,
@@ -2709,161 +2821,308 @@ impl App {
                 )
                 .then_some(Action::CloseForm);
         }
-        let compact = h < 520.;
-        c.ellipsis(
-            "New instance",
-            x + 30.,
-            y + 28.,
-            w - 105.,
-            if w < 430. { 23 } else { 29 },
-            true,
-            INK,
-        );
+        if self.version_picker {
+            return self.draw_version_picker(c, Rect::new(x, y, w, h));
+        }
+        let compact = h < 590.;
         let busy = self.busy();
+        let versions_pending = self.versions_pending();
+        // Fetching the release list must not freeze editable form fields.
+        let editing = !busy
+            || (self
+                .job
+                .as_ref()
+                .is_none_or(|job| matches!(job.task, Task::Versions))
+                && self.queue.iter().all(|task| matches!(task, Task::Versions)));
         let mut action = None;
+        c.ellipsis("New instance", x + 30., y + 25., w - 105., 27, true, INK);
+        if !compact {
+            c.ellipsis(
+                "Choose a version. We will download the game files for you.",
+                x + 30.,
+                y + 69.,
+                w - 60.,
+                13,
+                false,
+                MUTED,
+            );
+        }
         if self.ui.button(
             c,
             700,
-            Rect::new(x + w - 68., y + 24., 40., 36.),
+            Rect::new(x + w - 68., y + 23., 40., 36.),
             "×",
             ButtonStyle::Quiet,
             true,
         ) {
             action = Some(Action::CloseForm);
         }
-        let first = if compact { 76. } else { 90. };
-        let version = if compact { 158. } else { 203. };
-        let loader = if compact { 239. } else { 306. };
-        c.text("Instance name", x + 30., y + first, 13, true, INK);
+        let name = if compact { 78. } else { 100. };
+        let version = if compact { 144. } else { 184. };
+        let loader = if compact { 210. } else { 268. };
+        let field_h = if compact { 36. } else { 42. };
+        c.text("Instance name", x + 30., y + name, 13, true, INK);
         self.ui.launcher_input(
             c,
             701,
-            Rect::new(x + 30., y + first + 24., w - 60., 42.),
+            Rect::new(x + 30., y + name + 22., w - 60., field_h),
             &mut self.new_id,
-            "my-world",
+            "minecraft",
             false,
-            !busy,
+            editing,
         );
-        if !compact {
-            c.ellipsis(
-                "Letters, numbers, dashes and underscores. Your saves stay separate.",
-                x + 30.,
-                y + 166.,
-                w - 60.,
-                11,
-                false,
-                MUTED,
-            );
-        }
         c.text("Minecraft version", x + 30., y + version, 13, true, INK);
         self.ui.launcher_input(
             c,
             702,
-            Rect::new(x + 30., y + version + 24., w - 190., 42.),
+            Rect::new(x + 30., y + version + 22., w - 202., field_h),
             &mut self.new_version,
-            "Version number",
+            if versions_pending {
+                "Fetching releases…"
+            } else {
+                "Version number"
+            },
             false,
-            !busy,
+            editing,
         );
         if self.ui.button(
             c,
             703,
-            Rect::new(x + w - 148., y + version + 24., 118., 42.),
-            "Latest release",
+            Rect::new(x + w - 160., y + version + 22., 130., field_h),
+            "Choose release",
             ButtonStyle::Quiet,
-            !busy,
+            editing,
         ) {
-            if self.latest_release.is_empty() {
-                action = Some(Action::Start(Task::Versions));
-            } else {
-                self.new_version = self.latest_release.clone();
-            }
+            action = Some(Action::VersionPicker(true));
         }
         c.text("Mod loader", x + 30., y + loader, 13, true, INK);
-        let loader_width = (w * 0.31).clamp(106., 150.);
-        let loader_label = format!(
-            "{} ↻",
-            ["Vanilla", "Fabric", "Quilt", "Forge", "NeoForge"][self.new_loader]
-        );
-        if self.ui.button(
-            c,
-            704,
-            Rect::new(x + 30., y + loader + 27., loader_width, 42.),
-            &loader_label,
-            ButtonStyle::Secondary,
-            !busy,
-        ) {
-            self.new_loader = (self.new_loader + 1) % 5;
-            self.new_loader_version.clear();
+        let cell = (w - 76.) / 3.;
+        for (i, label) in ["Vanilla", "Fabric", "Quilt", "Forge", "NeoForge"]
+            .iter()
+            .enumerate()
+        {
+            if self.ui.button(
+                c,
+                730 + i as u64,
+                Rect::new(
+                    x + 30. + (i % 3) as f32 * (cell + 8.),
+                    y + loader + 22. + (i / 3) as f32 * 44.,
+                    cell,
+                    38.,
+                ),
+                label,
+                if self.new_loader == i {
+                    ButtonStyle::Secondary
+                } else {
+                    ButtonStyle::Quiet
+                },
+                editing,
+            ) {
+                self.new_loader = i;
+                self.new_loader_version.clear();
+            }
         }
         if self.new_loader > 0 {
             self.ui.launcher_input(
                 c,
                 705,
-                Rect::new(
-                    x + 42. + loader_width,
-                    y + loader + 27.,
-                    w - loader_width - 72.,
-                    42.,
-                ),
+                Rect::new(x + 30., y + loader + 112., w - 60., field_h),
                 &mut self.new_loader_version,
                 if self.new_loader >= 3 {
                     "Loader version (required)"
                 } else {
-                    "Latest compatible version"
+                    "Latest compatible loader (automatic)"
                 },
                 false,
-                !busy,
+                editing,
             );
-        }
-        if self.error && !self.notice.is_empty() {
+        } else {
             c.ellipsis(
-                &self.notice,
+                "Vanilla is the original Minecraft, with no mod loader.",
                 x + 30.,
-                y + h - 105.,
-                w - 60.,
-                12,
-                false,
-                ERROR,
-            );
-        } else if !compact {
-            c.ellipsis(
-                "Game assets and libraries are shared between instances.",
-                x + 30.,
-                y + 404.,
+                y + loader + 124.,
                 w - 60.,
                 12,
                 false,
                 MUTED,
             );
         }
-        let can_create = valid_id(self.new_id.trim())
-            && !self.new_version.trim().is_empty()
-            && (self.new_loader < 3 || !self.new_loader_version.trim().is_empty());
+        let issue = self.creation_issue();
+        let hint = if self.error && !self.notice.is_empty() {
+            self.notice.as_str()
+        } else if versions_pending {
+            "Fetching official releases. You can still edit the fields above."
+        } else {
+            issue.unwrap_or("Each instance keeps its saves and mods separate.")
+        };
+        c.ellipsis(
+            hint,
+            x + 30.,
+            y + h - if compact { 140. } else { 163. },
+            w - 60.,
+            12,
+            false,
+            if self.error { ERROR } else { MUTED },
+        );
+        if self.ui.button(
+            c,
+            706,
+            Rect::new(x + 30., y + h - 116., 145., 34.),
+            if self.new_install {
+                "✓ Install now"
+            } else {
+                "Create only"
+            },
+            ButtonStyle::Quiet,
+            editing,
+        ) {
+            self.new_install = !self.new_install;
+        }
+        c.ellipsis(
+            if self.new_install {
+                "Download game files after creating."
+            } else {
+                "Install later from your library."
+            },
+            x + 185.,
+            y + h - 106.,
+            w - 215.,
+            12,
+            false,
+            MUTED,
+        );
         if self.ui.button(
             c,
             710,
-            Rect::new(
-                x + 30.,
-                y + h - if compact { 62. } else { 74. },
-                w - 60.,
-                44.,
-            ),
+            Rect::new(x + 30., y + h - 68., w - 60., 44.),
             if busy {
                 "Please wait…"
+            } else if self.new_install {
+                "Create & install"
             } else {
                 "Create instance"
             },
             ButtonStyle::Secondary,
-            !busy && can_create,
+            !busy && issue.is_none(),
         ) {
             action = Some(Action::Start(Task::Create {
                 id: self.new_id.trim().into(),
                 version: self.new_version.trim().into(),
                 loader: ["vanilla", "fabric", "quilt", "forge", "neoforge"][self.new_loader].into(),
                 loader_version: self.new_loader_version.trim().into(),
+                install_after: self.new_install,
             }));
         }
+        action
+    }
+
+    fn draw_version_picker(&mut self, c: &mut Canvas<'_>, rect: Rect) -> Option<Action> {
+        let Rect { x, y, w, h } = rect;
+        let mut action = None;
+        c.ellipsis(
+            "Minecraft releases",
+            x + 30.,
+            y + 25.,
+            w - 105.,
+            27,
+            true,
+            INK,
+        );
+        if self.ui.button(
+            c,
+            750,
+            Rect::new(x + w - 68., y + 23., 40., 36.),
+            "×",
+            ButtonStyle::Quiet,
+            true,
+        ) {
+            action = Some(Action::VersionPicker(false));
+        }
+        if self.ui.launcher_input(
+            c,
+            751,
+            Rect::new(x + 30., y + 88., w - 178., 40.),
+            &mut self.version_query,
+            "Filter versions, e.g. 1.21",
+            false,
+            true,
+        ) {
+            self.version_scroll = 0;
+        }
+        if self.ui.button(
+            c,
+            752,
+            Rect::new(x + w - 138., y + 88., 108., 40.),
+            "Refresh",
+            ButtonStyle::Quiet,
+            !self.busy(),
+        ) {
+            action = Some(Action::Start(Task::Versions));
+        }
+        let query = self.version_query.trim();
+        let count = ((h - 232.) / 44.).floor() as usize;
+        let total = self.versions.iter().filter(|v| v.contains(query)).count();
+        self.version_scroll = self.version_scroll.min(total.saturating_sub(count));
+        for (row, (index, version)) in matching_versions(&self.versions, query)
+            .skip(self.version_scroll)
+            .take(count)
+            .enumerate()
+        {
+            let vy = y + 150. + row as f32 * 44.;
+            let selected = *version == self.new_version;
+            if self.ui.button(
+                c,
+                8000 + index as u64,
+                Rect::new(x + 30., vy, w - 60., 38.),
+                version,
+                if selected {
+                    ButtonStyle::Secondary
+                } else {
+                    ButtonStyle::Quiet
+                },
+                true,
+            ) {
+                action = Some(Action::SelectVersion(version.clone()));
+            }
+        }
+        if total == 0 {
+            let message = if self.versions_pending() {
+                "Fetching official Minecraft releases…"
+            } else if !self.versions.is_empty() {
+                "No matching release. Try a shorter version number."
+            } else if self.error {
+                "Could not fetch releases. Refresh to try again."
+            } else {
+                "Refresh to load official releases."
+            };
+            c.ellipsis(
+                message,
+                x + 30.,
+                y + 168.,
+                w - 60.,
+                14,
+                false,
+                if self.error { ERROR } else { MUTED },
+            );
+        }
+        c.ellipsis(
+            &format!("{total} releases · Scroll to browse · Esc to go back"),
+            x + 30.,
+            y + h - 66.,
+            w - 60.,
+            12,
+            false,
+            MUTED,
+        );
+        c.ellipsis(
+            "Other versions can be entered directly in the creation form.",
+            x + 30.,
+            y + h - 42.,
+            w - 60.,
+            11,
+            false,
+            DIM,
+        );
         action
     }
 
@@ -2940,6 +3199,41 @@ impl App {
         );
         action
     }
+}
+
+fn matching_versions<'a>(
+    versions: &'a [String],
+    query: &'a str,
+) -> impl Iterator<Item = (usize, &'a String)> + 'a {
+    versions
+        .iter()
+        .enumerate()
+        .filter(move |(_, v)| v.as_str() == query)
+        .chain(
+            versions
+                .iter()
+                .enumerate()
+                .filter(move |(_, v)| v.as_str() != query && v.contains(query)),
+        )
+}
+
+fn suggested_instance_id(instances: &[Instance]) -> String {
+    if !instances
+        .iter()
+        .any(|instance| instance.id.eq_ignore_ascii_case("minecraft"))
+    {
+        return "minecraft".into();
+    }
+    for n in 2..=instances.len() + 2 {
+        let name = format!("minecraft-{n}");
+        if !instances
+            .iter()
+            .any(|instance| instance.id.eq_ignore_ascii_case(&name))
+        {
+            return name;
+        }
+    }
+    unreachable!("there are more candidate names than existing instances")
 }
 
 fn valid_id(id: &str) -> bool {
@@ -3194,6 +3488,128 @@ mod tests {
     use super::*;
 
     #[test]
+    fn new_instance_suggests_a_free_name_and_fetches_releases_once() {
+        let mut app = App::new(None);
+        app.queue.clear();
+        app.instances = vec![
+            Instance {
+                id: "MineCraft".into(),
+                ..Instance::default()
+            },
+            Instance {
+                id: "minecraft-2".into(),
+                ..Instance::default()
+            },
+        ];
+        app.action(Action::New);
+        assert!(app.form);
+        assert!(app.new_install);
+        assert_eq!(app.new_id, "minecraft-3");
+        assert!(matches!(app.queue.front(), Some(Task::Versions)));
+        app.action(Action::CloseForm);
+        app.action(Action::New);
+        assert_eq!(app.queue.len(), 1);
+        app.new_id = "my-custom-world".into();
+        app.action(Action::New);
+        assert_eq!(app.new_id, "my-custom-world");
+    }
+
+    #[test]
+    fn release_picker_keeps_old_releases_and_respects_a_typed_version() {
+        let mut app = App::new(None);
+        let releases = (0..24)
+            .map(|n| format!(r#"{{"id":"1.{n}","type":"release"}}"#))
+            .collect::<Vec<_>>()
+            .join(",");
+        let payload = format!(
+            r#"{{"latest":{{"release":"1.23"}},"versions":[{releases},{{"id":"snapshot","type":"snapshot"}}]}}"#
+        );
+        app.apply_result(&Task::Versions, payload.as_bytes())
+            .unwrap();
+        assert_eq!(app.versions.len(), 24);
+        assert_eq!(app.new_version, "1.23");
+        assert!(!app.versions.iter().any(|v| v == "snapshot"));
+        app.new_version = "manual-snapshot".into();
+        app.apply_result(&Task::Versions, payload.as_bytes())
+            .unwrap();
+        assert_eq!(app.new_version, "manual-snapshot");
+        app.action(Action::VersionPicker(true));
+        app.action(Action::SelectVersion("1.0".into()));
+        assert_eq!(app.new_version, "1.0");
+        assert!(!app.version_picker);
+        assert!(
+            app.apply_result(&Task::Versions, br#"{"error":"offline"}"#)
+                .is_err()
+        );
+        assert_eq!(app.new_version, "1.0");
+    }
+
+    #[test]
+    fn release_picker_prefers_an_exact_version_over_prefix_matches() {
+        let versions = vec![
+            "1.21.11".into(),
+            "1.21.10".into(),
+            "1.21.1".into(),
+            "1.21".into(),
+        ];
+        let found = matching_versions(&versions, "1.21.1")
+            .map(|(_, v)| v.as_str())
+            .collect::<Vec<_>>();
+        assert_eq!(found, ["1.21.1", "1.21.11", "1.21.10"]);
+        assert_eq!(matching_versions(&versions, "").count(), versions.len());
+    }
+
+    #[test]
+    fn create_and_install_runs_in_order_and_create_only_stays_local() {
+        for install_after in [true, false] {
+            let mut app = App::new(None);
+            app.queue.clear();
+            app.form = true;
+            let task = Task::Create {
+                id: "new-world".into(),
+                version: "1.21.1".into(),
+                loader: "vanilla".into(),
+                loader_version: String::new(),
+                install_after,
+            };
+            app.apply_result(&task, b"{}").unwrap();
+            assert!(!app.form);
+            assert_eq!(app.selected.as_deref(), Some("new-world"));
+            assert!(matches!(app.queue.pop_front(), Some(Task::Instances)));
+            if install_after {
+                assert!(
+                    matches!(app.queue.pop_front(), Some(Task::Install(id)) if id == "new-world")
+                );
+            }
+            assert!(app.queue.is_empty());
+            assert!(!task.args().iter().any(|v| v == "--install-after"));
+        }
+    }
+
+    #[test]
+    fn creation_reports_the_actionable_missing_field() {
+        let mut app = App::new(None);
+        app.new_id = "minecraft".into();
+        assert_eq!(
+            app.creation_issue(),
+            Some("Choose a release or enter a Minecraft version.")
+        );
+        app.new_version = "1.21.1".into();
+        assert_eq!(app.creation_issue(), None);
+        app.new_loader = 3;
+        assert!(app.creation_issue().unwrap().contains("Forge"));
+        app.new_loader_version = "52.0.1".into();
+        assert_eq!(app.creation_issue(), None);
+        app.instances.push(Instance {
+            id: "minecraft".into(),
+            ..Instance::default()
+        });
+        assert!(app.creation_issue().unwrap().contains("already"));
+        app.new_id = "../unsafe".into();
+        assert!(app.creation_issue().unwrap().contains("letters"));
+    }
+
+    #[test]
     fn automatic_exit_requires_a_successful_game_pid() {
         let task = Task::Launch {
             id: "world".into(),
@@ -3274,6 +3690,7 @@ mod tests {
             version: "1.21.1".into(),
             loader: "forge".into(),
             loader_version: "52.0.1".into(),
+            install_after: false,
         };
         assert_eq!(
             task.args(),
