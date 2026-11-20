@@ -1,0 +1,236 @@
+{
+  "schema": 1,
+  "public_release": {
+    "schema": 1,
+    "version": "0.1.2",
+    "release_id": 452547223,
+    "release_url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.2",
+    "prerelease": true,
+    "draft": false,
+    "published_at": "2026-11-20T10:24:37Z",
+    "verified_at": "2026-11-20T10:24:41.395605+00:00",
+    "app_source_commit": "e86b5841532ef04cc74cea5585ae396150452408",
+    "packaging_commit": "dc9e586ed541cc3e1d75661c54caacdd021834a9",
+    "public_unauthenticated_download_verified": true,
+    "archive": {
+      "name": "zmcl-0.1.2-linux-x86_64.tar.gz",
+      "bytes": 679358,
+      "sha256": "5cb7945cb5888d1ec02d84e55a4b91576161ddb6fe6c3a6be2644c8f058fb3c4",
+      "url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.2/zmcl-0.1.2-linux-x86_64.tar.gz"
+    },
+    "binary": {
+      "bytes": 1473144,
+      "sha256": "71bf4017072703a91359ea84e2493db218d9962456ece2060d0f2e42b3500c32"
+    },
+    "checksum_sidecar_verified": true,
+    "assets": [
+      {
+        "name": "zmcl-0.1.2-linux-x86_64.tar.gz",
+        "bytes": 679358,
+        "digest": "sha256:5cb7945cb5888d1ec02d84e55a4b91576161ddb6fe6c3a6be2644c8f058fb3c4",
+        "url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.2/zmcl-0.1.2-linux-x86_64.tar.gz"
+      },
+      {
+        "name": "zmcl-0.1.2-linux-x86_64.tar.gz.sha256",
+        "bytes": 97,
+        "digest": "sha256:2b31b50d6bb038101b683b5fff611410830d985f186e02182df4fa38cda3a3b4",
+        "url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.2/zmcl-0.1.2-linux-x86_64.tar.gz.sha256"
+      }
+    ]
+  },
+  "package_verification": {
+    "schema": 1,
+    "passed": true,
+    "archive": "zmcl-0.1.2-linux-x86_64.tar.gz",
+    "sha256": "5cb7945cb5888d1ec02d84e55a4b91576161ddb6fe6c3a6be2644c8f058fb3c4",
+    "bytes": 679358,
+    "binary_bytes": 1473144,
+    "binary_sha256": "71bf4017072703a91359ea84e2493db218d9962456ece2060d0f2e42b3500c32",
+    "unpacked_bytes": 1526666,
+    "unpacked_metric": "Sum of regular-file content bytes; excludes archive headers and filesystem allocation.",
+    "file_count": 7,
+    "files": [
+      {
+        "path": "LICENSE",
+        "bytes": 1070,
+        "sha256": "97016fcf641f0ebb5c3fb6a0eda2e2bec82aecd443f3acd24a536499d5fa28a4"
+      },
+      {
+        "path": "README.md",
+        "bytes": 11695,
+        "sha256": "eb089e4f7d93192f2129da88d47b9d1eda637c14c891ca1b353e69b13b90cbcf"
+      },
+      {
+        "path": "assets/zmcl.svg",
+        "bytes": 301,
+        "sha256": "c6053bfef9e54d4d5506fe2575508355cae50133f18dc3f9692e3970d13915a5"
+      },
+      {
+        "path": "docs/FEATURES.md",
+        "bytes": 25690,
+        "sha256": "85770622b5cd9093dc188b5689a40277ae944c7cad8cbd63fd94bdc64e713fa1"
+      },
+      {
+        "path": "release.json",
+        "bytes": 4218,
+        "sha256": "ff5e5b303913d2c26d4157c288d0812b4f8653a74e2a6a2f0555f8808103526b"
+      },
+      {
+        "path": "scripts/install.py",
+        "bytes": 10548,
+        "sha256": "baa67ea001bd464fae3d5b96582e9f95ea7f54f5ce82f7c195365412247993c5"
+      },
+      {
+        "path": "zmcl",
+        "bytes": 1473144,
+        "sha256": "71bf4017072703a91359ea84e2493db218d9962456ece2060d0f2e42b3500c32"
+      }
+    ],
+    "app_source_commit": "e86b5841532ef04cc74cea5585ae396150452408",
+    "packager": {
+      "path": "scripts/package.py",
+      "sha256": "f6e78d14150faabb78c99c05e6eaa18f1fa8d5e3270511a611455e63942377cf",
+      "git_head_at_packaging": "dc9e586ed541cc3e1d75661c54caacdd021834a9",
+      "working_tree_modified": false,
+      "identity_note": "The script digest identifies the executed packager; HEAD alone does not identify uncommitted script changes."
+    },
+    "platform": "linux-x86_64",
+    "checks": {
+      "archive_paths_confined": true,
+      "regular_files_only": true,
+      "file_sizes_and_sha256_match": true,
+      "checksum_sidecar_verified": true,
+      "source_documents_unchanged": true,
+      "markdown_link_rewrites": {
+        "README.md": 15,
+        "docs/FEATURES.md": 44
+      },
+      "no_relative_markdown_links_outside_code": true,
+      "no_game_java_cache_screenshots_or_logs_bundled": true,
+      "installation": {
+        "performed": true,
+        "gui_started": false,
+        "game_started": false,
+        "clean_install_uninstall": {
+          "passed": true,
+          "installed_regular_file_count": 4,
+          "installed_regular_file_bytes": 1474100,
+          "installed_files": [
+            {
+              "path": "bin/zmcl",
+              "bytes": 1473144,
+              "sha256": "71bf4017072703a91359ea84e2493db218d9962456ece2060d0f2e42b3500c32"
+            },
+            {
+              "path": "share/icons/hicolor/scalable/apps/zmcl.svg",
+              "bytes": 301,
+              "sha256": "c6053bfef9e54d4d5506fe2575508355cae50133f18dc3f9692e3970d13915a5"
+            },
+            {
+              "path": "share/applications/zmcl.desktop",
+              "bytes": 254,
+              "sha256": "55e435d875c1b659df73686cc099decb3eea840287e4cdfd31d245467c56423e"
+            },
+            {
+              "path": "share/zmcl/install.json",
+              "bytes": 401,
+              "sha256": "d2c8e65178314fa40eeea1aaac12eb1f165dbae6d0b7a40202aad9330ebcfae8"
+            }
+          ],
+          "prefix_character_count": 90,
+          "size_scope": "Binary, icon, desktop entry and install manifest; desktop size depends on the prefix.",
+          "simulated_game_data_preserved_inside_and_outside_prefix": true
+        },
+        "modified_file_protection": {
+          "passed": true,
+          "modified_file": "share/applications/zmcl.desktop",
+          "modified_file_preserved": true,
+          "install_manifest_retained": true,
+          "unchanged_binary_and_icon_removed": true,
+          "simulated_game_data_preserved": true
+        },
+        "commands": [
+          {
+            "operation": "install",
+            "exit_code": 0,
+            "expected_exit_code": 0,
+            "stdout": "<private-test>/clean prefix/bin/zmcl\n"
+          },
+          {
+            "operation": "installed-version",
+            "exit_code": 0,
+            "expected_exit_code": 0,
+            "stdout": "zmcl 0.1.2\n"
+          },
+          {
+            "operation": "clean-uninstall",
+            "exit_code": 0,
+            "expected_exit_code": 0,
+            "stdout": "Removed zmcl installation. Minecraft instances, saves and credentials are preserved.\n"
+          },
+          {
+            "operation": "install-for-modified-file",
+            "exit_code": 0,
+            "expected_exit_code": 0,
+            "stdout": "<private-test>/modified prefix/bin/zmcl\n"
+          },
+          {
+            "operation": "modified-file-uninstall-refusal",
+            "exit_code": 1,
+            "expected_exit_code": 1,
+            "stderr": "zmcl installer: Modified files preserved: share/applications/zmcl.desktop\n"
+          }
+        ],
+        "command_count": 5,
+        "expected_protection_failures": 1,
+        "private_test_prefixes_cleaned": true
+      }
+    },
+    "runtime_dependencies": {
+      "bundled_runtimes": [],
+      "linux_direct_elf_needed": [
+        "libX11.so.6",
+        "libc.so.6",
+        "libfontconfig.so.1",
+        "libfreetype.so.6",
+        "libgcc_s.so.1"
+      ],
+      "linux_direct_elf_minimum_glibc": "2.39",
+      "linux_direct_elf_glibc_symbol_versions": [
+        "2.2.5",
+        "2.3",
+        "2.3.4",
+        "2.4",
+        "2.9",
+        "2.14",
+        "2.15",
+        "2.16",
+        "2.17",
+        "2.18",
+        "2.27",
+        "2.28",
+        "2.29",
+        "2.30",
+        "2.32",
+        "2.33",
+        "2.34",
+        "2.39"
+      ],
+      "linux_glibc_scope": "Highest GLIBC_* version required directly by this executable; this is not a complete distribution compatibility test. Shared libraries and external helpers have their own requirements.",
+      "linux_direct_elf_minimum_fontconfig": "2.17.0",
+      "linux_direct_elf_fontconfig_version_basis": {
+        "FcConfigSetDefaultSubstitute": "2.17.0"
+      },
+      "linux_fontconfig_scope": "Known ABI floor from mandatory undefined ELF symbols, currently FcConfigSetDefaultSubstitute (Fontconfig 2.17.0). Null means no floor was established by this check, not compatibility with all versions. Source-level fallbacks do not remove the requirements of this prebuilt executable.",
+      "native_gui": "Linux X11 or XWayland; CPU software rendering, with no direct OpenGL ELF dependency. Font libraries: FreeType, Fontconfig >= 2.17.0.",
+      "downloads": "System curl with HTTPS and its certificate store.",
+      "archive_metadata_and_process_helpers": "Python 3 standard library, started on demand.",
+      "horizon_signature_verification": "Optional system OpenSSL with Ed25519 verification support.",
+      "linux_account_secrets": "secret-tool and a desktop Secret Service for account credential operations.",
+      "minecraft": "A compatible system or separately downloaded managed Java runtime; game files are separate.",
+      "horizon": "Separately downloaded official Horizon launcher and its legitimate game preparation.",
+      "scope": "These dependencies and their files/processes are outside the launcher payload; only Linux x86_64 is accepted by this package-install test."
+    }
+  },
+  "scope": "Linux x86_64 prerelease. AUR and host installation are separately verified; this record does not claim Windows/macOS application runtime or a new final-binary memory benchmark."
+}

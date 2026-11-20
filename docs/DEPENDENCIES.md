@@ -35,6 +35,11 @@ manifest、Cargo.lock、gitlink 与实际导入一致。[最终应用验收](val
 
 本轮已提供可复用的真实发布提交 `4aba3ba`、精确 crate checksum、应用提交与限定性能证据。Project Z 聚合维护者拥有聚合树写入权，其他消费者由各自维护者继续接入；当前没有“全 Project Z 已升级至 0.1.5”的回执。[聚合依赖审计阶段](https://github.com/LIghtJUNction/project-z/commit/8c789ef69297ca344f667cbe1bcdf223d79babf2)登记了 zi18n，并核对真实依赖关系；聚合候选和 canonical main 的 pin 不混称。
 
+
+### 聚合维护者后续确认
+
+聚合维护者已接受本轮 0.1.5 发布回执并接回上游后续协调范围；本会话仅继续 zmcl 分发与安装验收。[聚合提交 b54f083](https://github.com/LIghtJUNction/project-z/commit/b54f083e2b7900c2f5c93ec93e26366526645095)已通过 GitHub 插件独立读回：它登记了 `zmcl → zi18n`，固定的是较早的 `2b1218f` 英文标题消费，`zgpui` 聚合 pin 仍为 0.1.2 / `5b268da`。该提交没有把最终 zmcl 0.1.2 / `e86b584` 或框架 0.1.5 全面传播。下一轮消费者源码、lock、gitlink 和套件资产更新由各原维护者及 Project Z 聚合维护者继续负责，现有冻结发行保持不变。
+
 ## zmcl 0.1.1 / zgpui 0.1.2 历史依赖
 
 | 关系 | 精确版本 / 源码 | 本消费者证据 |
