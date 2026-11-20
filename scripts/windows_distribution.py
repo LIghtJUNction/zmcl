@@ -87,6 +87,24 @@ def pe_dependencies(text):
             "scope": "Direct PE imports only; external Python/curl/Java helpers and graphics drivers remain separate."}
 
 
+def resolve_dumpbin(env):
+    # Windows CreateProcess does not use a supplied child env PATH to find argv[0].
+    # Resolve from the prepared MSVC environment; never fall back to the parent PATH/CWD.
+    paths = [value for key, value in env.items() if key.casefold() == "path"]
+    require(len(paths) == 1 and isinstance(paths[0], str) and paths[0],
+            "Prepared MSVC environment must contain one nonempty PATH")
+    for entry in paths[0].split(os.pathsep):
+        directory = Path(entry.strip().strip('"'))
+        if not directory.is_absolute():
+            continue
+        executable = directory / "dumpbin.exe"
+        if executable.is_file():
+            resolved = executable.resolve(strict=True)
+            require(resolved.is_absolute(), "Resolved dumpbin.exe path must be absolute")
+            return resolved
+    raise ValueError("Prepared MSVC PATH does not contain an existing absolute dumpbin.exe")
+
+
 class Evidence:
     def __init__(self, output, source_commit):
         output.mkdir(parents=True, exist_ok=False)
@@ -461,6 +479,7 @@ def native_run(args):
         env["CARGO_TARGET_DIR"] = str(ROOT / "target/windows-distribution")
         env["RUSTFLAGS"] = "-C target-feature=+crt-static"
         evidence.report["rustflags"] = env["RUSTFLAGS"]
+        dumpbin = evidence.check("msvc_dumpbin", lambda: str(resolve_dumpbin(env)))
         evidence.check("rust_version", lambda: evidence.command(
             "rust-version", ["rustc", "+" + selected["channel"], "--version", "--verbose"], env=env))
         evidence.check("native_build", lambda: evidence.command(
@@ -471,7 +490,7 @@ def native_run(args):
         version = tomllib.loads((ROOT / "Cargo.toml").read_text(encoding="utf-8"))["package"]["version"]
         expected_sha = sha256(binary)
         evidence.check("pe_runtime_imports", lambda: pe_dependencies(evidence.command(
-            "pe-imports", ["dumpbin", "/dependents", binary], env=env)))
+            "pe-imports", [dumpbin, "/dependents", binary], env=env)))
         evidence.check("native_version", lambda: require(
             evidence.command("native-version", [binary, "--version"], env=env).strip() == "zmcl " + version,
             "Native built executable version mismatch"))

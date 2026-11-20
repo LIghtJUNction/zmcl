@@ -7,6 +7,7 @@ The real workflow must execute those gates on a Windows runner.
 import hashlib
 import importlib.util
 import json
+import os
 from pathlib import Path
 import stat
 import struct
@@ -61,6 +62,51 @@ class WindowsDistributionContracts(unittest.TestCase):
                 windows.pe_dependencies("KERNEL32.dll\n" + name + "\n")
         with self.assertRaisesRegex(ValueError, "did not report"):
             windows.pe_dependencies("failed to read executable")
+
+    def test_dumpbin_uses_prepared_path_with_case_insensitive_environment_key(self):
+        with tempfile.TemporaryDirectory() as directory:
+            tools = Path(directory) / "MSVC tools with spaces" / "Hostx64" / "x64"
+            tools.mkdir(parents=True)
+            tool = tools / "dumpbin.exe"
+            tool.write_bytes(b"Synthetic tool-location fixture; not a Windows executable")
+            for key in ("PATH", "Path", "pAtH"):
+                env = {key: os.pathsep.join(["", ".", '"' + str(tools) + '"'])}
+                with self.subTest(key=key):
+                    self.assertEqual(windows.resolve_dumpbin(env), tool.resolve())
+
+    def test_dumpbin_never_uses_parent_path_cwd_or_ambiguous_environment(self):
+        with tempfile.TemporaryDirectory() as directory:
+            decoy = Path(directory)
+            (decoy / "dumpbin.exe").write_bytes(b"Do not select this ambient fixture")
+            previous = Path.cwd()
+            try:
+                os.chdir(decoy)
+                with patch.dict(os.environ, {"PATH": str(decoy)}):
+                    for env in ({}, {"PATH": ""}, {"PATH": os.pathsep.join(["", "."])},
+                                {"PATH": str(decoy / "missing")},
+                                {"PATH": str(decoy), "Path": str(decoy)}):
+                        with self.subTest(env=env), self.assertRaisesRegex(ValueError, "Prepared MSVC"):
+                            windows.resolve_dumpbin(env)
+            finally:
+                os.chdir(previous)
+
+    def test_resolved_dumpbin_is_passed_as_literal_absolute_argv(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            tools = root / "MSVC tools with spaces"
+            tools.mkdir()
+            (tools / "dumpbin.exe").write_bytes(b"Synthetic tool-location fixture")
+            env = {"PATH": str(tools)}
+            executable = windows.resolve_dumpbin(env)
+            binary = root / "application with spaces" / "zmcl.exe"
+            evidence = windows.Evidence(root / "evidence", "a" * 40)
+            completed = subprocess.CompletedProcess([], 0, "KERNEL32.dll\nUSER32.dll\n", "")
+            with patch.object(windows.subprocess, "run", return_value=completed) as invoked:
+                result = evidence.command("pe-imports", [executable, "/dependents", binary], env=env)
+            self.assertEqual(invoked.call_args.args[0], [str(executable), "/dependents", str(binary)])
+            self.assertIs(invoked.call_args.kwargs["env"], env)
+            self.assertFalse(invoked.call_args.kwargs.get("shell", False))
+            self.assertEqual(windows.pe_dependencies(result)["direct_dll_imports"], ["KERNEL32.dll", "USER32.dll"])
 
     def test_failure_evidence_never_becomes_a_successful_gui_check(self):
         with tempfile.TemporaryDirectory() as directory:

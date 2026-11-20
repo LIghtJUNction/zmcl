@@ -1,0 +1,47 @@
+{
+  "base_commit": "0673d98447e3eed354149462498c18c6780b26b5",
+  "dll_gate_relaxed": false,
+  "failed_formal_run": "https://github.com/LIghtJUNction/zmcl/actions/runs/44738048119",
+  "files": {
+    "scripts/test_windows_distribution.py": {
+      "after_sha256": "5d231e5395c9e8e0d509e3f6935eac9aa14281d26f489995ff1eb01beffdeb99",
+      "before_sha256": "b8ae80386af798aefd6b9b9c5e035ec97405e27695c698fa832c489454bed0f8"
+    },
+    "scripts/windows_distribution.py": {
+      "after_sha256": "ea98cb1648525837d995073043715f59ec8f8d6cf99e0252ddd5a355fae87872",
+      "before_sha256": "4144da170fa198d45f6f7cd918834790d37cb75d728d2e64270538e5d43b8de1"
+    }
+  },
+  "git_apply_check_passed": true,
+  "msvc_environment_keys_uppercase": true,
+  "native_local_test": {
+    "count": 14,
+    "log_sha256": "821c3582d36ebe6ec98e6f677995441cf8567308e75989f3b420bb6ac80e931e",
+    "passed": true,
+    "python": "3.14.10"
+  },
+  "native_windows_rerun": false,
+  "observed_error": "WinError 2: dumpbin was not found",
+  "observed_failure_stage": "pe_runtime_imports",
+  "observed_native_build_passed": true,
+  "patch": {
+    "bytes": 5801,
+    "file": "windows-dumpbin-path.patch",
+    "sha256": "e0517d727f0d88770fb5d6e6ca5470b8cedc467eb46d95e3a5f4d98c2b89e5d6"
+  },
+  "primary_sources": [
+    "https://docs.python.org/3/library/subprocess.html",
+    "https://github.com/LIghtJUNction/zgpui/blob/4aba3ba83815253fb7e4013baa8bcf894439d32d/scripts/check_native.py"
+  ],
+  "published": false,
+  "python_3_11_grammar_passed": true,
+  "schema": 1,
+  "tests": {
+    "count": 14,
+    "log_sha256": "63e18ad0b23f30e67c97e35e358470a6e7a1b070cf67d7ae32bb199820aa26c2",
+    "passed": true,
+    "python": "3.12.14",
+    "scope": "Portable path/argv, file-layout and strict DLL-gate contracts; no native Windows rerun"
+  },
+  "vendor_changed": false
+}
