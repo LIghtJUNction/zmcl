@@ -23,7 +23,7 @@ This record separates implementation, local fixtures and live results. **Impleme
 | Offline single-player profile | Explicit user name and compatible offline UUID in the launch plan. | The recorded Linux vanilla/Fabric launches used explicit offline names. | Online ownership authentication is handled through the account flow. |
 | Diagnostics | Runtime/tool discovery, Java reporting and shared-storage statistics. | CLI diagnostics and GUI Settings paths. | Redacted crash analysis, AI providers and authorized automated repair. |
 
-The current source uses the unified **`zgpui` 0.1.1** package and its **`zgpui::native`** window, input and drawing API, with `native` and `linux-software` enabled. Linux renders into a client CPU surface and submits it through X11. The former `zui-native` dependency and alias are removed. The published v0.1.0/AUR 0.1.0-1 artifacts retain their original backend until a new release is published. See the [manifest](../Cargo.toml), [pinned submodules](../.gitmodules) and [architecture](ARCHITECTURE.md).
+The current source uses the unified **`zgpui` 0.1.2** package and its **`zgpui::native`** window, input and drawing API, with `native` and `linux-software` enabled. Linux renders into a client CPU surface and submits it through X11. The former `zui-native` dependency and alias are removed. The v0.1.1 release ships this backend. Historical v0.1.0/AUR 0.1.0-1 evidence retains its original backend and artifact identity. See the [manifest](../Cargo.toml), [pinned submodules](../.gitmodules) and [architecture](ARCHITECTURE.md).
 
 ## Content and distribution
 

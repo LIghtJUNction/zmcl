@@ -1,0 +1,482 @@
+{
+  "schema": 1,
+  "validation_date": "2026-11-20",
+  "source_commit": "35eb8a3242a6ba637266ba1480354138389c9cb0",
+  "source_tree": "1aa5f1ea38cfd8dca82c0485ec160b486358adb3",
+  "release": {
+    "url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.1",
+    "id": 452414416,
+    "tag": "v0.1.1",
+    "draft": false,
+    "prerelease": true,
+    "published_at_utc": "2026-11-20T08:07:12Z",
+    "draft_assets_downloaded_and_byte_verified": true,
+    "public_metadata_read_back": true,
+    "unauthenticated_public_download_verified": true,
+    "assets_frozen_for_this_release": true
+  },
+  "gates": {
+    "binary": {
+      "bytes": 1439712,
+      "path": "release/zmcl",
+      "sha256": "a28998952b42d09f652ac95da47ddb15930cd556b6fa4e9b7e7ebbd23a4ac2e9",
+      "version_output": "zmcl 0.1.1"
+    },
+    "changed_files": {
+      "Cargo.lock": "a45de13d6b8abb476a876be2b76c1f9614c8043fa2056f888614746247da576f",
+      "Cargo.toml": "ddd82821cff6bcc161e0686cde61c1438cf23d7a479780a72cf7cc7d3442715b",
+      "scripts/bench_gui_activity.py": "49918d1c3d6b77184923050ab97c90145dac3088b1303079ed7f591e0b057c49",
+      "src/gui/manage_smoke.py": "27d739c873782820937cba76ab2162adca1a86ceaba1d58d97cf1bf8400a32f3"
+    },
+    "source_parent": "ce70fef498cb0a5e1bab530cddc80e2238252a40",
+    "source_tree": "1aa5f1ea38cfd8dca82c0485ec160b486358adb3",
+    "started_utc": "2026-11-20T07:31:58.524552+00:00",
+    "status": "passed",
+    "steps": [
+      {
+        "command": [
+          "cargo",
+          "fmt",
+          "--all",
+          "--",
+          "--check"
+        ],
+        "elapsed_s": 0.665,
+        "exit_code": 0,
+        "log": "01.log",
+        "log_scope": "Local gate log; no raw session log is published"
+      },
+      {
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--workspace",
+          "--all-features"
+        ],
+        "elapsed_s": 345.055,
+        "exit_code": 0,
+        "log": "02.log",
+        "log_scope": "Local gate log; no raw session log is published"
+      },
+      {
+        "command": [
+          "cargo",
+          "clippy",
+          "--locked",
+          "--offline",
+          "--workspace",
+          "--all-targets",
+          "--all-features",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "elapsed_s": 21.575,
+        "exit_code": 0,
+        "log": "03.log",
+        "log_scope": "Local gate log; no raw session log is published"
+      },
+      {
+        "command": [
+          "cargo",
+          "check",
+          "--locked",
+          "--offline",
+          "-p",
+          "zmcl-core",
+          "--target",
+          "x86_64-unknown-none"
+        ],
+        "elapsed_s": 7.888,
+        "exit_code": 0,
+        "log": "04.log",
+        "log_scope": "Local gate log; no raw session log is published"
+      },
+      {
+        "command": [
+          "python3",
+          "scripts/test_package_metadata.py",
+          "-v"
+        ],
+        "elapsed_s": 0.164,
+        "exit_code": 0,
+        "log": "05.log",
+        "log_scope": "Local gate log; no raw session log is published"
+      },
+      {
+        "command": [
+          "python3",
+          "scripts/test_bench_linux.py",
+          "-v"
+        ],
+        "elapsed_s": 0.216,
+        "exit_code": 0,
+        "log": "06.log",
+        "log_scope": "Local gate log; no raw session log is published"
+      },
+      {
+        "command": [
+          "python3",
+          "scripts/test_install.py",
+          "-v"
+        ],
+        "elapsed_s": 0.366,
+        "exit_code": 0,
+        "log": "07.log",
+        "log_scope": "Local gate log; no raw session log is published"
+      },
+      {
+        "command": [
+          "cargo",
+          "build",
+          "--release",
+          "--locked",
+          "--offline"
+        ],
+        "elapsed_s": 27.326,
+        "exit_code": 0,
+        "log": "08.log",
+        "log_scope": "Local gate log; no raw session log is published"
+      },
+      {
+        "command": [
+          "python3",
+          "src/gui/test_management.py",
+          "--binary",
+          "release/zmcl",
+          "-v"
+        ],
+        "elapsed_s": 1.216,
+        "exit_code": 0,
+        "log": "09.log",
+        "log_scope": "Local gate log; no raw session log is published"
+      }
+    ],
+    "verified_source_commit": "35eb8a3242a6ba637266ba1480354138389c9cb0",
+    "version": "0.1.1",
+    "zgpui": "5b268da910639abd2fb8e581acb4f6eed50b7516"
+  },
+  "test_counts": {
+    "rust_application": 66,
+    "rust_core": 19,
+    "python_package_metadata": 13,
+    "python_base_benchmark": 7,
+    "python_installer": 21,
+    "python_gui_management_file_roundtrips": 5,
+    "real_native_management_flows": 6,
+    "gui_activity_trials": 3
+  },
+  "package": {
+    "app_source_commit": "35eb8a3242a6ba637266ba1480354138389c9cb0",
+    "archive": "zmcl-0.1.1-linux-x86_64.tar.gz",
+    "binary_bytes": 1439712,
+    "binary_sha256": "a28998952b42d09f652ac95da47ddb15930cd556b6fa4e9b7e7ebbd23a4ac2e9",
+    "bytes": 664850,
+    "checks": {
+      "archive_paths_confined": true,
+      "checksum_sidecar_verified": true,
+      "file_sizes_and_sha256_match": true,
+      "installation": {
+        "clean_install_uninstall": {
+          "installed_files": [
+            {
+              "bytes": 1439712,
+              "path": "bin/zmcl",
+              "sha256": "a28998952b42d09f652ac95da47ddb15930cd556b6fa4e9b7e7ebbd23a4ac2e9"
+            },
+            {
+              "bytes": 301,
+              "path": "share/icons/hicolor/scalable/apps/zmcl.svg",
+              "sha256": "c6053bfef9e54d4d5506fe2575508355cae50133f18dc3f9692e3970d13915a5"
+            },
+            {
+              "bytes": 256,
+              "path": "share/applications/zmcl.desktop",
+              "sha256": "4263116e1fd0ade9a27802d0a544dbe2c2c32db1bd60ca626356565591910077"
+            },
+            {
+              "bytes": 401,
+              "path": "share/zmcl/install.json",
+              "sha256": "4d00f7a0862b2a909491dfbd8d955de3ac49d5199d59b1093191a44b269b2553"
+            }
+          ],
+          "installed_regular_file_bytes": 1440670,
+          "installed_regular_file_count": 4,
+          "passed": true,
+          "prefix_character_count": 92,
+          "simulated_game_data_preserved_inside_and_outside_prefix": true,
+          "size_scope": "Binary, icon, desktop entry and install manifest; desktop size depends on the prefix."
+        },
+        "command_count": 5,
+        "commands": [
+          {
+            "exit_code": 0,
+            "expected_exit_code": 0,
+            "operation": "install",
+            "stdout": "<private-test>/clean prefix/bin/zmcl\n"
+          },
+          {
+            "exit_code": 0,
+            "expected_exit_code": 0,
+            "operation": "installed-version",
+            "stdout": "zmcl 0.1.1\n"
+          },
+          {
+            "exit_code": 0,
+            "expected_exit_code": 0,
+            "operation": "clean-uninstall",
+            "stdout": "Removed zmcl installation. Minecraft instances, saves and credentials are preserved.\n"
+          },
+          {
+            "exit_code": 0,
+            "expected_exit_code": 0,
+            "operation": "install-for-modified-file",
+            "stdout": "<private-test>/modified prefix/bin/zmcl\n"
+          },
+          {
+            "exit_code": 1,
+            "expected_exit_code": 1,
+            "operation": "modified-file-uninstall-refusal",
+            "stderr": "zmcl installer: Modified files preserved: share/applications/zmcl.desktop\n"
+          }
+        ],
+        "expected_protection_failures": 1,
+        "game_started": false,
+        "gui_started": false,
+        "modified_file_protection": {
+          "install_manifest_retained": true,
+          "modified_file": "share/applications/zmcl.desktop",
+          "modified_file_preserved": true,
+          "passed": true,
+          "simulated_game_data_preserved": true,
+          "unchanged_binary_and_icon_removed": true
+        },
+        "performed": true,
+        "private_test_prefixes_cleaned": true
+      },
+      "markdown_link_rewrites": {
+        "README.md": 13,
+        "docs/FEATURES.md": 42
+      },
+      "no_game_java_cache_screenshots_or_logs_bundled": true,
+      "no_relative_markdown_links_outside_code": true,
+      "regular_files_only": true,
+      "source_documents_unchanged": true
+    },
+    "file_count": 7,
+    "files": [
+      {
+        "bytes": 1070,
+        "path": "LICENSE",
+        "sha256": "97016fcf641f0ebb5c3fb6a0eda2e2bec82aecd443f3acd24a536499d5fa28a4"
+      },
+      {
+        "bytes": 10473,
+        "path": "README.md",
+        "sha256": "ec90a1f8a970ddbc59c1e564b0da55d98b82d37ca71c38764643215fb85b47cb"
+      },
+      {
+        "bytes": 301,
+        "path": "assets/zmcl.svg",
+        "sha256": "c6053bfef9e54d4d5506fe2575508355cae50133f18dc3f9692e3970d13915a5"
+      },
+      {
+        "bytes": 24000,
+        "path": "docs/FEATURES.md",
+        "sha256": "4950e7697e853a64cad3f52833ba06299ecddad7795d27edf215d1ea2f976520"
+      },
+      {
+        "bytes": 4218,
+        "path": "release.json",
+        "sha256": "9d403f498efedd10cecb128eea054660b61a8ac1e7a9701ed9b7801ef33d59e1"
+      },
+      {
+        "bytes": 10548,
+        "path": "scripts/install.py",
+        "sha256": "baa67ea001bd464fae3d5b96582e9f95ea7f54f5ce82f7c195365412247993c5"
+      },
+      {
+        "bytes": 1439712,
+        "path": "zmcl",
+        "sha256": "a28998952b42d09f652ac95da47ddb15930cd556b6fa4e9b7e7ebbd23a4ac2e9"
+      }
+    ],
+    "packager": {
+      "git_head_at_packaging": "35eb8a3242a6ba637266ba1480354138389c9cb0",
+      "identity_note": "The script digest identifies the executed packager; HEAD alone does not identify uncommitted script changes.",
+      "path": "scripts/package.py",
+      "sha256": "f6e78d14150faabb78c99c05e6eaa18f1fa8d5e3270511a611455e63942377cf",
+      "working_tree_modified": false
+    },
+    "passed": true,
+    "platform": "linux-x86_64",
+    "runtime_dependencies": {
+      "archive_metadata_and_process_helpers": "Python 3 standard library, started on demand.",
+      "bundled_runtimes": [],
+      "downloads": "System curl with HTTPS and its certificate store.",
+      "horizon": "Separately downloaded official Horizon launcher and its legitimate game preparation.",
+      "horizon_signature_verification": "Optional system OpenSSL with Ed25519 verification support.",
+      "linux_account_secrets": "secret-tool and a desktop Secret Service for account credential operations.",
+      "linux_direct_elf_fontconfig_version_basis": {
+        "FcConfigSetDefaultSubstitute": "2.17.0"
+      },
+      "linux_direct_elf_glibc_symbol_versions": [
+        "2.2.5",
+        "2.3",
+        "2.3.4",
+        "2.4",
+        "2.9",
+        "2.14",
+        "2.15",
+        "2.16",
+        "2.17",
+        "2.18",
+        "2.27",
+        "2.28",
+        "2.29",
+        "2.30",
+        "2.32",
+        "2.33",
+        "2.34",
+        "2.39"
+      ],
+      "linux_direct_elf_minimum_fontconfig": "2.17.0",
+      "linux_direct_elf_minimum_glibc": "2.39",
+      "linux_direct_elf_needed": [
+        "libX11.so.6",
+        "libc.so.6",
+        "libfontconfig.so.1",
+        "libfreetype.so.6",
+        "libgcc_s.so.1"
+      ],
+      "linux_fontconfig_scope": "Known ABI floor from mandatory undefined ELF symbols, currently FcConfigSetDefaultSubstitute (Fontconfig 2.17.0). Null means no floor was established by this check, not compatibility with all versions. Source-level fallbacks do not remove the requirements of this prebuilt executable.",
+      "linux_glibc_scope": "Highest GLIBC_* version required directly by this executable; this is not a complete distribution compatibility test. Shared libraries and external helpers have their own requirements.",
+      "minecraft": "A compatible system or separately downloaded managed Java runtime; game files are separate.",
+      "native_gui": "Linux X11 or XWayland; CPU software rendering, with no direct OpenGL ELF dependency. Font libraries: FreeType, Fontconfig >= 2.17.0.",
+      "scope": "These dependencies and their files/processes are outside the launcher payload; only Linux x86_64 is accepted by this package-install test."
+    },
+    "schema": 1,
+    "sha256": "c61a83ce918d7fe3d58a080bc41bc1c5f301c259396cc4a96a5acf81c3ee9f0b",
+    "unpacked_bytes": 1490322,
+    "unpacked_metric": "Sum of regular-file content bytes; excludes archive headers and filesystem allocation."
+  },
+  "manifest": {
+    "app_source_commit": "35eb8a3242a6ba637266ba1480354138389c9cb0",
+    "application": "zmcl",
+    "binary": {
+      "bytes": 1439712,
+      "path": "zmcl",
+      "sha256": "a28998952b42d09f652ac95da47ddb15930cd556b6fa4e9b7e7ebbd23a4ac2e9"
+    },
+    "files": [
+      {
+        "bytes": 1070,
+        "path": "LICENSE",
+        "sha256": "97016fcf641f0ebb5c3fb6a0eda2e2bec82aecd443f3acd24a536499d5fa28a4"
+      },
+      {
+        "bytes": 10473,
+        "path": "README.md",
+        "sha256": "ec90a1f8a970ddbc59c1e564b0da55d98b82d37ca71c38764643215fb85b47cb"
+      },
+      {
+        "bytes": 301,
+        "path": "assets/zmcl.svg",
+        "sha256": "c6053bfef9e54d4d5506fe2575508355cae50133f18dc3f9692e3970d13915a5"
+      },
+      {
+        "bytes": 24000,
+        "path": "docs/FEATURES.md",
+        "sha256": "4950e7697e853a64cad3f52833ba06299ecddad7795d27edf215d1ea2f976520"
+      },
+      {
+        "bytes": 10548,
+        "path": "scripts/install.py",
+        "sha256": "baa67ea001bd464fae3d5b96582e9f95ea7f54f5ce82f7c195365412247993c5"
+      },
+      {
+        "bytes": 1439712,
+        "path": "zmcl",
+        "sha256": "a28998952b42d09f652ac95da47ddb15930cd556b6fa4e9b7e7ebbd23a4ac2e9"
+      }
+    ],
+    "manifest_scope": "files excludes release.json; archive and manifest digests are recorded outside this archive.",
+    "markdown_links": {
+      "repository_branch": "main",
+      "rewritten_counts": {
+        "README.md": 13,
+        "docs/FEATURES.md": 42
+      }
+    },
+    "packager": {
+      "git_head_at_packaging": "35eb8a3242a6ba637266ba1480354138389c9cb0",
+      "identity_note": "The script digest identifies the executed packager; HEAD alone does not identify uncommitted script changes.",
+      "path": "scripts/package.py",
+      "sha256": "f6e78d14150faabb78c99c05e6eaa18f1fa8d5e3270511a611455e63942377cf",
+      "working_tree_modified": false
+    },
+    "platform": "linux-x86_64",
+    "platform_basis": "Packaging host; native executable required.",
+    "repository": "https://github.com/LIghtJUNction/zmcl",
+    "runtime_dependencies": {
+      "archive_metadata_and_process_helpers": "Python 3 standard library, started on demand.",
+      "bundled_runtimes": [],
+      "downloads": "System curl with HTTPS and its certificate store.",
+      "horizon": "Separately downloaded official Horizon launcher and its legitimate game preparation.",
+      "horizon_signature_verification": "Optional system OpenSSL with Ed25519 verification support.",
+      "linux_account_secrets": "secret-tool and a desktop Secret Service for account credential operations.",
+      "linux_direct_elf_fontconfig_version_basis": {
+        "FcConfigSetDefaultSubstitute": "2.17.0"
+      },
+      "linux_direct_elf_glibc_symbol_versions": [
+        "2.2.5",
+        "2.3",
+        "2.3.4",
+        "2.4",
+        "2.9",
+        "2.14",
+        "2.15",
+        "2.16",
+        "2.17",
+        "2.18",
+        "2.27",
+        "2.28",
+        "2.29",
+        "2.30",
+        "2.32",
+        "2.33",
+        "2.34",
+        "2.39"
+      ],
+      "linux_direct_elf_minimum_fontconfig": "2.17.0",
+      "linux_direct_elf_minimum_glibc": "2.39",
+      "linux_direct_elf_needed": [
+        "libX11.so.6",
+        "libc.so.6",
+        "libfontconfig.so.1",
+        "libfreetype.so.6",
+        "libgcc_s.so.1"
+      ],
+      "linux_fontconfig_scope": "Known ABI floor from mandatory undefined ELF symbols, currently FcConfigSetDefaultSubstitute (Fontconfig 2.17.0). Null means no floor was established by this check, not compatibility with all versions. Source-level fallbacks do not remove the requirements of this prebuilt executable.",
+      "linux_glibc_scope": "Highest GLIBC_* version required directly by this executable; this is not a complete distribution compatibility test. Shared libraries and external helpers have their own requirements.",
+      "minecraft": "A compatible system or separately downloaded managed Java runtime; game files are separate.",
+      "native_gui": "Linux X11 or XWayland; CPU software rendering, with no direct OpenGL ELF dependency. Font libraries: FreeType, Fontconfig >= 2.17.0.",
+      "scope": "These dependencies and their files/processes are outside the launcher payload; only Linux x86_64 is accepted by this package-install test."
+    },
+    "schema": 1,
+    "source_identity_basis": "Explicit --source-commit; never inferred from an existing executable.",
+    "version": "0.1.1"
+  },
+  "scope": {
+    "ordinary_acceptance": "Local; no remote acceptance CI was triggered",
+    "formal_upstream_release": "Separate zgpui 0.1.2 official 12-job release workflow",
+    "platform": "Linux x86_64",
+    "new_minecraft_or_java_run": false,
+    "new_microsoft_sign_in": false,
+    "new_real_server_run": false,
+    "management_data": "Synthetic small local fixtures; see memory and GUI evidence",
+    "upstream_multi_platform_release_does_not_prove_zmcl_multi_platform_gui_acceptance": true
+  }
+}

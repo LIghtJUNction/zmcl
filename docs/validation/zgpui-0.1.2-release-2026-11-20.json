@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "crate": "zgpui",
+  "version": "0.1.2",
+  "source_commit": "5b268da910639abd2fb8e581acb4f6eed50b7516",
+  "source_tree": "c211930a5db7cc58666ec6ece72df423e9a41181",
+  "formal_release": {
+    "url": "https://github.com/LIghtJUNction/zgpui/actions/runs/44695292166",
+    "conclusion": "success",
+    "jobs": 12,
+    "platforms": [
+      "Linux core/OpenGL/CPU",
+      "macOS core/native",
+      "Windows core/native"
+    ],
+    "no_std_targets": [
+      "wasm32-unknown-unknown",
+      "x86_64-unknown-none"
+    ]
+  },
+  "registry": {
+    "download": "https://static.crates.io/crates/zgpui/zgpui-0.1.2.crate",
+    "bytes": 68613,
+    "files": 34,
+    "sha256": "0c5cddf5d0ed86ccb9cf21e035585146cf5aff0e316301bc037684b3c51b1046",
+    "index_matches": true,
+    "yanked": false,
+    "vcs_commit": "5b268da910639abd2fb8e581acb4f6eed50b7516"
+  },
+  "local_checks": {
+    "native_backends": [
+      "native",
+      "linux-software"
+    ],
+    "font_sanitizer_cases": 5,
+    "software_sanitizer_cases": 6,
+    "real_x11_frames_per_build": 25,
+    "clippy_warnings_denied": true,
+    "no_std_targets_passed": 2,
+    "package_verified": true,
+    "zero_cargo_dependencies": true
+  },
+  "scope": "Source release verification; not a whole-application memory guarantee."
+}

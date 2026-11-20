@@ -1,11 +1,36 @@
 # zmcl 开发与验收报告
 
-## 当前源码增量
+## v0.1.1 发行验收
 
-AUR `zmcl-bin 0.1.0-1` 已公开，并通过从公共仓库 fresh clone、构建、隔离 pacman 安装/重装/卸载验收，见[安装证据](validation/aur-install-2026-11-20.json)。新原生管理界面已在 [9206b836](https://github.com/LIghtJUNction/zmcl/commit/9206b8366324bdaf701c2890fcdafb2656f7d100) 提交；[六项窗口与文件往返](validation/gui-management-2026-11-20.json)包括世界导入/导出、备份确认恢复、保留未托管资源和服务器 EULA 拒绝。
+报告日期：2026-11-20（Asia/Taipei）。本版应用源码固定为 [35eb8a3](https://github.com/LIghtJUNction/zmcl/commit/35eb8a3242a6ba637266ba1480354138389c9cb0)，实际使用 zgpui 0.1.2 / `5b268da910639abd2fb8e581acb4f6eed50b7516` 的原生 CPU 后端。核心保持 `no_std + alloc`。
 
-统一 zgpui 的[消费者验收](validation/zgpui-consumer-2026-11-20.json)另外记录实际 CPU 后端构建、no_std 核心、严格 Clippy 及相同原生管理流程。它是主线源码增量，不改变已发行 v0.1.0 包的身份，也不把功能验收当作低于 10 MiB 的证据。
+[GitHub v0.1.1](https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.1) 已公开；[AUR zmcl-bin](https://aur.archlinux.org/packages/zmcl-bin) 为0.1.1-1。归档664,850字节，程序1,439,712字节，分别为 SHA-256 `c61a83ce918d7fe3d58a080bc41bc1c5f301c259396cc4a96a5acf81c3ee9f0b` 和 `a28998952b42d09f652ac95da47ddb15930cd556b6fa4e9b7e7ebbd23a4ac2e9`。glibc≥2.39、Fontconfig≥2.17.0 是这一预编译 ELF 的实际要求。
 
+| 本版检查 | 实际结果 | 证据 |
+| --- | --- | --- |
+| Rust 与核心 | 66项应用、19项核心，共85项通过；fmt、严格Clippy、no_std目标和release构建通过 | [本地门禁](validation/release-0.1.1-2026-11-20.json) |
+| 受影响 Python | 打包元数据13项、基础测量7项、安装器21项、GUI管理文件往返5项通过 | 同上 |
+| 原生管理界面 | 世界目录/ZIP导入、导出回导、备份确认恢复、未托管资源保留、服务器EULA拒绝等6个流程通过 | [最终测量与功能记录](measurements/2026-11-20-zmcl-0.1.1-summary.json) |
+| 官方发行文件 | 固定源码与打包提交；归档/校验/manifest回读一致；用户级安装、卸载与改动文件保护通过 | [发行证据](validation/release-0.1.1-2026-11-20.json) |
+| AUR 与 host 安装 | 公共新克隆、makepkg、namcap、布局通过，正常升级0.1.0-1→0.1.1-1，RPC/yay/paru回读新版本 | [AUR证据](validation/aur-install-0.1.1-2026-11-20.json) |
+| 已安装原生窗口 | 创建1.21.1 Vanilla实例、CLI读回、进入管理页、正常退出 | [安装后窗口证据](validation/installed-gui-0.1.1-2026-11-20.json) |
+| 上游正式发布 | zgpui 0.1.2正式流程12任务成功，真实crate/索引/VCS身份匹配 | [上游发布证据](validation/zgpui-0.1.2-release-2026-11-20.json) |
+
+这次管理验收使用合成存档和本地文件夹具。它证明上述六个流程，不能解释为整个GUI或XMCL全部功能已完成；没有新增真实Microsoft登录、在线GUI资源下载或服务器联机验收。旧版真实游戏主菜单证据保留在下文，未改标成0.1.1重新执行。
+
+![包管理器安装的0.1.1成功创建实例](validation/images/zmcl-0.1.1-aur-installed.jpg)
+
+### 内存结论与限制
+
+空库默认首页静置的三轮汇总为RSS **9,784 KiB**、PSS **4,647 KiB**，主进程与相关树一致。但重绘RSS观察峰值为13,192 KiB，管理启动为16,972 KiB；管理动作相关树峰值为60,860 KiB RSS / 49,269 KiB PSS，包含应用派生的CLI与Python。**全状态低于10 MiB的目标未完成。**
+
+管理采样有129/2,938条包含缺读，状态保留为 `needs_review`，完整树中位数和完整CPU总量为 `null`；功能通过与内存采样完整性不是同一判断。第二轮重绘后有换页，Xvfb及测试控制器成本另列，共享宿主持续有外部构建任务。完整条件、峰值来源、CPU和未计入项见 [PERFORMANCE.md](PERFORMANCE.md)。
+
+### 代码与依赖传播
+
+本次GUI增量从 [9206b836](https://github.com/LIghtJUNction/zmcl/commit/9206b8366324bdaf701c2890fcdafb2656f7d100) 接入世界、备份、资源与服务器管理；[fcc214bf](https://github.com/LIghtJUNction/zmcl/commit/fcc214bfb01072607b4ca17527dcc8c87ec1d224) 消费真实统一原生后端；[ce70fef](https://github.com/LIghtJUNction/zmcl/commit/ce70fef498cb0a5e1bab530cddc80e2238252a40) 修正预编译Fontconfig ABI记录；最终35eb固定0.1.1及0.1.2依赖；[d7485de](https://github.com/LIghtJUNction/zmcl/commit/d7485defab8e8fa398a6fd272bad3ffcc183a7d7) 同步实际已发布AUR配方。日常验收在本地执行，未以远端CI代替；上游正式发行流程及网站发布正常执行。
+
+完整功能差距仍按固定XMCL v0.73.1记录于 [FEATURES.md](FEATURES.md)，跨仓库责任和提交见 [DEPENDENCIES.md](DEPENDENCIES.md)。最初统一到zgpui0.1.1的[旧消费者验收](validation/zgpui-consumer-2026-11-20.json)保留原身份。
 ## v0.1.0 冻结验收
 
 以下编号章节保留 v0.1.0 的原始构建、游戏和内存结果。后续版本按独立记录追加，不覆盖旧样本。

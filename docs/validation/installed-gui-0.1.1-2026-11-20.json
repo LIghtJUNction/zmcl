@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "checked_at_utc": "2026-11-20T08:29:32.970377+00:00",
+  "package": {
+    "exit_code": 0,
+    "stdout": "zmcl-bin 0.1.1-1\n",
+    "stderr": ""
+  },
+  "version": {
+    "exit_code": 0,
+    "stdout": "zmcl 0.1.1\n",
+    "stderr": ""
+  },
+  "binary_bytes": 1439712,
+  "binary_sha256": "a28998952b42d09f652ac95da47ddb15930cd556b6fa4e9b7e7ebbd23a4ac2e9",
+  "instance_list": {
+    "exit_code": 0,
+    "stdout": "{\"instances\":[{\"id\":\"aur-0-1-1-check\",\"name\":\"aur-0-1-1-check\",\"version\":\"1.21.1\",\"loader\":\"vanilla\",\"loader_version\":\"\",\"memory_mib\":2048,\"java\":\"\",\"installed\":false}]}\n",
+    "stderr": ""
+  },
+  "instance_show": {
+    "exit_code": 0,
+    "stdout": "{\"id\":\"aur-0-1-1-check\",\"name\":\"aur-0-1-1-check\",\"version\":\"1.21.1\",\"loader\":\"vanilla\",\"loader_version\":\"\",\"memory_mib\":2048,\"java\":\"\",\"installed\":false}\n",
+    "stderr": ""
+  },
+  "window": {
+    "width": 1120,
+    "height": 760,
+    "private_display": true,
+    "native_gui": true
+  },
+  "observed_actions": [
+    "opened installed native GUI",
+    "opened new instance form",
+    "entered aur-0-1-1-check and 1.21.1 Vanilla",
+    "clicked Create instance",
+    "observed created instance and success notice",
+    "opened Manage and observed Worlds/Backups/Resources",
+    "clicked Quit",
+    "verified empty window list",
+    "stopped owned private desktop"
+  ],
+  "scope": {
+    "new_isolated_data_root": true,
+    "real_user_data_changed": false,
+    "game_downloaded": false,
+    "game_launched": false,
+    "microsoft_sign_in": false,
+    "server_started": false
+  },
+  "passed": true,
+  "source_commit": "35eb8a3242a6ba637266ba1480354138389c9cb0",
+  "aur_commit": "15bdd71d63db740fadf13edbe9d876f2fb0f1bc1",
+  "screenshot": "images/zmcl-0.1.1-aur-installed.jpg"
+}

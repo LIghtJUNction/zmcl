@@ -1,0 +1,183 @@
+{
+  "aur": {
+    "binary_preserved_without_restripping": true,
+    "dependencies": [
+      "glibc>=2.39",
+      "libgcc",
+      "libx11",
+      "freetype2",
+      "fontconfig>=2.17.0",
+      "hicolor-icon-theme",
+      "curl",
+      "python"
+    ],
+    "git_url": "https://aur.archlinux.org/zmcl-bin.git",
+    "master_commit": "15bdd71d63db740fadf13edbe9d876f2fb0f1bc1",
+    "name": "zmcl-bin",
+    "parent_commit": "e1fd82532d8b8a8b9548386fda9fd6305fd232da",
+    "public_master_readback": "15bdd71d63db740fadf13edbe9d876f2fb0f1bc1",
+    "recipe_files": {
+      ".SRCINFO": {
+        "bytes": 1172,
+        "sha256": "e27cdeb80ee5d9de31e19eaa25fda4cdf44d035632fd32c5cd2b5f4c45f2890e"
+      },
+      "PKGBUILD": {
+        "bytes": 1622,
+        "sha256": "1ee98a63cb503009b9755da3ba0924973f9c5a8aa17d5190c50a175696f5d3ff"
+      }
+    },
+    "url": "https://aur.archlinux.org/packages/zmcl-bin",
+    "version": "0.1.1-1"
+  },
+  "fresh_build": {
+    "clone_commit": "15bdd71d63db740fadf13edbe9d876f2fb0f1bc1",
+    "makepkg_passed": true,
+    "package_bytes": 661047,
+    "package_name": "zmcl-bin-0.1.1-1-x86_64.pkg.tar.zst",
+    "package_sha256": "60168d68a60c1702c14b6c216cee762e05735105f315ce7e38a7ebb39a45041a",
+    "payload_checks": {
+      "desktop_entry_valid": true,
+      "exact_package_file_set": true,
+      "installed_layout_version_executed": true,
+      "official_binary_sha256_preserved": true,
+      "regular_payload_files": true,
+      "runtime_libraries_resolved_on_test_host": true
+    },
+    "payload_regular_files": 7,
+    "source_checksums_verified": true,
+    "srcinfo_matches_regeneration": true,
+    "tracked_recipe_files_unchanged": true
+  },
+  "host_upgrade": {
+    "after": {
+      "binary_bytes": 1439712,
+      "binary_path": "/usr/bin/zmcl",
+      "binary_sha256": "a28998952b42d09f652ac95da47ddb15930cd556b6fa4e9b7e7ebbd23a4ac2e9",
+      "manifest_sha256": "9d403f498efedd10cecb128eea054660b61a8ac1e7a9701ed9b7801ef33d59e1",
+      "package": "zmcl-bin 0.1.1-1",
+      "pacman_integrity": {
+        "altered_files": 0,
+        "total_files": 19
+      },
+      "version": "zmcl 0.1.1"
+    },
+    "before": {
+      "binary_sha256": "8139bab8416ec9720bc4c9e11765944755f85bbe778b5cf404863bd6fb3ba30c",
+      "package": "zmcl-bin 0.1.0-1",
+      "pacman_integrity": {
+        "altered_files": 0,
+        "total_files": 19
+      }
+    },
+    "desktop_entry_valid": true,
+    "method": "Normal pacman package upgrade from the verified fresh AUR build",
+    "runtime_libraries_resolved": true
+  },
+  "namcap": {
+    "package_exit_code": 0,
+    "package_warnings": [
+      "zmcl-bin W: Dependency included, but may not be needed ('curl')",
+      "zmcl-bin W: Dependency included, but may not be needed ('python')"
+    ],
+    "reason_for_retaining_warned_dependencies": "curl and Python 3 are invoked on demand by application operations; ELF-only analysis does not show those subprocess dependencies.",
+    "recipe_diagnostics": [],
+    "recipe_exit_code": 0
+  },
+  "passed": true,
+  "public_metadata": {
+    "final": {
+      "dependencies": [
+        "glibc>=2.39",
+        "libgcc",
+        "libx11",
+        "freetype2",
+        "fontconfig>=2.17.0",
+        "hicolor-icon-theme",
+        "curl",
+        "python"
+      ],
+      "helper_exit_codes": {
+        "paru": 0,
+        "yay": 0
+      },
+      "helper_versions": {
+        "paru": "0.1.1-1",
+        "yay": "0.1.1-1"
+      },
+      "http_date_gmt": "Fri, 20 Nov 2026 08:30:32 GMT",
+      "passed": true,
+      "provides": [
+        "zmcl=0.1.1"
+      ],
+      "rpc_versions": {
+        "rpc-current": "0.1.1-1",
+        "rpc-legacy": "0.1.1-1",
+        "rpc-search": "0.1.1-1"
+      }
+    },
+    "initial": {
+      "note": "Initial RPC/helper metadata still reported the old package while public git already contained the new recipe; this result is retained.",
+      "paru_version": "0.1.0-1",
+      "public_git_master": "15bdd71d63db740fadf13edbe9d876f2fb0f1bc1",
+      "rpc_version": "0.1.0-1",
+      "yay_version": "0.1.0-1"
+    }
+  },
+  "release": {
+    "abi": {
+      "direct_elf_needed": [
+        "libX11.so.6",
+        "libc.so.6",
+        "libfontconfig.so.1",
+        "libfreetype.so.6",
+        "libgcc_s.so.1"
+      ],
+      "direct_opengl_dependency": false,
+      "fontconfig_version_basis": {
+        "FcConfigSetDefaultSubstitute": "2.17.0"
+      },
+      "minimum_fontconfig": "2.17.0",
+      "minimum_glibc": "2.39",
+      "scope": "Requirements of this prebuilt ELF; source fallback compatibility does not lower its runtime ABI requirements. This is not a complete distribution compatibility test."
+    },
+    "app_source_commit": "35eb8a3242a6ba637266ba1480354138389c9cb0",
+    "archive": {
+      "bytes": 664850,
+      "name": "zmcl-0.1.1-linux-x86_64.tar.gz",
+      "sha256": "c61a83ce918d7fe3d58a080bc41bc1c5f301c259396cc4a96a5acf81c3ee9f0b"
+    },
+    "binary": {
+      "bytes": 1439712,
+      "executed_version": "zmcl 0.1.1",
+      "sha256": "a28998952b42d09f652ac95da47ddb15930cd556b6fa4e9b7e7ebbd23a4ac2e9"
+    },
+    "channel": "Linux development preview",
+    "checksum_sidecar": {
+      "bytes": 97,
+      "matches_archive": true,
+      "sha256": "e1dee82ad6ccaedacdaff558ccfacee7840716c6400f9e385047be98dc99ebd5"
+    },
+    "download_method": "Unauthenticated public HTTPS; independent of GitHub CLI upload/download",
+    "manifest": {
+      "bytes": 4218,
+      "name": "release.json",
+      "sha256": "9d403f498efedd10cecb128eea054660b61a8ac1e7a9701ed9b7801ef33d59e1"
+    },
+    "platform": "linux-x86_64",
+    "url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.1",
+    "version": "0.1.1"
+  },
+  "schema": 1,
+  "scope": {
+    "eula_acceptance": false,
+    "gui_acceptance": "Recorded separately by the main coordinator using the installed application",
+    "gui_or_game_started_by_this_validation": false,
+    "package_payload": "Seven regular files under /usr; no package install script",
+    "private_absolute_paths_or_complete_command_logs_included": false,
+    "real_game_download": false,
+    "system_wide_upgrade": false,
+    "tested_platform": "Arch Linux x86_64 on the development host",
+    "user_data_operations": false
+  },
+  "validation_date": "2026-11-20"
+}
