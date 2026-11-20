@@ -80,6 +80,8 @@ enum Page {
     Packs,
     Accounts,
     System,
+    Manage,
+    Servers,
 }
 
 #[derive(Default, Clone)]
@@ -106,8 +108,357 @@ struct Account {
     kind: String,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum ManagementPage {
+    Worlds,
+    Backups,
+    Resources,
+    Servers,
+}
+
+#[derive(Clone, Debug)]
+enum ManagementTask {
+    Worlds(String),
+    WorldImport {
+        instance: String,
+        path: String,
+        name: String,
+    },
+    WorldExport {
+        instance: String,
+        name: String,
+        path: String,
+    },
+    WorldPath {
+        instance: String,
+        name: String,
+    },
+    Backups(String),
+    BackupCreate {
+        instance: String,
+        label: String,
+    },
+    BackupRestore {
+        instance: String,
+        backup: String,
+    },
+    Resources(String),
+    ResourceAdd {
+        instance: String,
+        kind: String,
+        project: String,
+    },
+    ResourceToggle {
+        instance: String,
+        kind: String,
+        project: String,
+        enabled: bool,
+    },
+    ResourceRemove {
+        instance: String,
+        kind: String,
+        project: String,
+    },
+    ResourceUpdate {
+        instance: String,
+        kind: String,
+        project: String,
+    },
+    ResourceRecover(String),
+    Servers,
+    ServerCreate {
+        id: String,
+        version: String,
+    },
+    ServerInstall(String),
+    ServerStart(String),
+    ServerStop(String),
+}
+
+impl ManagementTask {
+    fn label(&self) -> &'static str {
+        match self {
+            Self::Worlds(_) => "Reading worlds",
+            Self::WorldImport { .. } => "Importing world",
+            Self::WorldExport { .. } => "Exporting world",
+            Self::WorldPath { .. } => "Reading world folder",
+            Self::Backups(_) => "Reading backups",
+            Self::BackupCreate { .. } => "Creating backup",
+            Self::BackupRestore { .. } => "Restoring backup",
+            Self::Resources(_) => "Reading resources",
+            Self::ResourceAdd { .. } => "Adding resource",
+            Self::ResourceToggle { .. } => "Updating resource state",
+            Self::ResourceRemove { .. } => "Removing resource",
+            Self::ResourceUpdate { .. } => "Updating resource",
+            Self::ResourceRecover(_) => "Recovering resource operation",
+            Self::Servers => "Reading servers",
+            Self::ServerCreate { .. } => "Creating server",
+            Self::ServerInstall(_) => "Installing server",
+            Self::ServerStart(_) => "Starting server",
+            Self::ServerStop(_) => "Stopping server",
+        }
+    }
+
+    fn list_target(&self) -> Option<(ManagementPage, &str)> {
+        match self {
+            Self::Worlds(id) => Some((ManagementPage::Worlds, id)),
+            Self::Backups(id) => Some((ManagementPage::Backups, id)),
+            Self::Resources(id) => Some((ManagementPage::Resources, id)),
+            Self::Servers => Some((ManagementPage::Servers, "")),
+            _ => None,
+        }
+    }
+
+    fn refresh(&self) -> Option<Self> {
+        Some(match self {
+            Self::WorldImport { instance, .. } => Self::Worlds(instance.clone()),
+            Self::BackupCreate { instance, .. } | Self::BackupRestore { instance, .. } => {
+                Self::Backups(instance.clone())
+            }
+            Self::ResourceAdd { instance, .. }
+            | Self::ResourceToggle { instance, .. }
+            | Self::ResourceRemove { instance, .. }
+            | Self::ResourceUpdate { instance, .. } => Self::Resources(instance.clone()),
+            Self::ResourceRecover(instance) => Self::Resources(instance.clone()),
+            Self::ServerCreate { .. }
+            | Self::ServerInstall(_)
+            | Self::ServerStart(_)
+            | Self::ServerStop(_) => Self::Servers,
+            _ => return None,
+        })
+    }
+
+    fn success(&self) -> &'static str {
+        match self {
+            Self::WorldImport { .. } => "World imported.",
+            Self::WorldExport { .. } => "World exported.",
+            Self::WorldPath { .. } => "World folder path copied.",
+            Self::BackupCreate { .. } => "Backup created.",
+            Self::BackupRestore { .. } => "Backup restored. A pre-restore snapshot was saved.",
+            Self::ResourceAdd { .. } => "Resource added.",
+            Self::ResourceToggle { .. } => "Resource state updated.",
+            Self::ResourceRemove { .. } => "Resource removed. Its history is retained.",
+            Self::ResourceUpdate { .. } => "Resource updated.",
+            Self::ResourceRecover(_) => "Resource recovery complete.",
+            Self::ServerCreate { .. } => "Server created. Install it before starting.",
+            Self::ServerInstall(_) => "Server installed. Review its EULA before starting.",
+            Self::ServerStart(_) => "Server process started. Check its log for readiness.",
+            Self::ServerStop(_) => "Stop requested. Check the refreshed server state.",
+            _ => "List refreshed.",
+        }
+    }
+
+    fn args(&self) -> Vec<String> {
+        // Every user-supplied path/name is one argv item after --, never shell text.
+        let args = match self {
+            Self::Worlds(id) => vec!["world", "list", "--", id],
+            Self::WorldImport {
+                instance,
+                path,
+                name,
+            } => vec!["world", "import", "--", instance, path, name],
+            Self::WorldExport {
+                instance,
+                name,
+                path,
+            } => vec!["world", "export", "--", instance, name, path],
+            Self::WorldPath { instance, name } => vec!["world", "path", "--", instance, name],
+            Self::Backups(id) => vec!["backup", "list", "--", id],
+            Self::BackupCreate { instance, label } => {
+                vec!["backup", "create", "--", instance, label]
+            }
+            Self::BackupRestore { instance, backup } => {
+                vec!["backup", "restore", "--", instance, backup]
+            }
+            Self::Resources(id) => vec!["resources", "list", "--", id],
+            Self::ResourceAdd {
+                instance,
+                kind,
+                project,
+            } => vec!["resources", "add", "--", instance, kind, project],
+            Self::ResourceToggle {
+                instance,
+                kind,
+                project,
+                enabled,
+            } => vec![
+                "resources",
+                if *enabled { "enable" } else { "disable" },
+                "--",
+                instance,
+                kind,
+                project,
+            ],
+            Self::ResourceRemove {
+                instance,
+                kind,
+                project,
+            } => vec!["resources", "remove", "--", instance, kind, project],
+            Self::ResourceUpdate {
+                instance,
+                kind,
+                project,
+            } => vec!["resources", "update", "--", instance, kind, project],
+            Self::ResourceRecover(id) => vec!["resources", "recover", "--", id],
+            Self::Servers => vec!["server", "list"],
+            Self::ServerCreate { id, version } => {
+                vec!["server", "create", "--version", version, "--", id]
+            }
+            Self::ServerInstall(id) => vec!["server", "install", "--", id],
+            Self::ServerStart(id) => vec!["server", "start", "--", id],
+            Self::ServerStop(id) => vec!["server", "stop", "--", id],
+        };
+        args.into_iter().map(str::to_owned).collect()
+    }
+}
+
+#[derive(Clone, Debug)]
+struct ManagementRow {
+    id: String,
+    title: String,
+    detail: String,
+    kind: String,
+    enabled: bool,
+    valid: bool,
+}
+
+#[derive(Clone)]
+enum ManagementForm {
+    WorldImport,
+    WorldExport(String),
+    BackupCreate,
+    BackupRestore(String),
+    ResourceAdd,
+    ResourceRemove { kind: String, project: String },
+    ServerCreate,
+}
+
+fn management_rows(
+    page: ManagementPage,
+    bytes: &[u8],
+) -> Result<(Vec<ManagementRow>, bool), String> {
+    with_json(bytes, |root| {
+        let array = if page == ManagementPage::Resources {
+            root.get("entries").unwrap_or(root)
+        } else {
+            root
+        };
+        if array.kind() != Kind::Array {
+            return Err("Management response was not a list".into());
+        }
+        let mut rows = Vec::new();
+        for item in array.array().take(2000) {
+            let value = if page == ManagementPage::Servers {
+                item.get("server").unwrap_or(item)
+            } else {
+                item
+            };
+            let id = get_str(
+                value,
+                if page == ManagementPage::Resources {
+                    "project_id"
+                } else {
+                    "id"
+                },
+            )
+            .ok_or("Management item is missing its identifier")?;
+            let flag = |key| value.get(key).and_then(Value::as_bool).unwrap_or(false);
+            let count = |key| value.get(key).and_then(Value::as_u64).unwrap_or(0);
+            let (title, detail, enabled, valid) = match page {
+                ManagementPage::Worlds => (
+                    get_str(value, "name").unwrap_or_else(|| id.clone()),
+                    get_str(value, "error").unwrap_or_else(|| format!("Java world · {id}")),
+                    false,
+                    flag("valid"),
+                ),
+                ManagementPage::Backups => (
+                    get_str(value, "label")
+                        .filter(|s| !s.is_empty())
+                        .unwrap_or_else(|| id.clone()),
+                    get_str(value, "error").unwrap_or_else(|| {
+                        format!(
+                            "{} · {} files · verified on restore",
+                            human_bytes(count("bytes")),
+                            count("files")
+                        )
+                    }),
+                    false,
+                    flag("manifest_valid"),
+                ),
+                ManagementPage::Resources => (
+                    get_str(value, "title").unwrap_or_else(|| id.clone()),
+                    format!(
+                        "{} · {} · {}",
+                        get_str(value, "kind").unwrap_or_default(),
+                        if flag("enabled") {
+                            "Enabled"
+                        } else {
+                            "Disabled"
+                        },
+                        get_str(value, "integrity").unwrap_or_default()
+                    ),
+                    flag("enabled"),
+                    true,
+                ),
+                ManagementPage::Servers => {
+                    let process = item.get("process").unwrap_or(item);
+                    let running = process
+                        .get("running")
+                        .and_then(Value::as_bool)
+                        .unwrap_or(false);
+                    (
+                        id.clone(),
+                        format!(
+                            "Minecraft {} · {}",
+                            get_str(value, "version").unwrap_or_default(),
+                            if !flag("installed") {
+                                "Not installed".to_owned()
+                            } else {
+                                get_str(process, "state").unwrap_or_else(|| "Unknown".into())
+                            }
+                        ),
+                        running,
+                        flag("installed"),
+                    )
+                }
+            };
+            rows.push(ManagementRow {
+                id,
+                title,
+                detail,
+                kind: get_str(value, "kind").unwrap_or_default(),
+                enabled,
+                valid,
+            });
+        }
+        if page == ManagementPage::Resources
+            && let Some(manual) = root.get("unmanaged")
+        {
+            for item in manual.array().take(2000usize.saturating_sub(rows.len())) {
+                if let Some(path) = get_str(item, "path") {
+                    rows.push(ManagementRow {
+                        id: path.clone(),
+                        title: path,
+                        detail: "Unmanaged file · kept as-is".into(),
+                        kind: get_str(item, "kind").unwrap_or_default(),
+                        enabled: false,
+                        valid: false,
+                    });
+                }
+            }
+        }
+        Ok((
+            rows,
+            root.get("recovery_pending")
+                .and_then(Value::as_bool)
+                .unwrap_or(false),
+        ))
+    })
+}
+
 #[derive(Clone)]
 enum Task {
+    Manage(ManagementTask),
     Instances,
     Versions,
     Accounts,
@@ -148,6 +499,7 @@ enum Task {
 impl Task {
     fn label(&self) -> String {
         match self {
+            Self::Manage(task) => task.label().into(),
             Self::Instances => "Reading your library".into(),
             Self::Versions => "Fetching Minecraft versions".into(),
             Self::Accounts => "Reading accounts".into(),
@@ -165,6 +517,9 @@ impl Task {
     }
 
     fn silent(&self) -> bool {
+        if let Self::Manage(task) = self {
+            return task.list_target().is_some();
+        }
         matches!(
             self,
             Self::Instances | Self::Accounts | Self::Versions | Self::Storage | Self::Search { .. }
@@ -172,7 +527,11 @@ impl Task {
     }
 
     fn args(&self) -> Vec<String> {
+        if let Self::Manage(task) = self {
+            return task.args();
+        }
         let mut args: Vec<String> = match self {
+            Self::Manage(_) => unreachable!(),
             Self::Instances => vec!["instance", "list", "--json"],
             Self::Versions => vec!["versions", "--json"],
             Self::Accounts => vec!["account", "list", "--json"],
@@ -275,6 +634,15 @@ fn reader(mut stream: impl Read + Send + 'static, stderr: bool, tx: SyncSender<P
     });
 }
 
+fn command_for_task(executable: &std::path::Path, task: &Task, root: Option<&str>) -> Command {
+    let mut command = Command::new(executable);
+    if let Some(root) = root {
+        command.args(["--root", root]);
+    }
+    command.args(task.args());
+    command
+}
+
 struct Job {
     task: Task,
     child: Child,
@@ -291,12 +659,8 @@ struct Job {
 impl Job {
     fn start(task: Task, root: Option<&str>) -> Result<Self, String> {
         let executable = std::env::current_exe().map_err(|e| e.to_string())?;
-        let mut command = Command::new(executable);
-        if let Some(root) = root {
-            command.args(["--root", root]);
-        }
+        let mut command = command_for_task(&executable, &task, root);
         command
-            .args(task.args())
             .stdin(Stdio::null())
             .stdout(Stdio::piped())
             .stderr(Stdio::piped());
@@ -427,6 +791,10 @@ fn append_log(log: &mut VecDeque<String>, text: &str) {
 
 enum Action {
     Navigate(Page),
+    ManagementPage(ManagementPage),
+    ManagementSelect(String),
+    ManagementForm(ManagementForm),
+    ManagementClose,
     Start(Task),
     Select(String),
     New,
@@ -475,6 +843,14 @@ struct App {
     diagnostics: Vec<(String, String)>,
     searched: bool,
     loaded: bool,
+    management_page: ManagementPage,
+    management_rows: Vec<ManagementRow>,
+    management_selected: Option<String>,
+    management_form: Option<ManagementForm>,
+    management_value: String,
+    management_name: String,
+    management_shader: bool,
+    resource_recovery: bool,
 }
 
 impl App {
@@ -518,6 +894,14 @@ impl App {
             diagnostics: Vec::new(),
             searched: false,
             loaded: false,
+            management_page: ManagementPage::Worlds,
+            management_rows: Vec::new(),
+            management_selected: None,
+            management_form: None,
+            management_value: String::new(),
+            management_name: String::new(),
+            management_shader: false,
+            resource_recovery: false,
         }
     }
 
@@ -564,6 +948,7 @@ impl App {
                     append_log(&mut self.log, &error);
                 } else if !job.task.silent() {
                     self.notice = match &job.task {
+                        Task::Manage(task) => task.success().into(),
                         Task::Create { .. } => {
                             "Instance created. Install it when you are ready.".into()
                         }
@@ -602,6 +987,7 @@ impl App {
 
     fn apply_result(&mut self, task: &Task, bytes: &[u8]) -> Result<(), String> {
         match task {
+            Task::Manage(task) => self.apply_management_result(task, bytes)?,
             Task::Instances => {
                 self.instances = with_json(bytes, |root| {
                     let array = root.get("instances").unwrap_or(root);
@@ -754,11 +1140,48 @@ impl App {
     fn action(&mut self, action: Action) -> bool {
         match action {
             Action::Quit => return false,
+            Action::ManagementPage(page) => {
+                self.management_page = page;
+                self.management_rows.clear();
+                self.management_selected = None;
+                self.resource_recovery = false;
+                self.scroll = 0;
+                self.notice.clear();
+                self.error = false;
+                if let Some(task) = self.management_list() {
+                    self.queue.push_back(Task::Manage(task));
+                }
+            }
+            Action::ManagementSelect(id) => self.management_selected = Some(id),
+            Action::ManagementForm(form) => {
+                self.management_form = Some(form);
+                self.management_value.clear();
+                self.management_name.clear();
+                self.notice.clear();
+                self.error = false;
+            }
+            Action::ManagementClose => self.management_form = None,
             Action::Navigate(page) => {
                 self.page = page;
                 self.scroll = 0;
                 self.form = false;
                 self.show_logs = false;
+                self.management_form = None;
+                if matches!(page, Page::Manage | Page::Servers) {
+                    self.management_page = if page == Page::Servers {
+                        ManagementPage::Servers
+                    } else {
+                        ManagementPage::Worlds
+                    };
+                    self.management_rows.clear();
+                    self.management_selected = None;
+                    self.resource_recovery = false;
+                    self.notice.clear();
+                    self.error = false;
+                    if let Some(task) = self.management_list() {
+                        self.queue.push_back(Task::Manage(task));
+                    }
+                }
             }
             Action::Start(task) if !self.busy() => {
                 self.notice.clear();
@@ -813,6 +1236,7 @@ impl App {
         if matches!(event, Some(Event::Key { code: 27, .. })) {
             self.form = false;
             self.show_logs = false;
+            self.management_form = None;
         }
         self.ui.begin(event);
         let compact = c.width < 820.;
@@ -832,12 +1256,13 @@ impl App {
             (Page::Discover, "Discover", "Mods"),
             (Page::Packs, "Modpacks", "Packs"),
             (Page::Accounts, "Accounts", "Login"),
+            (Page::Servers, "Servers", "Host"),
             (Page::System, "Settings", "Info"),
         ];
-        let content_enabled = !self.form && !self.show_logs;
+        let content_enabled = !self.form && !self.show_logs && self.management_form.is_none();
         for (i, (page, label, short)) in pages.into_iter().enumerate() {
             let r = Rect::new(14., 130. + i as f32 * 54., side - 28., 42.);
-            if self.page == page {
+            if self.page == page || (self.page == Page::Manage && page == Page::Library) {
                 c.rect(r, 9., PANEL);
                 c.rect(Rect::new(14., r.y + 13., 2., 16.), 1., ACCENT);
             }
@@ -858,7 +1283,7 @@ impl App {
         }
         if self.ui.button(
             c,
-            15,
+            60,
             Rect::new(14., h - 55., side - 28., 34.),
             "Quit",
             ButtonStyle::Quiet,
@@ -885,6 +1310,7 @@ impl App {
                 Page::Packs => self.draw_packs(c, x, w, h, content_enabled),
                 Page::Accounts => self.draw_accounts(c, x, w, h, content_enabled),
                 Page::System => self.draw_system(c, x, w, h, content_enabled),
+                Page::Manage | Page::Servers => self.draw_management(c, x, w, h, content_enabled),
             };
             c.unclip();
             if page_action.is_some() {
@@ -897,6 +1323,9 @@ impl App {
         }
         if self.show_logs {
             action = self.draw_logs(c).or(action);
+        }
+        if self.management_form.is_some() {
+            action = self.draw_management_form(c).or(action);
         }
         self.ui.end();
         action
@@ -916,13 +1345,7 @@ impl App {
         enabled: bool,
     ) -> Option<Action> {
         let mut action = None;
-        Self::heading(
-            c,
-            x,
-            w,
-            "Your worlds.",
-            "A home for every way you play Minecraft.",
-        );
+        Self::heading(c, x, w, "Library", "Your Minecraft instances.");
         let busy = self.busy();
         if self.ui.button(
             c,
@@ -951,7 +1374,7 @@ impl App {
             centered(
                 c,
                 if self.loaded {
-                    "Your next adventure starts here."
+                    "No instances yet."
                 } else {
                     "Opening your library…"
                 },
@@ -964,7 +1387,7 @@ impl App {
             );
             centered(
                 c,
-                "Create an instance. Choose a version. Make it yours.",
+                "Create an instance to choose a game version and loader.",
                 x,
                 cy + 129.,
                 w,
@@ -1127,6 +1550,7 @@ impl App {
                 }));
             }
             if item.installed
+                && w >= 420.
                 && self.ui.button(
                     c,
                     113,
@@ -1138,6 +1562,16 @@ impl App {
             {
                 action = Some(Action::Start(Task::Install(item.id.clone())));
             }
+            if self.ui.button(
+                c,
+                115,
+                Rect::new(x + if w >= 420. { 280. } else { 160. }, play_y, 104., 44.),
+                "Manage",
+                ButtonStyle::Quiet,
+                enabled && !busy,
+            ) {
+                action = Some(Action::Navigate(Page::Manage));
+            }
             if self.offline && !valid_username(&self.username) {
                 c.ellipsis(
                     "Use 3–16 letters, numbers or underscores.",
@@ -1148,6 +1582,565 @@ impl App {
                     false,
                     MUTED,
                 );
+            }
+        }
+        action
+    }
+
+    fn management_list(&self) -> Option<ManagementTask> {
+        if self.management_page == ManagementPage::Servers {
+            return Some(ManagementTask::Servers);
+        }
+        let id = self.selected.clone()?;
+        Some(match self.management_page {
+            ManagementPage::Worlds => ManagementTask::Worlds(id),
+            ManagementPage::Backups => ManagementTask::Backups(id),
+            ManagementPage::Resources => ManagementTask::Resources(id),
+            ManagementPage::Servers => unreachable!(),
+        })
+    }
+
+    fn management_matches(&self, page: ManagementPage, instance: &str) -> bool {
+        if page == ManagementPage::Servers {
+            return self.page == Page::Servers;
+        }
+        self.page == Page::Manage
+            && self.management_page == page
+            && self.selected.as_deref() == Some(instance)
+    }
+
+    fn apply_management_result(
+        &mut self,
+        task: &ManagementTask,
+        bytes: &[u8],
+    ) -> Result<(), String> {
+        if let Some((page, instance)) = task.list_target() {
+            if !self.management_matches(page, instance) {
+                return Ok(());
+            }
+            let (rows, pending) = management_rows(page, bytes)?;
+            if !rows
+                .iter()
+                .any(|row| Some(&row.id) == self.management_selected.as_ref())
+            {
+                self.management_selected = rows.first().map(|row| row.id.clone());
+            }
+            self.management_rows = rows;
+            self.resource_recovery = pending;
+            return Ok(());
+        }
+        if matches!(task, ManagementTask::WorldPath { .. }) {
+            self.ui.clipboard = Some(with_json(bytes, |root| {
+                get_str(root, "path").ok_or_else(|| "World response has no folder path".into())
+            })?);
+        }
+        self.management_form = None;
+        if let Some(refresh) = task.refresh() {
+            self.queue.push_back(Task::Manage(refresh));
+        }
+        Ok(())
+    }
+
+    fn draw_management(
+        &mut self,
+        c: &mut Canvas<'_>,
+        x: f32,
+        w: f32,
+        h: f32,
+        enabled: bool,
+    ) -> Option<Action> {
+        let mut action = None;
+        let busy = self.busy();
+        let page = self.management_page;
+        let instance = self.selected.clone().unwrap_or_default();
+        let title = match page {
+            ManagementPage::Worlds => "Worlds",
+            ManagementPage::Backups => "Backups",
+            ManagementPage::Resources => "Resources",
+            ManagementPage::Servers => "Servers",
+        };
+        let subtitle = if page == ManagementPage::Servers {
+            "Local Minecraft servers. Start and stop on Linux.".to_owned()
+        } else {
+            format!("Instance: {instance}")
+        };
+        Self::heading(c, x, w, title, &subtitle);
+        if page != ManagementPage::Servers {
+            let tab_width = (w / 3.).min(148.);
+            for (index, (tab, label)) in [
+                (ManagementPage::Worlds, "Worlds"),
+                (ManagementPage::Backups, "Backups"),
+                (ManagementPage::Resources, "Resources"),
+            ]
+            .into_iter()
+            .enumerate()
+            {
+                let r = Rect::new(x + index as f32 * tab_width, 153., tab_width - 8., 37.);
+                if page == tab {
+                    c.rect(r, 8., PANEL);
+                }
+                if self.ui.button(
+                    c,
+                    900 + index as u64,
+                    r,
+                    label,
+                    ButtonStyle::Quiet,
+                    enabled && !busy,
+                ) {
+                    action = Some(Action::ManagementPage(tab));
+                }
+            }
+        }
+        let toolbar_y = if page == ManagementPage::Servers {
+            156.
+        } else {
+            211.
+        };
+        let (label, form) = match page {
+            ManagementPage::Worlds => ("Import world", ManagementForm::WorldImport),
+            ManagementPage::Backups => ("Create backup", ManagementForm::BackupCreate),
+            ManagementPage::Resources => ("Add resource", ManagementForm::ResourceAdd),
+            ManagementPage::Servers => ("Create server", ManagementForm::ServerCreate),
+        };
+        if self.ui.button(
+            c,
+            910,
+            Rect::new(x, toolbar_y, 152., 39.),
+            label,
+            ButtonStyle::Secondary,
+            enabled && !busy && !self.resource_recovery,
+        ) {
+            action = Some(Action::ManagementForm(form));
+        }
+        if self.ui.button(
+            c,
+            911,
+            Rect::new(x + 162., toolbar_y, 90., 39.),
+            "Refresh",
+            ButtonStyle::Quiet,
+            enabled && !busy,
+        ) && let Some(task) = self.management_list()
+        {
+            action = Some(Action::Start(Task::Manage(task)));
+        }
+        let list_y = toolbar_y + 68.;
+        let footer_y = (h - 177.).max(list_y + 86.);
+        let count = (((footer_y - list_y - 22.).max(60.) / 68.).floor() as usize).max(1);
+        self.scroll = self
+            .scroll
+            .min(self.management_rows.len().saturating_sub(count));
+        for (index, row) in self
+            .management_rows
+            .iter()
+            .enumerate()
+            .skip(self.scroll)
+            .take(count)
+        {
+            let y = list_y + (index - self.scroll) as f32 * 68.;
+            if self.management_selected.as_deref() == Some(&row.id) {
+                c.rect(Rect::new(x - 10., y - 7., w + 20., 61.), 9., PANEL);
+            }
+            c.ellipsis(&row.title, x + 8., y, (w - 112.).max(50.), 17, true, INK);
+            c.ellipsis(
+                &row.detail,
+                x + 8.,
+                y + 27.,
+                (w - 112.).max(50.),
+                11,
+                false,
+                if row.valid || page == ManagementPage::Servers {
+                    MUTED
+                } else {
+                    ERROR
+                },
+            );
+            if self.ui.button(
+                c,
+                10000 + index as u64,
+                Rect::new(x + w - 92., y + 5., 92., 35.),
+                "Select",
+                ButtonStyle::Quiet,
+                enabled && !busy,
+            ) {
+                action = Some(Action::ManagementSelect(row.id.clone()));
+            }
+        }
+        if self.management_rows.is_empty() {
+            c.ellipsis(
+                if busy {
+                    "Reading…"
+                } else if self.error {
+                    "Could not load this list. See the message below."
+                } else {
+                    "Nothing here yet."
+                },
+                x + 8.,
+                list_y + 24.,
+                w - 16.,
+                16,
+                false,
+                MUTED,
+            );
+        }
+        c.line((x, footer_y - 15.), (x + w, footer_y - 15.), 1., LINE);
+        let row = self
+            .management_rows
+            .iter()
+            .find(|row| Some(&row.id) == self.management_selected.as_ref())
+            .cloned();
+        let can_change = enabled && !busy && !self.resource_recovery;
+        if let Some(row) = row {
+            let button_width = ((w - 20.) / 3.).min(152.);
+            let mut button = |index: u64, label: &str, enabled: bool, style| {
+                self.ui.button(
+                    c,
+                    930 + index,
+                    Rect::new(
+                        x + index as f32 * (button_width + 10.),
+                        footer_y,
+                        button_width,
+                        40.,
+                    ),
+                    label,
+                    style,
+                    enabled,
+                )
+            };
+            match page {
+                ManagementPage::Worlds => {
+                    if button(
+                        0,
+                        "Export .zip",
+                        can_change && row.valid,
+                        ButtonStyle::Secondary,
+                    ) {
+                        action = Some(Action::ManagementForm(ManagementForm::WorldExport(
+                            row.id.clone(),
+                        )));
+                    }
+                    if button(1, "Copy folder path", enabled && !busy, ButtonStyle::Quiet) {
+                        action = Some(Action::Start(Task::Manage(ManagementTask::WorldPath {
+                            instance: instance.clone(),
+                            name: row.id,
+                        })));
+                    }
+                }
+                ManagementPage::Backups => {
+                    if button(
+                        0,
+                        "Restore…",
+                        can_change && row.valid,
+                        ButtonStyle::Secondary,
+                    ) {
+                        action = Some(Action::ManagementForm(ManagementForm::BackupRestore(
+                            row.id,
+                        )));
+                    }
+                }
+                ManagementPage::Resources => {
+                    if button(
+                        0,
+                        if row.enabled { "Disable" } else { "Enable" },
+                        can_change && row.valid,
+                        ButtonStyle::Secondary,
+                    ) {
+                        action = Some(Action::Start(Task::Manage(
+                            ManagementTask::ResourceToggle {
+                                instance: instance.clone(),
+                                kind: row.kind.clone(),
+                                project: row.id.clone(),
+                                enabled: !row.enabled,
+                            },
+                        )));
+                    }
+                    if button(1, "Update", can_change && row.valid, ButtonStyle::Quiet) {
+                        action = Some(Action::Start(Task::Manage(
+                            ManagementTask::ResourceUpdate {
+                                instance: instance.clone(),
+                                kind: row.kind.clone(),
+                                project: row.id.clone(),
+                            },
+                        )));
+                    }
+                    if button(2, "Remove…", can_change && row.valid, ButtonStyle::Quiet) {
+                        action = Some(Action::ManagementForm(ManagementForm::ResourceRemove {
+                            kind: row.kind,
+                            project: row.id,
+                        }));
+                    }
+                }
+                ManagementPage::Servers => {
+                    if button(
+                        0,
+                        if row.valid { "Reinstall" } else { "Install" },
+                        can_change && !row.enabled,
+                        ButtonStyle::Secondary,
+                    ) {
+                        action = Some(Action::Start(Task::Manage(ManagementTask::ServerInstall(
+                            row.id.clone(),
+                        ))));
+                    }
+                    if button(
+                        1,
+                        "Start",
+                        can_change && row.valid && !row.enabled,
+                        ButtonStyle::Quiet,
+                    ) {
+                        action = Some(Action::Start(Task::Manage(ManagementTask::ServerStart(
+                            row.id.clone(),
+                        ))));
+                    }
+                    if button(2, "Stop", can_change && row.enabled, ButtonStyle::Quiet) {
+                        action = Some(Action::Start(Task::Manage(ManagementTask::ServerStop(
+                            row.id,
+                        ))));
+                    }
+                }
+            }
+        }
+        if page == ManagementPage::Resources && self.resource_recovery {
+            c.ellipsis(
+                "An interrupted resource change needs recovery.",
+                x,
+                footer_y + 5.,
+                (w - 110.).max(60.),
+                12,
+                false,
+                ERROR,
+            );
+            if self.ui.button(
+                c,
+                940,
+                Rect::new(x + w - 104., footer_y, 104., 40.),
+                "Recover",
+                ButtonStyle::Secondary,
+                enabled && !busy,
+            ) {
+                action = Some(Action::Start(Task::Manage(
+                    ManagementTask::ResourceRecover(instance),
+                )));
+            }
+        }
+        let note = match page {
+            ManagementPage::Worlds => {
+                "Import a Java save folder or .zip. Existing worlds are kept."
+            }
+            ManagementPage::Backups => {
+                "Restore checks file hashes and first saves a pre-restore backup."
+            }
+            ManagementPage::Resources => {
+                "Managed packs only. Shader packs also need a compatible shader engine."
+            }
+            ManagementPage::Servers => {
+                "Read the Minecraft EULA, then set eula=true in the server's eula.txt."
+            }
+        };
+        c.ellipsis(note, x, footer_y + 61., w, 11, false, MUTED);
+        action
+    }
+
+    fn draw_management_form(&mut self, c: &mut Canvas<'_>) -> Option<Action> {
+        let form = self.management_form.clone()?;
+        let busy = self.busy();
+        let w = (c.width - 48.).min(560.);
+        let h = 370_f32.min(c.height - 36.);
+        let x = (c.width - w) / 2.;
+        let y = (c.height - h) / 2.;
+        c.rect(Rect::new(0., 0., c.width, c.height), 0., 0x000000b8);
+        c.rect(Rect::new(x, y, w, h), 16., PANEL);
+        let (title, note, first, second, submit) = match &form {
+            ManagementForm::WorldImport => (
+                "Import world",
+                "A save folder or ZIP containing one Java world.",
+                "Source path",
+                Some("New world folder name"),
+                "Import",
+            ),
+            ManagementForm::WorldExport(_) => (
+                "Export world",
+                "Creates a new ZIP file without replacing an existing file.",
+                "Destination .zip path",
+                None,
+                "Export",
+            ),
+            ManagementForm::BackupCreate => (
+                "Create backup",
+                "Snapshots mutable instance data. Stop the game first.",
+                "Label (optional)",
+                None,
+                "Create backup",
+            ),
+            ManagementForm::BackupRestore(_) => (
+                "Restore backup?",
+                "The current data is backed up before the selected snapshot is restored.",
+                "",
+                None,
+                "Restore backup",
+            ),
+            ManagementForm::ResourceAdd => (
+                "Add resource",
+                "Paste a Modrinth project ID or slug.",
+                "Project ID or slug",
+                None,
+                "Add resource",
+            ),
+            ManagementForm::ResourceRemove { .. } => (
+                "Remove resource?",
+                "The managed pack is removed. Its revision history remains available.",
+                "",
+                None,
+                "Remove",
+            ),
+            ManagementForm::ServerCreate => (
+                "Create server",
+                "Creates a local vanilla server; installation is a separate step.",
+                "Server ID",
+                Some("Minecraft version"),
+                "Create server",
+            ),
+        };
+        c.ellipsis(title, x + 28., y + 25., w - 100., 25, true, INK);
+        c.ellipsis(note, x + 28., y + 69., w - 56., 12, false, MUTED);
+        let mut action = None;
+        if self.ui.button(
+            c,
+            950,
+            Rect::new(x + w - 64., y + 20., 38., 36.),
+            "×",
+            ButtonStyle::Quiet,
+            !busy,
+        ) {
+            action = Some(Action::ManagementClose);
+        }
+        if !first.is_empty() {
+            c.text(first, x + 28., y + 110., 12, true, INK);
+            self.ui.launcher_input(
+                c,
+                951,
+                Rect::new(x + 28., y + 132., w - 56., 42.),
+                &mut self.management_value,
+                first,
+                false,
+                !busy,
+            );
+        }
+        if let Some(label) = second {
+            c.text(label, x + 28., y + 194., 12, true, INK);
+            self.ui.launcher_input(
+                c,
+                952,
+                Rect::new(x + 28., y + 216., w - 56., 42.),
+                &mut self.management_name,
+                label,
+                false,
+                !busy,
+            );
+        } else if matches!(form, ManagementForm::ResourceAdd) {
+            if self.ui.button(
+                c,
+                952,
+                Rect::new(x + 28., y + 203., 180., 40.),
+                if self.management_shader {
+                    "Shader pack ↻"
+                } else {
+                    "Resource pack ↻"
+                },
+                ButtonStyle::Quiet,
+                !busy,
+            ) {
+                self.management_shader = !self.management_shader;
+            }
+        } else {
+            let target = match &form {
+                ManagementForm::BackupRestore(id) | ManagementForm::WorldExport(id) => Some(id),
+                ManagementForm::ResourceRemove { project, .. } => Some(project),
+                _ => None,
+            };
+            if let Some(id) = target {
+                let title = self
+                    .management_rows
+                    .iter()
+                    .find(|row| row.id == *id)
+                    .map_or(id.as_str(), |row| row.title.as_str());
+                c.ellipsis(title, x + 28., y + 202., w - 56., 15, true, INK);
+                if title != id {
+                    c.ellipsis(id, x + 28., y + 229., w - 56., 11, false, MUTED);
+                }
+            }
+        }
+        if self.error {
+            c.ellipsis(
+                &self.notice,
+                x + 28.,
+                y + h - 96.,
+                w - 56.,
+                11,
+                false,
+                ERROR,
+            );
+        }
+        let instance = self.selected.clone().unwrap_or_default();
+        let value = self.management_value.trim();
+        let name = self.management_name.trim();
+        let task = match form {
+            ManagementForm::WorldImport if !value.is_empty() && !name.is_empty() => {
+                Some(ManagementTask::WorldImport {
+                    instance,
+                    path: value.into(),
+                    name: name.into(),
+                })
+            }
+            ManagementForm::WorldExport(name) if !value.is_empty() => {
+                Some(ManagementTask::WorldExport {
+                    instance,
+                    name,
+                    path: value.into(),
+                })
+            }
+            ManagementForm::BackupCreate => Some(ManagementTask::BackupCreate {
+                instance,
+                label: value.into(),
+            }),
+            ManagementForm::BackupRestore(backup) => {
+                Some(ManagementTask::BackupRestore { instance, backup })
+            }
+            ManagementForm::ResourceAdd if !value.is_empty() => Some(ManagementTask::ResourceAdd {
+                instance,
+                kind: if self.management_shader {
+                    "shader"
+                } else {
+                    "resourcepack"
+                }
+                .into(),
+                project: value.into(),
+            }),
+            ManagementForm::ResourceRemove { kind, project } => {
+                Some(ManagementTask::ResourceRemove {
+                    instance,
+                    kind,
+                    project,
+                })
+            }
+            ManagementForm::ServerCreate if valid_id(value) && !name.is_empty() => {
+                Some(ManagementTask::ServerCreate {
+                    id: value.into(),
+                    version: name.into(),
+                })
+            }
+            _ => None,
+        };
+        if self.ui.button(
+            c,
+            953,
+            Rect::new(x + 28., y + h - 66., w - 56., 42.),
+            if busy { "Cancel operation" } else { submit },
+            ButtonStyle::Secondary,
+            busy || task.is_some(),
+        ) {
+            if busy {
+                action = Some(Action::Cancel);
+            } else if let Some(task) = task {
+                action = Some(Action::Start(Task::Manage(task)));
             }
         }
         action
@@ -1718,7 +2711,7 @@ impl App {
         }
         let compact = h < 520.;
         c.ellipsis(
-            "A new beginning.",
+            "New instance",
             x + 30.,
             y + 28.,
             w - 105.,
@@ -2296,6 +3289,127 @@ mod tests {
                 "52.0.1"
             ]
         );
+    }
+
+    #[test]
+    fn management_paths_are_literal_arguments_and_root_is_forwarded() {
+        let path = "/tmp/a folder/$(touch never); --root.zip";
+        let task = Task::Manage(ManagementTask::WorldImport {
+            instance: "demo".into(),
+            path: path.into(),
+            name: "--root".into(),
+        });
+        let command = command_for_task(
+            std::path::Path::new("/a launcher/zmcl"),
+            &task,
+            Some("/isolated root"),
+        );
+        let args: Vec<_> = command.get_args().map(|v| v.to_str().unwrap()).collect();
+        assert_eq!(
+            args,
+            [
+                "--root",
+                "/isolated root",
+                "world",
+                "import",
+                "--",
+                "demo",
+                path,
+                "--root"
+            ]
+        );
+        assert_eq!(command.get_program(), "/a launcher/zmcl");
+        let server = ManagementTask::ServerCreate {
+            id: "local".into(),
+            version: "1.21.1".into(),
+        };
+        assert_eq!(
+            server.args(),
+            ["server", "create", "--version", "1.21.1", "--", "local"]
+        );
+        assert_eq!(
+            ManagementTask::ServerStart("local".into()).args(),
+            ["server", "start", "--", "local"]
+        );
+    }
+
+    #[test]
+    fn invalid_worlds_and_backups_remain_visible_but_cannot_be_selected_for_restore() {
+        let (worlds, _) = management_rows(ManagementPage::Worlds,
+            br#"[{"id":"broken","valid":false,"error":"bad level.dat"},{"id":"good","name":"My world","valid":true}]"#).unwrap();
+        assert_eq!(worlds.len(), 2);
+        assert!(!worlds[0].valid);
+        assert_eq!(worlds[0].detail, "bad level.dat");
+        assert!(worlds[1].valid);
+        let (backups, _) = management_rows(ManagementPage::Backups,
+            br#"[{"id":"broken","manifest_valid":false,"error":"corrupt archive"},{"id":"good","label":"Before mods","manifest_valid":true,"data_verified":false,"bytes":4096,"files":3}]"#).unwrap();
+        assert!(!backups[0].valid);
+        assert!(backups[1].valid);
+        assert!(backups[1].detail.contains("verified on restore"));
+        assert!(management_rows(ManagementPage::Backups, b"{}").is_err());
+    }
+
+    #[test]
+    fn stale_management_results_cannot_replace_another_instance_or_page() {
+        let mut app = App::new(None);
+        app.page = Page::Manage;
+        app.management_page = ManagementPage::Worlds;
+        app.selected = Some("current".into());
+        let value = br#"[{"id":"world","name":"Current world","valid":true}]"#;
+        app.apply_management_result(&ManagementTask::Worlds("old".into()), value)
+            .unwrap();
+        assert!(app.management_rows.is_empty());
+        app.apply_management_result(&ManagementTask::Worlds("current".into()), value)
+            .unwrap();
+        assert_eq!(app.management_rows[0].title, "Current world");
+        app.management_page = ManagementPage::Backups;
+        app.apply_management_result(&ManagementTask::Worlds("current".into()), b"[]")
+            .unwrap();
+        assert_eq!(app.management_rows.len(), 1);
+        app.page = Page::Library;
+        app.apply_management_result(&ManagementTask::Servers, b"[]")
+            .unwrap();
+        assert_eq!(app.management_rows.len(), 1);
+    }
+
+    #[test]
+    fn resources_keep_unmanaged_files_and_show_pending_recovery() {
+        let (rows, pending) = management_rows(ManagementPage::Resources,
+            br#"{"entries":[{"project_id":"pack","title":"Pack","kind":"resourcepack","enabled":true,"integrity":"not_checked"}],"unmanaged":[{"path":"resourcepacks/manual.zip","kind":"resourcepack"}],"recovery_pending":true}"#).unwrap();
+        assert!(pending);
+        assert!(rows[0].valid && rows[0].enabled);
+        assert!(!rows[1].valid);
+        assert!(rows[1].detail.contains("Unmanaged"));
+        let task = ManagementTask::ResourceToggle {
+            instance: "demo".into(),
+            kind: "resourcepack".into(),
+            project: "pack".into(),
+            enabled: false,
+        };
+        assert_eq!(
+            task.args(),
+            ["resources", "disable", "--", "demo", "resourcepack", "pack"]
+        );
+    }
+
+    #[test]
+    fn managed_server_state_and_restore_target_are_preserved() {
+        let (rows, _) = management_rows(ManagementPage::Servers,
+            br#"[{"server":{"id":"local","version":"1.21.1","installed":true},"process":{"state":"running","running":true}}]"#).unwrap();
+        assert!(rows[0].valid && rows[0].enabled);
+        assert!(rows[0].detail.contains("running"));
+        let task = ManagementTask::BackupRestore {
+            instance: "other".into(),
+            backup: "b-test".into(),
+        };
+        assert_eq!(task.args(), ["backup", "restore", "--", "other", "b-test"]);
+        assert!(matches!(task.refresh(), Some(ManagementTask::Backups(id)) if id == "other"));
+        assert!(!should_exit_after_launch(
+            true,
+            &Task::Manage(task),
+            true,
+            br#"{"pid":1234}"#
+        ));
     }
 
     #[test]
