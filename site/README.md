@@ -1,8 +1,11 @@
 # zmcl project site
 
-This is a static project site for GitHub Pages. It contains no build framework, remote font, analytics script or third-party JavaScript dependency.
+A static Chinese documentation page for GitHub Pages. The page uses system fonts,
+local assets and a small command-copy helper. The installation instructions,
+feature status and measurement summary remain readable without JavaScript.
+There is no application framework, analytics or third-party script.
 
-## Preview
+## Preview and validation
 
 From the repository root:
 
@@ -11,34 +14,60 @@ python3 site/check.py
 python3 -m http.server 8080 --bind 127.0.0.1 --directory site
 ```
 
-Open http://127.0.0.1:8080/ in a browser. HTTP is required for the JSON data request; opening index.html directly as a file is not the preview path.
+Open the local HTTP URL in a browser. Check desktop and mobile widths, section
+links, the source-build disclosure, command-copy feedback and keyboard focus.
+The copy helper selects the command if clipboard access is unavailable.
 
-## Update evidence
+## Content and evidence
 
-Edit data.json without rebuilding the site. schema_version is currently 1.
+The page is arranged as installation, first use, current features, the actual
+window, resource measurements and remaining work. Keep text factual and specific
+to the released version. Do not replace missing acceptance with a completion
+claim, a performance ratio or a universal compatibility statement.
 
-- project.updated is the user-facing record date; project.baseline is the pinned XMCL release.
-- features[].state is verified, implemented or planned. The label and summary must describe the actual verification scope. A small configuration round trip does not prove that every public modpack works.
-- measurement.phase identifies initial or final measurements. Keep measurement.label, environment, scope, sample_count and comparison consistent with the recorded procedure.
-- measurement.commit can contain the immutable commit once a measured build has been associated with it.
-- measurements[].zmcl.value and measurements[].xmcl.value are a nonnegative number or null. null means unmeasured, never zero.
-- Each measured cell can include note for sample count, range, median definition or format. Both applications use the same visual weight.
-- Units are bytes, kib, ms, ticks, seconds or percent. Preserve raw values; app.js converts their presentation.
-- Do not calculate or publish speed or memory ratios until both applications have paired observations on the same machine and equivalent functionality.
-- Never put account tokens, personal paths, private launch logs or user worlds in this directory.
+`data.json` remains the machine-readable historical record. It describes zmcl
+source `033776287ab10aab90f46fd5b65309fecb9b8711` and official XMCL v0.73.1,
+measured on 2026-11-20 with schema 4, three trials and eleven samples per trial.
+The page shows a short static summary; update it alongside the evidence record
+when a newly measured build is published. Earlier samples are not silently
+relabelled as results for new code.
 
-The current data describes source 033776287ab10aab90f46fd5b65309fecb9b8711 (ELF SHA-256 8139bab8416ec9720bc4c9e11765944755f85bbe778b5cf404863bd6fb3ba30c) and official XMCL 0.73.1, measured on 2026-11-20 with the same schema 4 script, three trials and eleven samples per trial. Exact raw records and derived summaries are under docs/measurements/. The screenshot is from the final zmcl trial. Shared-host memory pressure differed between application batches; the page discloses available memory, swapped pages and different default home content. Hardware GPU, installation peak and physical game storage remain unmeasured. Earlier records are historical and do not supply the displayed final values.
+The current screenshot shows the v0.1.0 native window. The Linux x86_64 archive
+is 648,849 bytes and contains the measured 1,412,176-byte executable. Its direct
+ELF GLIBC requirement is 2.43. The fixed download link is
+`/releases/tag/v0.1.0`, because this release is a prerelease.
 
-The Linux x86_64 prerelease package is 648,849 bytes (tar.gz); its seven regular files total 1,453,865 logical bytes. It was packaged from clean commit a8f72474c4f5289ea881226299ae7706b8024b59 and preserves the measured application binary. The prebuilt ELF directly requires glibc 2.43; this is not a blanket Linux compatibility claim. The download URL is the explicit /releases/tag/v0.1.0 prerelease page, not /releases/latest. Exact package hashes and file manifests are linked from docs/validation/package-install-2026-11-20.json.
+The displayed idle GUI values are 89,946 KiB PSS and 108,728 KiB RSS. They cover
+the observed launcher process tree in Xvfb with llvmpipe at 1024×720 after a
+20-second warmup. Xvfb, Java and Minecraft are outside that scope. The 10 MiB GUI
+target remains unmet by this released build. The existing UI still uses
+zui-native; the planned unified zgpui backend must pass actual window and memory
+acceptance before the page describes it as shipped.
+
+Keep the AUR status in `index.html` consistent with a readback of the public
+`zmcl-bin` package. A packaging file in GitHub does not establish that the AUR
+entry is published or installable. Keep the GitHub download available while an
+AUR publication is pending.
+
+## Claim review
+
+| Claim | Evidence | Status |
+| --- | --- | --- |
+| Linux v0.1.0 can be downloaded | Explicit GitHub release and `docs/validation/package-install-2026-11-20.json` | Accepted for that package |
+| Selected game and loader menus were reached | `docs/VALIDATION.md` and its screenshots | Limited to recorded versions |
+| Some management tools are CLI only | `docs/FEATURES.md` and current GUI source | Kept explicit |
+| Idle memory remains above 10 MiB | `docs/PERFORMANCE.md` and raw samples | Target not achieved |
+| Full XMCL feature coverage | `docs/FEATURES.md`, fixed v0.73.1 baseline | Incomplete |
+
+Writing review follows the user-selected Research-Paper-Writing-Skills:
+one message per paragraph, evidence next to quantitative claims, limited table
+rules and explicit experimental boundaries. The page avoids unsupported
+superiority claims. Remaining evaluation gaps include hardware GPU measurements,
+installation peaks, large modpack workloads and independent Windows/macOS runs.
 
 ## Publish
 
-Use GitHub Pages with GitHub Actions and upload site/ as the Pages artifact. The publishing workflow belongs to the repository maintainer, outside this directory. The standard sequence is checkout → check → upload-pages-artifact (path: site) → deploy-pages. No Jekyll or asset build step is required.
-
-All site links and assets are relative where appropriate, so the same directory works under the repository prefix /zmcl/ and under a local HTTP root.
-
-## Source and claim review
-
-The overview states the goal, describes the mechanism and links to code. The feature table distinguishes implementation from verification. The performance table carries units, environment and exclusions alongside the values. The comparison method includes child processes, physical file use and the existing shared storage in XMCL.
-
-Before publishing: check the feature matrix, replace provisional measurements if newer evidence exists, confirm the screenshot is from the stated build, and run check.py. Browser review should include the feature filters, command-copy feedback, wide and narrow viewports, and the no-data failure message.
+The repository's official Pages workflow validates and uploads `site/`.
+Do not run a separate frontend build or remote acceptance CI for this page.
+Relative asset paths support both `/zmcl/` on Pages and a local HTTP root.
+Never include account data, private paths, raw application logs or user saves.

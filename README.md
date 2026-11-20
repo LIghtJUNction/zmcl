@@ -6,6 +6,17 @@
 
 [项目网站](https://lightjunction.github.io/zmcl/) · [预览版下载](https://github.com/LIghtJUNction/zmcl/releases) · [实际验收](docs/VALIDATION.md) · [性能测量](docs/PERFORMANCE.md)
 
+## 安装
+
+Arch Linux 可直接安装 [AUR 包 zmcl-bin](https://aur.archlinux.org/packages/zmcl-bin)：
+
+~~~sh
+yay -S zmcl-bin
+# 或 paru -S zmcl-bin
+~~~
+
+当前 AUR 版本为 **0.1.0-1 开发预览**。Linux x86_64 预编译包要求 glibc 2.43 或更新；GUI 低于 10 MiB 仍是优化目标。安装、更新、卸载、其他 Linux 系统和实际验收范围见 [安装说明](docs/INSTALL.md)。
+
 ## 为什么体积可以小
 
 启动计划由 Rust `no_std + alloc` 核心生成，JSON 使用 `zconv`，命令行使用 `zclap`，界面使用 Project Z 的 `zui-native`。界面按事件重绘，空闲时等待事件。受管理文件依据上游提供的摘要和大小校验；不可变文件放进共享内容库，再通过硬链接或复制提供给实例。

@@ -1,0 +1,117 @@
+{
+  "schema": 1,
+  "recorded_on": "2026-11-20",
+  "status": "published and verified",
+  "github_source_commit": "0a7dda0a582f00334a61a1c236cb9f50ca9a64ed",
+  "aur_commit": "e1fd82532d8b8a8b9548386fda9fd6305fd232da",
+  "aur_remote_commit": "e1fd82532d8b8a8b9548386fda9fd6305fd232da",
+  "public_package_url": "https://aur.archlinux.org/packages/zmcl-bin",
+  "public_clone_url": "https://aur.archlinux.org/zmcl-bin.git",
+  "package_version": "0.1.0-1",
+  "public_git_and_package_page_verified": true,
+  "rpc_version_verified": true,
+  "helpers": [
+    {
+      "helper": "yay",
+      "exit_code": 0,
+      "reported_version": "0.1.0-1",
+      "version_found": true
+    },
+    {
+      "helper": "paru",
+      "exit_code": 0,
+      "reported_version": "0.1.0-1",
+      "version_found": true
+    }
+  ],
+  "fresh_build_checks": [
+    {
+      "operation": "public-https-clone",
+      "exit_code": 0
+    },
+    {
+      "operation": "public-aur-source-sha",
+      "exit_code": 0
+    },
+    {
+      "operation": "regenerate-srcinfo",
+      "exit_code": 0
+    },
+    {
+      "operation": "fresh-source-verification",
+      "exit_code": 0
+    },
+    {
+      "operation": "fresh-build",
+      "exit_code": 0
+    },
+    {
+      "operation": "namcap-pkgbuild",
+      "exit_code": 0
+    },
+    {
+      "operation": "namcap-package",
+      "exit_code": 0
+    },
+    {
+      "operation": "fresh-installed-layout",
+      "exit_code": 0
+    },
+    {
+      "operation": "fresh-pacman-install-roundtrip",
+      "exit_code": 0
+    }
+  ],
+  "package_payload": {
+    "schema": 1,
+    "passed": true,
+    "package": "zmcl-bin-0.1.0-1-x86_64.pkg.tar.zst",
+    "package_sha256": "39ea6c59d51dfb0641de04a64d4adc6cf088bc275a4aa688e9efae0e570b19d1",
+    "pkgver": "0.1.0-1",
+    "arch": "x86_64",
+    "binary_bytes": 1412176,
+    "binary_sha256": "8139bab8416ec9720bc4c9e11765944755f85bbe778b5cf404863bd6fb3ba30c",
+    "app_source_commit": "033776287ab10aab90f46fd5b65309fecb9b8711",
+    "payload_file_count": 7,
+    "checks": {
+      "exact_package_file_set": true,
+      "regular_payload_files": true,
+      "official_binary_sha256_preserved": true,
+      "installed_layout_version_executed": true,
+      "desktop_entry_valid": true,
+      "runtime_libraries_resolved_on_test_host": true
+    },
+    "scope": "Extracted installed filesystem layout in a temporary directory; executed its binary and validated the desktop file. This check does not modify the host pacman database or start the GUI."
+  },
+  "pacman_operations": [
+    {
+      "operation": "pacman-isolated-install",
+      "exit_code": 0
+    },
+    {
+      "operation": "pacman-installed-query",
+      "exit_code": 0
+    },
+    {
+      "operation": "installed-binary-version",
+      "exit_code": 0
+    },
+    {
+      "operation": "pacman-isolated-reinstall",
+      "exit_code": 0
+    },
+    {
+      "operation": "pacman-isolated-uninstall",
+      "exit_code": 0
+    }
+  ],
+  "synthetic_user_data_preserved": true,
+  "pacman_scope": "Real pacman transactions under fakeroot in an isolated filesystem root and database. Dependency checks skipped only for this empty staging root; makepkg checked dependencies on the host. No host pacman database changed; no GUI was launched.",
+  "namcap_notes": [
+    "No errors; curl and python remain real on-demand external helper dependencies despite static unused-dependency warnings."
+  ],
+  "limitations": [
+    "Linux x86_64 development host only; isolated pacman root is not a clean chroot.",
+    "Existing v0.1.0 release; no claim that GUI memory is below 10 MiB."
+  ]
+}
