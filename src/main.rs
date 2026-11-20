@@ -360,6 +360,8 @@ pub fn run_cli(args: Vec<String>) -> Result<()> {
             "set" => {
                 let id = cli.pos(2)?;
                 let _lock = util::Lock::acquire(&app.root, &format!("instance-{id}"))?;
+                util::check_pending_transactions(&app.dir(id)?)?;
+                worlds::assert_stopped(&app, id)?;
                 let mut instance = app.read_instance(id)?;
                 if let Some(v) = cli.val("memory") {
                     instance.memory_mib = v.parse().map_err(|_| "Invalid memory value")?;
@@ -499,4 +501,37 @@ pub fn run_cli(args: Vec<String>) -> Result<()> {
         _ => return Err(format!("Unknown command '{}'. Run zmcl --help.", command)),
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod config_tests {
+    #[test]
+    fn pending_content_transaction_blocks_configuration_without_writes() {
+        let root = std::env::temp_dir().join(format!(
+            "zmcl-config-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let app = crate::App::new(Some(root.to_string_lossy().into_owned())).unwrap();
+        app.create_instance("guarded", "1.21.1", "vanilla", "")
+            .unwrap();
+        let path = app.dir("guarded").unwrap();
+        let original = std::fs::read(path.join("instance.json")).unwrap();
+        std::fs::write(path.join(".content-journal.json"), b"{}").unwrap();
+        let args = vec![
+            "--root".into(),
+            root.to_string_lossy().into_owned(),
+            "instance".into(),
+            "set".into(),
+            "guarded".into(),
+            "--memory".into(),
+            "1024".into(),
+        ];
+        assert!(crate::run_cli(args).is_err());
+        assert_eq!(original, std::fs::read(path.join("instance.json")).unwrap());
+        std::fs::remove_dir_all(root).unwrap();
+    }
 }
