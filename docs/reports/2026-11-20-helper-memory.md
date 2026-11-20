@@ -115,11 +115,11 @@ makepkg -si
 
 上述测试没有触发日常远端 CI。发布采用仓库既有本地打包流程和官方 GitHub/AUR 通道。[源码与测试门禁](../validation/helper-release-0.1.3-2026-11-20.json) · [安装器](../validation/release-0.1.3-2026-11-20.json) · [已安装 GUI](../validation/installed-gui-0.1.3-2026-11-20.json)
 
-![AUR 安装后的备份恢复窗口](../validation/images/zmcl-0.1.3-backup-installed.png)
+[AUR 安装后的备份恢复窗口（历史附件）](https://drive.google.com/file/d/1jMOYzLeo1prfhObfF_XA1OE852OJKUNt/view)
 
 恢复后两份快照均可见，底部明确提示保留了恢复前快照。实际区域文件已恢复为原字节。截图没有观察到重叠或裁切。[窗口与文件验收](../validation/installed-gui-0.1.3-2026-11-20.json)
 
-![AUR 安装后的服务器 EULA 拒绝窗口](../validation/images/zmcl-0.1.3-server-installed.png)
+[AUR 安装后的服务器 EULA 拒绝窗口（历史附件）](https://drive.google.com/file/d/1jMOYzLeo1prfhObfF_XA1OE852OJKUNt/view)
 
 服务器保持 stopped，Stop 按钮不可用，底部显示需要用户阅读并设置 EULA 的错误；没有创建服务器进程记录。[窗口与文件验收](../validation/installed-gui-0.1.3-2026-11-20.json)
 

@@ -224,8 +224,8 @@ RSS 表示驻留页；PSS 对共享页按共享进程数分摊。SwapPss 记录�
 | [XMCL 原始记录](measurements/2026-11-20-xmcl-0.73.1.json) | d4e8c12f0ffcd7b317e9f285ca6717c200bce9ec312ad4864f37903629647973 |
 | [最终汇总 JSON](measurements/2026-11-20-comparison.json) | 包含逐样本合计后的范围、轮内中位数和轮间中位数 |
 | [最终分发包与安装验收](validation/package-install-2026-11-20.json) | 4e374decd2c396a0af9f2585440110c0eeeb52de8f882c764c1efb6dd99ac01d |
-| [zmcl 默认首页](measurements/2026-11-20-zmcl-empty.jpg) | 本次第一轮 1024×720 实际截图 |
-| [XMCL 默认首页](measurements/2026-11-20-xmcl-empty.jpg) | 本次第一轮 1024×720 实际截图 |
+| [zmcl 默认首页（历史附件）](https://drive.google.com/file/d/1jMOYzLeo1prfhObfF_XA1OE852OJKUNt/view) | 本次第一轮 1024×720 实际截图 |
+| [XMCL 默认首页（历史附件）](https://drive.google.com/file/d/1jMOYzLeo1prfhObfF_XA1OE852OJKUNt/view) | 本次第一轮 1024×720 实际截图 |
 
 [2026-11-19 的 XMCL schema 3 记录](measurements/2026-11-19-xmcl-0.73.1.json) 是历史方法试运行。早期 GUI 烟测、早期单轮 XMCL 数值、其它源码对应的体积与内存均不参与本页最终对照。GUI 退出生命周期的功能验收单独保存在 [2026-11-20 原生窗口与生命周期记录](measurements/2026-11-20-gui-exit-and-window.json)，该功能测试的限核条件不用于性能表。
 

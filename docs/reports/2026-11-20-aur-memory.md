@@ -44,7 +44,7 @@ zmcl gui
 
 对实际 `/usr/bin/zmcl` 另做了原生窗口检查：在独立数据目录打开1120×760窗口，点击新建实例，输入 `aur-0-1-1-check`、版本1.21.1和Vanilla，观察成功通知；CLI的list/show读回完全一致。随后进入管理页，确认Worlds、Backups、Resources入口，点击Quit并检查窗口列表为空，最后停止本轮私有显示。没有下载游戏、登录账号或启动服务器。
 
-![AUR安装后的原生窗口成功创建实例](https://raw.githubusercontent.com/LIghtJUNction/zmcl/main/docs/validation/images/zmcl-0.1.1-aur-installed.jpg)
+[AUR安装后的原生窗口成功创建实例（历史附件）](https://drive.google.com/file/d/1jMOYzLeo1prfhObfF_XA1OE852OJKUNt/view)
 
 用户此前反馈“用不了”的具体失败步骤尚未提供。这次结果证明记录的安装和窗口路径可用，不能直接宣称已复现并修复那个尚未定位的问题。[安装后窗口记录](https://github.com/LIghtJUNction/zmcl/blob/main/docs/validation/installed-gui-0.1.1-2026-11-20.json)
 

@@ -13,9 +13,9 @@
 - Activity 隐藏时继续读取和保存有界日志，但不再因每段后台输出重绘整个窗口。登录自动展开 Activity，设备码和链接保持实时可见。
 - 离开管理页或切换管理子页时释放旧行字符串和向量容量。当前实例与已排队任务保留自己的参数；迟到列表受页面、子页和实例匹配检查保护。
 
-![0.1.2 默认创建界面](../validation/images/zmcl-0.1.2-create.png)
+[0.1.2 默认创建界面（历史附件）](https://drive.google.com/file/d/1jMOYzLeo1prfhObfF_XA1OE852OJKUNt/view)
 
-![800×600 紧凑创建界面](../validation/images/zmcl-0.1.2-compact-create.png)
+[800×600 紧凑创建界面（历史附件）](https://drive.google.com/file/d/1jMOYzLeo1prfhObfF_XA1OE852OJKUNt/view)
 
 本轮较早的功能候选已实际完成 **Minecraft 1.21.1 的版本选择、GUI 创建、下载和安装，并以显式离线测试身份打开游戏欢迎窗口**。后来的正式组合重新执行了创建与管理 fixture，没有将较早的游戏结果改标为最终二进制的新实测。没有新增真实 Microsoft 登录、世界游玩或服务器运行验收。
 
@@ -84,9 +84,9 @@ Windows辅助进程统一抑制额外控制台，保留管道、日志和游戏�
 
 以下是正式发布候选的真实框架像素输出，已人工检查。Windows为GDI Generic，macOS为Apple Software Renderer；不代表硬件GPU性能或整个启动器的Windows/macOS游戏流程。
 
-![Windows 框架字形和圆角探针](../validation/images/zgpui-0.1.5-windows.png)
+[Windows 框架字形和圆角探针（历史附件）](https://drive.google.com/file/d/1jMOYzLeo1prfhObfF_XA1OE852OJKUNt/view)
 
-![macOS 框架字形和圆角探针](../validation/images/zgpui-0.1.5-macos.png)
+[macOS 框架字形和圆角探针（历史附件）](https://drive.google.com/file/d/1jMOYzLeo1prfhObfF_XA1OE852OJKUNt/view)
 
 ## 6. 最终组合与发布身份
 
@@ -129,6 +129,6 @@ AUR `zmcl-bin` **0.1.2-1** 配方固定于 `16b688237f8c54b47085a16279535db8f6c5
 
 已安装程序还通过四组真实 X11 输入与文件效果检查：版本筛选和失败安装后保留实例；仅创建与唯一建议名称；重名提交保护；模拟已安装状态下引导进入账号页。使用独立数据目录和本地 manifest 夹具，没有新增真实 provider 下载、Microsoft 登录或游戏启动。见[安装后原生窗口回执](../validation/installed-gui-0.1.2-2026-11-20.json)。这次安装验证不替代上文明确缺少的 Windows/macOS 应用实机流程，也没有把两组性能候选改标成最终二进制的新实测。
 
-![已安装 0.1.2 的创建界面](../validation/images/zmcl-0.1.2-aur-installed.png)
+[已安装 0.1.2 的创建界面（历史附件）](https://drive.google.com/file/d/1jMOYzLeo1prfhObfF_XA1OE852OJKUNt/view)
 
 安装后程序的 1120×760 原生窗口；图中使用隔离测试数据。

@@ -28,7 +28,7 @@ Linux 程序为 **1,473,144 字节**，SHA-256 `71bf4017072703a91359ea84e2493db2
 
 归档为 679,358 字节；系统升级为 0.1.1-1 → 0.1.2-1，安装后程序保持上述 Linux 摘要，19 个受管文件没有改动。2026-11-20 18:44（Asia/Taipei）复验，current/legacy RPC、yay 和 paru 均返回 0.1.2-1。详细记录：[发行包](validation/release-0.1.2-2026-11-20.json)、[AUR 与系统安装](validation/aur-install-0.1.2-2026-11-20.json)、[安装后原生窗口](validation/installed-gui-0.1.2-2026-11-20.json)。公共新克隆首轮曾因宿主磁盘不足解包失败，原失败记录与清理后成功的重试分别保留。
 
-![0.1.2 创建与安装界面](validation/images/zmcl-0.1.2-create.png)
+[0.1.2 创建与安装界面（历史附件）](https://drive.google.com/file/d/1jMOYzLeo1prfhObfF_XA1OE852OJKUNt/view)
 
 以下 0.1.1 与 0.1.0 记录保持原始版本、二进制和实测范围。
 
@@ -50,7 +50,7 @@ Linux 程序为 **1,473,144 字节**，SHA-256 `71bf4017072703a91359ea84e2493db2
 
 这次管理验收使用合成存档和本地文件夹具。它证明上述六个流程，不能解释为整个GUI或XMCL全部功能已完成；没有新增真实Microsoft登录、在线GUI资源下载或服务器联机验收。旧版真实游戏主菜单证据保留在下文，未改标成0.1.1重新执行。
 
-![包管理器安装的0.1.1成功创建实例](validation/images/zmcl-0.1.1-aur-installed.jpg)
+[包管理器安装的0.1.1成功创建实例（历史附件）](https://drive.google.com/file/d/1jMOYzLeo1prfhObfF_XA1OE852OJKUNt/view)
 
 ### 内存结论与限制
 
@@ -149,9 +149,9 @@ PSS 将共享页按使用者分摊，更适合比较完整应用；RSS 求和可
 
 [窗口记录和截图摘要](validation/game-menus-2026-11-20.json)保留每组实际结果。Fabric 界面显示的 56 个 mods 包含 Fabric API 的内部模块，不能据此声称下载了 56 个独立项目。尚未验收实际世界游玩、正版账号、Realms 或多人连接。
 
-![通过 zmcl 启动的 Forge 1.21.1 主菜单](validation/images/forge-1.21.1-main-menu.jpg)
+[通过 zmcl 启动的 Forge 1.21.1 主菜单（历史附件）](https://drive.google.com/file/d/1jMOYzLeo1prfhObfF_XA1OE852OJKUNt/view)
 
-![通过 zmcl 启动的 Minecraft 26.3 主菜单](validation/images/vanilla-26.3-main-menu.jpg)
+[通过 zmcl 启动的 Minecraft 26.3 主菜单（历史附件）](https://drive.google.com/file/d/1jMOYzLeo1prfhObfF_XA1OE852OJKUNt/view)
 
 本轮还修复了两项真实兼容性问题：
 

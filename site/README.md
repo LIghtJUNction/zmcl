@@ -46,7 +46,7 @@ The first Windows validator PATH lookup failure and Linux container documentatio
 
 ## Historical screenshots and measurements
 
-The displayed 1120×760 creation window is still the original v0.1.2 native capture. `assets/create-0.1.2.png` reuses the exact Git blob of `docs/validation/images/zmcl-0.1.2-create.png` without image editing. Its caption keeps zgpui 0.1.5 and source `e86b584`. It must not be relabelled as a 0.1.4 screenshot.
+The original v0.1.2 native captures are stored in the [verified historical archive](https://drive.google.com/file/d/1jMOYzLeo1prfhObfF_XA1OE852OJKUNt/view). Their source `e86b584`, zgpui 0.1.5 identity and original blob hashes remain recorded in the archive manifest. The site links to the archive without tracking screenshot binaries. They must not be relabelled as v0.1.4 captures.
 
 The complete previous 0.1.3 release object is preserved in `historical_releases`, including source `9ef89bb`, 679517-byte tar, 1473752-byte binary and AUR recipe `60c9ad8`. The 0.1.3 management measurements retain their environments, binary identities, missing samples and peak lower-bound interpretation. No new whole-application memory comparison was made for 0.1.4.
 
