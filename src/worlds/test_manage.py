@@ -99,6 +99,17 @@ class WorldsTests(unittest.TestCase):
         self.assertEqual(details["file_count"], 3)
         self.assertGreater(details["bytes"], 1000)
 
+    def test_cli_list_preserves_unicode_json_protocol(self):
+        self.world(name="测试 World")
+        expected = manage.list_worlds(self.instance)
+        result = subprocess.run(
+            [sys.executable, "-I", "-S", "-X", "utf8", str(Path(manage.__file__)),
+             "list", str(self.instance)], capture_output=True, check=False)
+        self.assertEqual(result.returncode, 0, result.stderr.decode())
+        self.assertEqual(json.loads(result.stdout), expected)
+        self.assertEqual(result.stdout, (json.dumps(
+            expected, ensure_ascii=True, separators=(",", ":"), allow_nan=False) + "\n").encode())
+
     def test_directory_clone_zip_roundtrip_without_hardlinks(self):
         source = self.world()
         imported = manage.import_world(self.other, source, "Imported", self.stage(self.other))

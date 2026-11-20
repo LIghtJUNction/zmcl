@@ -79,6 +79,22 @@ class BackupTests(unittest.TestCase):
         self.assertFalse((self.instance / backup.JOURNAL).exists())
         self.assertEqual(len(backup.list_snapshots(self.snapshots, "demo")), 2)
 
+    def test_cli_list_keeps_valid_and_corrupt_archive_results_and_unicode(self):
+        backup.snapshot(self.game, self.snapshots, "first", "demo", "测试 snapshot", int(time.time()))
+        self.create("second")
+        (self.snapshots / "broken.zip").write_bytes(b"not a ZIP")
+        expected = backup.list_snapshots(self.snapshots, "demo")
+        self.assertEqual(sum(item["manifest_valid"] for item in expected), 2)
+        self.assertTrue(all(item["data_verified"] is False for item in expected))
+        result = subprocess.run(
+            [sys.executable, "-I", "-S", "-X", "utf8", str(Path(backup.__file__)),
+             "list", str(self.instance), str(self.snapshots), "demo"],
+            capture_output=True, check=False)
+        self.assertEqual(result.returncode, 0, result.stderr.decode())
+        self.assertEqual(json.loads(result.stdout), expected)
+        self.assertEqual(result.stdout, (json.dumps(
+            expected, ensure_ascii=False, separators=(",", ":")) + "\n").encode())
+
     def test_tampered_file_rejected_before_live_changes_or_pre_snapshot(self):
         self.create()
         def transform(info, body):

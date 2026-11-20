@@ -364,6 +364,7 @@ def inspect_archive(source, expected_instance, budget):
         if len(body) > MAX_INDEX:
             fail("Backup manifest exceeds 8 MiB")
         metadata = json.loads(body, object_pairs_hook=unique_pairs)
+        del body  # Validation now needs the parsed manifest, not a second raw copy.
         if not isinstance(metadata, dict) or metadata.get("format_version") != 1 or metadata.get("policy") != POLICY:
             fail("Unsupported backup format or data policy")
         if metadata.get("instance") != expected_instance:
@@ -717,6 +718,16 @@ def restore(instance, backup_dir, backup_id, instance_id, fail_at=None):
             shutil.rmtree(stage)
 
 
+def archive_summary(path, instance_id):
+    # Keep the full manifest and ZIP indexes scoped to one archive. Otherwise
+    # the next inspection overlaps with the previous loop iteration's objects.
+    archive, metadata, _ = inspect_archive(path, instance_id, Budget())
+    try:
+        return summary(path, metadata)
+    finally:
+        archive.close()
+
+
 def list_snapshots(backup_dir, instance_id):
     if not backup_dir.exists():
         return []
@@ -732,9 +743,7 @@ def list_snapshots(backup_dir, instance_id):
             fail("Backup listing exceeds 10,000 snapshots; no data was removed")
         try:
             safe_token(path.stem)
-            archive, metadata, _ = inspect_archive(path, instance_id, Budget())
-            archive.close()
-            item = summary(path, metadata)
+            item = archive_summary(path, instance_id)
             item["manifest_valid"] = True
             item["data_verified"] = False
             result.append(item)
@@ -761,7 +770,8 @@ def main():
         result = restore(instance, backup_dir, sys.argv[5], instance_id)
     else:
         fail("Unknown backup operation")
-    print(json.dumps(result, ensure_ascii=False, separators=(",", ":")))
+    json.dump(result, sys.stdout, ensure_ascii=False, separators=(",", ":"))
+    sys.stdout.write("\n")
 
 
 if __name__ == "__main__":

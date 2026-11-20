@@ -831,7 +831,8 @@ def main():
         result = clone_world(Path(args[0]), args[1], Path(args[2]), args[3], Path(args[4]))
     else:
         fail("Invalid world helper operation")
-    print(json.dumps(result, ensure_ascii=True, separators=(",", ":"), allow_nan=False))
+    json.dump(result, sys.stdout, ensure_ascii=True, separators=(",", ":"), allow_nan=False)
+    sys.stdout.write("\n")
 
 
 if __name__ == "__main__":
