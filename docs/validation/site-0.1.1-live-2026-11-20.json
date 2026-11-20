@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "checked_at_utc": "2026-11-20T08:52:48.470936+00:00",
+  "source_commit": "587feab8ffd01e9c627419c8057fcc5fbd2e6894",
+  "pages": {
+    "run_id": 44705666617,
+    "url": "https://github.com/LIghtJUNction/zmcl/actions/runs/44705666617",
+    "head_sha": "587feab8ffd01e9c627419c8057fcc5fbd2e6894",
+    "conclusion": "success"
+  },
+  "method": "Anonymous HTTPS GET of canonical URLs; exact bytes compared to the verified source; no cache-busting query",
+  "resources": [
+    {
+      "url": "https://lightjunction.github.io/zmcl/",
+      "source_path": "site/index.html",
+      "expected_sha256": "e6646cfe02013b9e52baeea79a09993848ee382cf43b1d831ff61a920e4ec9a1",
+      "http_status": 200,
+      "final_url": "https://lightjunction.github.io/zmcl/",
+      "bytes": 13514,
+      "sha256": "e6646cfe02013b9e52baeea79a09993848ee382cf43b1d831ff61a920e4ec9a1",
+      "last_modified": "Fri, 20 Nov 2026 08:50:16 GMT",
+      "etag": "\"6b0009c8-34ca\"",
+      "age": "0",
+      "matches_source": true
+    },
+    {
+      "url": "https://lightjunction.github.io/zmcl/data.json",
+      "source_path": "site/data.json",
+      "expected_sha256": "1c3735c621a3ed0e1c7e4231d0f3f7e52d8c77a7584127ef9bd89268109491a7",
+      "http_status": 200,
+      "final_url": "https://lightjunction.github.io/zmcl/data.json",
+      "bytes": 18935,
+      "sha256": "1c3735c621a3ed0e1c7e4231d0f3f7e52d8c77a7584127ef9bd89268109491a7",
+      "last_modified": "Fri, 20 Nov 2026 08:50:16 GMT",
+      "etag": "\"6b0009c8-49f7\"",
+      "age": "0",
+      "matches_source": true
+    },
+    {
+      "url": "https://lightjunction.github.io/zmcl/style.css",
+      "source_path": "site/style.css",
+      "expected_sha256": "dbcd238ee2c7d1b2da52e1cf59149d26d69c713cfd7b50bea10d7b02725ed8e1",
+      "http_status": 200,
+      "final_url": "https://lightjunction.github.io/zmcl/style.css",
+      "bytes": 8051,
+      "sha256": "dbcd238ee2c7d1b2da52e1cf59149d26d69c713cfd7b50bea10d7b02725ed8e1",
+      "last_modified": "Fri, 20 Nov 2026 08:50:16 GMT",
+      "etag": "\"6b0009c8-1f73\"",
+      "age": "0",
+      "matches_source": true
+    },
+    {
+      "url": "https://lightjunction.github.io/zmcl/app.js",
+      "source_path": "site/app.js",
+      "expected_sha256": "0c84d52008326b22a282e60561dc3cbf5a50eeb874d4ec4d6d3476b75333935b",
+      "http_status": 200,
+      "final_url": "https://lightjunction.github.io/zmcl/app.js",
+      "bytes": 996,
+      "sha256": "0c84d52008326b22a282e60561dc3cbf5a50eeb874d4ec4d6d3476b75333935b",
+      "last_modified": "Fri, 20 Nov 2026 08:50:16 GMT",
+      "etag": "\"6b0009c8-3e4\"",
+      "age": "0",
+      "matches_source": true
+    },
+    {
+      "url": "https://lightjunction.github.io/zmcl/assets/backups-0.1.1.png",
+      "source_path": "site/assets/backups-0.1.1.png",
+      "expected_sha256": "3dc0b4dd35d856855671bee30390187aed0b10f05b9ee009c166c98f026a7ff3",
+      "http_status": 200,
+      "final_url": "https://lightjunction.github.io/zmcl/assets/backups-0.1.1.png",
+      "bytes": 46110,
+      "sha256": "3dc0b4dd35d856855671bee30390187aed0b10f05b9ee009c166c98f026a7ff3",
+      "last_modified": "Fri, 20 Nov 2026 08:50:16 GMT",
+      "etag": "\"6b0009c8-b41e\"",
+      "age": "0",
+      "matches_source": true
+    },
+    {
+      "url": "https://lightjunction.github.io/zmcl/assets/mark.svg",
+      "source_path": "site/assets/mark.svg",
+      "expected_sha256": "3320435bfdc01e939a49d68acf3a450e752e8fbc4b4945cb5bd01d04c07a861d",
+      "http_status": 200,
+      "final_url": "https://lightjunction.github.io/zmcl/assets/mark.svg",
+      "bytes": 219,
+      "sha256": "3320435bfdc01e939a49d68acf3a450e752e8fbc4b4945cb5bd01d04c07a861d",
+      "last_modified": "Fri, 20 Nov 2026 08:50:16 GMT",
+      "etag": "\"6b0009c8-db\"",
+      "age": "0",
+      "matches_source": true
+    }
+  ],
+  "passed": true,
+  "scope": "Deployment readback; browser interaction was tested separately at the same HTML/JSON/JS/CSS/image bytes."
+}
