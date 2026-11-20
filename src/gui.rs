@@ -11,6 +11,7 @@ use zgpui::native::{ButtonStyle, Canvas, Event, Rect, Theme, Ui, Window};
 use zmcl_core::json::{Kind, Value, get_str, with_json};
 
 mod titles;
+use crate::update;
 use titles::EnglishTitles;
 
 const BG: u32 = 0x111214ff;
@@ -467,6 +468,7 @@ enum Task {
     Accounts,
     Storage,
     Doctor,
+    CheckUpdate,
     Create {
         id: String,
         version: String,
@@ -509,6 +511,7 @@ impl Task {
             Self::Accounts => "Reading accounts".into(),
             Self::Storage => "Checking shared storage".into(),
             Self::Doctor => "Checking your setup".into(),
+            Self::CheckUpdate => "Checking launcher updates".into(),
             Self::Create { id, .. } => format!("Creating {id}"),
             Self::Install(id) => format!("Installing {id}"),
             Self::Launch { id, .. } => format!("Starting {id}"),
@@ -526,7 +529,12 @@ impl Task {
         }
         matches!(
             self,
-            Self::Instances | Self::Accounts | Self::Versions | Self::Storage | Self::Search { .. }
+            Self::Instances
+                | Self::Accounts
+                | Self::Versions
+                | Self::Storage
+                | Self::CheckUpdate
+                | Self::Search { .. }
         )
     }
 
@@ -541,6 +549,7 @@ impl Task {
             Self::Accounts => vec!["account", "list", "--json"],
             Self::Storage => vec!["storage", "stats", "--json"],
             Self::Doctor => vec!["doctor", "--json"],
+            Self::CheckUpdate => vec!["update", "check", "--json"],
             Self::Create {
                 id,
                 version,
@@ -794,6 +803,8 @@ fn append_log(log: &mut VecDeque<String>, text: &str) {
 }
 
 enum Action {
+    OpenRelease,
+    CopyRelease,
     Navigate(Page),
     ManagementPage(ManagementPage),
     ManagementSelect(String),
@@ -810,7 +821,52 @@ enum Action {
     Quit,
 }
 
+enum UpdateView {
+    Idle,
+    Checking,
+    Complete(update::Check),
+    Failed(String),
+}
+
+impl UpdateView {
+    fn release_url(&self) -> &str {
+        match self {
+            Self::Complete(result) => &result.release_url,
+            _ => update::RELEASES_PAGE,
+        }
+    }
+
+    fn title(&self) -> &str {
+        match self {
+            Self::Idle => "Launcher updates",
+            Self::Checking => "Checking official releases…",
+            Self::Failed(_) => "Could not check for updates",
+            Self::Complete(result) => match result.status.as_str() {
+                "available" => "New version available",
+                "current" => "Up to date",
+                "ahead" => "Newer build installed",
+                "unavailable" => "Package unavailable",
+                _ => "No releases found",
+            },
+        }
+    }
+
+    fn message(&self) -> &str {
+        match self {
+            Self::Idle => {
+                "Check when you want. No package is downloaded or installed automatically."
+            }
+            Self::Checking => "Contacting GitHub. Your library remains available while we check.",
+            Self::Failed(error) => error,
+            Self::Complete(result) => &result.message,
+        }
+    }
+}
+
 struct App {
+    launcher: update::Identity,
+    update: UpdateView,
+    release_browser: Option<Child>,
     root: Option<String>,
     exit_after_launch: bool,
     exit_requested: bool,
@@ -867,6 +923,9 @@ struct App {
 impl App {
     fn new(root: Option<String>) -> Self {
         Self {
+            launcher: update::identity(),
+            update: UpdateView::Idle,
+            release_browser: None,
             root,
             exit_after_launch: false,
             exit_requested: false,
@@ -953,6 +1012,19 @@ impl App {
 
     fn poll(&mut self) -> bool {
         let mut changed = false;
+        if let Some(browser) = &mut self.release_browser {
+            match browser.try_wait() {
+                Ok(None) => {}
+                result => {
+                    self.release_browser = None;
+                    if !matches!(result, Ok(Some(status)) if status.success()) {
+                        self.notice = update::BROWSER_ERROR.into();
+                        self.error = true;
+                    }
+                    changed = true;
+                }
+            }
+        }
         if let Some(job) = &mut self.job {
             let output_changed = job.poll(&mut self.log);
             changed |= output_changed && self.show_logs;
@@ -986,6 +1058,9 @@ impl App {
                     self.queue.clear();
                 }
                 if let Err(error) = result {
+                    if matches!(job.task, Task::CheckUpdate) {
+                        self.update = UpdateView::Failed(error.clone());
+                    }
                     self.notice = truncate_chars(error.trim(), 220);
                     self.error = true;
                     append_log(&mut self.log, &error);
@@ -1023,6 +1098,9 @@ impl App {
             match Job::start(task, self.root.as_deref()) {
                 Ok(job) => self.job = Some(job),
                 Err(error) => {
+                    if matches!(self.update, UpdateView::Checking) {
+                        self.update = UpdateView::Failed(error.clone());
+                    }
                     self.notice = error;
                     self.error = true;
                 }
@@ -1034,6 +1112,11 @@ impl App {
 
     fn apply_result(&mut self, task: &Task, bytes: &[u8]) -> Result<(), String> {
         match task {
+            Task::CheckUpdate => {
+                self.update = UpdateView::Complete(update::Check::from_json(bytes)?);
+                self.notice.clear();
+                self.error = false;
+            }
             Task::Manage(task) => self.apply_management_result(task, bytes)?,
             Task::Instances => {
                 self.instances = with_json(bytes, |root| {
@@ -1195,6 +1278,25 @@ impl App {
 
     fn action(&mut self, action: Action) -> bool {
         match action {
+            Action::OpenRelease if self.release_browser.is_none() => {
+                match update::open_page(self.update.release_url()) {
+                    Ok(browser) => {
+                        self.release_browser = Some(browser);
+                        self.notice.clear();
+                        self.error = false;
+                    }
+                    Err(error) => {
+                        self.notice = error;
+                        self.error = true;
+                    }
+                }
+            }
+            Action::OpenRelease => {}
+            Action::CopyRelease => {
+                self.ui.clipboard = Some(self.update.release_url().to_owned());
+                self.notice = "Official release link copied.".into();
+                self.error = false;
+            }
             Action::Quit => return false,
             Action::ManagementPage(page) => {
                 self.management_page = page;
@@ -1243,6 +1345,9 @@ impl App {
                 }
             }
             Action::Start(task) if !self.busy() => {
+                if matches!(task, Task::CheckUpdate) {
+                    self.update = UpdateView::Checking;
+                }
                 self.notice.clear();
                 self.error = false;
                 if matches!(task, Task::Login(_)) {
@@ -2687,12 +2792,154 @@ impl App {
             x,
             w,
             self.titles.settings,
-            "Check your setup and see what is stored on this device.",
+            "Your launcher, updates and device.",
+        );
+        let rows = self.storage.len() + self.diagnostics.len();
+        let content_height = 388. + rows.max(1) as f32 * 52.;
+        let viewport = (h - 216.).max(1.);
+        let maximum_scroll = ((content_height - viewport).max(0.) / 52.).ceil() as usize;
+        self.scroll = self.scroll.min(maximum_scroll);
+        let y = 150. - self.scroll as f32 * 52.;
+        c.clip(Rect::new(x - 8., 144., w + 16., (h - 214.).max(1.)));
+        c.rect(Rect::new(x, y, w, 288.), 12., PANEL);
+        c.text(
+            concat!("zmcl ", env!("CARGO_PKG_VERSION")),
+            x + 20.,
+            y + 18.,
+            23,
+            true,
+            INK,
+        );
+        c.ellipsis(
+            &self.launcher.platform,
+            x + w - 184.,
+            y + 27.,
+            164.,
+            12,
+            false,
+            MUTED,
+        );
+        c.ellipsis(
+            self.launcher.distribution,
+            x + 20.,
+            y + 58.,
+            w - 40.,
+            13,
+            false,
+            MUTED,
+        );
+        c.ellipsis(
+            &self.launcher.location,
+            x + 20.,
+            y + 82.,
+            w - 40.,
+            12,
+            false,
+            MUTED,
+        );
+        c.line((x + 20., y + 110.), (x + w - 20., y + 110.), 1., LINE);
+        let color = if matches!(self.update, UpdateView::Failed(_)) {
+            ERROR
+        } else {
+            INK
+        };
+        c.ellipsis(
+            self.update.title(),
+            x + 20.,
+            y + 127.,
+            w - 40.,
+            17,
+            true,
+            color,
+        );
+        if let UpdateView::Complete(result) = &self.update {
+            let detail = result
+                .version
+                .as_deref()
+                .map(|version| format!("Published {version} · {}", result.platform))
+                .unwrap_or_else(|| format!("Checked {} · latest 10 releases", result.platform));
+            c.ellipsis(&detail, x + 20., y + 153., w - 40., 12, false, MUTED);
+        } else {
+            c.ellipsis(
+                "Official GitHub releases · development previews included",
+                x + 20.,
+                y + 153.,
+                w - 40.,
+                11,
+                false,
+                MUTED,
+            );
+        }
+        update_message(c, self.update.message(), x + 20., y + 176., w - 40., color);
+        let compact = w < 500.;
+        let check_width = if compact { (w - 52.) / 2. } else { 160. };
+        let button_y = y + 224.;
+        let check_label = match self.update {
+            UpdateView::Checking => "Checking…",
+            UpdateView::Failed(_) => "Retry check",
+            _ if compact => "Check updates",
+            _ => "Check for updates",
+        };
+        if self.ui.button(
+            c,
+            502,
+            Rect::new(x + 20., button_y, check_width, 36.),
+            check_label,
+            ButtonStyle::Secondary,
+            enabled && !busy,
+        ) {
+            action = Some(Action::Start(Task::CheckUpdate));
+        }
+        let release_width = if compact { check_width } else { 130. };
+        if self.ui.button(
+            c,
+            503,
+            Rect::new(x + 32. + check_width, button_y, release_width, 36.),
+            if self.release_browser.is_some() {
+                "Opening…"
+            } else {
+                "Release page"
+            },
+            ButtonStyle::Quiet,
+            enabled && self.release_browser.is_none(),
+        ) {
+            action = Some(Action::OpenRelease);
+        }
+        if !compact
+            && self.ui.button(
+                c,
+                504,
+                Rect::new(x + 44. + check_width + release_width, button_y, 94., 36.),
+                "Copy link",
+                ButtonStyle::Quiet,
+                enabled,
+            )
+        {
+            action = Some(Action::CopyRelease);
+        }
+        c.ellipsis(
+            self.launcher.guidance,
+            x + 20.,
+            y + 270.,
+            w - 40.,
+            11,
+            false,
+            MUTED,
+        );
+        c.text("Device", x, y + 308., 16, true, INK);
+        c.ellipsis(
+            "Scroll for setup and storage details",
+            x + 92.,
+            y + 312.,
+            w - 92.,
+            11,
+            false,
+            DIM,
         );
         if self.ui.button(
             c,
             500,
-            Rect::new(x, 156., 140., 42.),
+            Rect::new(x, y + 336., 140., 38.),
             "Check setup",
             ButtonStyle::Secondary,
             enabled && !busy,
@@ -2702,39 +2949,40 @@ impl App {
         if self.ui.button(
             c,
             501,
-            Rect::new(x + 154., 156., 145., 42.),
+            Rect::new(x + 154., y + 336., 145., 38.),
             "Refresh storage",
             ButtonStyle::Quiet,
             enabled && !busy,
         ) {
             action = Some(Action::Start(Task::Storage));
         }
-        let all: Vec<(&str, &str)> = self
+        for (i, (key, value)) in self
             .storage
             .iter()
             .chain(self.diagnostics.iter())
-            .map(|(a, b)| (a.as_str(), b.as_str()))
-            .collect();
-        let count = (((h - 310.).max(50.) / 52.).floor() as usize).max(1);
-        self.scroll = self.scroll.min(all.len().saturating_sub(count));
-        for (i, (key, value)) in all.iter().enumerate().skip(self.scroll).take(count) {
-            let y = 235. + (i - self.scroll) as f32 * 52.;
+            .enumerate()
+        {
+            let row_y = y + 396. + i as f32 * 52.;
+            if row_y < 120. || row_y > h - 70. {
+                continue;
+            }
             let half = (w * 0.38).min(200.);
-            c.ellipsis(key, x, y, half - 12., 13, false, MUTED);
-            c.ellipsis(value, x + half, y, w - half, 14, false, INK);
-            c.line((x, y + 32.), (x + w, y + 32.), 1., LINE);
+            c.ellipsis(key, x, row_y, half - 12., 13, false, MUTED);
+            c.ellipsis(value, x + half, row_y, w - half, 14, false, INK);
+            c.line((x, row_y + 32.), (x + w, row_y + 32.), 1., LINE);
         }
-        if all.is_empty() {
+        if rows == 0 {
             c.ellipsis(
                 "Run a check to see Java, network tools and storage details.",
                 x,
-                250.,
+                y + 396.,
                 w,
-                14,
+                13,
                 false,
                 MUTED,
             );
         }
+        c.unclip();
         action
     }
 
@@ -3203,6 +3451,35 @@ impl App {
     }
 }
 
+// Keep update errors readable at compact widths without allocating a wrapped copy.
+fn update_message(c: &mut Canvas<'_>, text: &str, x: f32, y: f32, width: f32, color: u32) {
+    let mut rest = text;
+    for row in 0..2 {
+        if rest.is_empty() {
+            break;
+        }
+        if row == 1 || c.measure(rest, 12, false) <= width {
+            c.ellipsis(rest, x, y + row as f32 * 18., width, 12, false, color);
+            break;
+        }
+        let mut end = 0;
+        for (index, ch) in rest.char_indices() {
+            if ch.is_whitespace() && c.measure(&rest[..index], 12, false) <= width {
+                end = index;
+            }
+            if c.measure(&rest[..index + ch.len_utf8()], 12, false) > width {
+                break;
+            }
+        }
+        if end == 0 {
+            c.ellipsis(rest, x, y + row as f32 * 18., width, 12, false, color);
+            break;
+        }
+        c.text(&rest[..end], x, y + row as f32 * 18., 12, false, color);
+        rest = rest[end..].trim_start();
+    }
+}
+
 fn matching_versions<'a>(
     versions: &'a [String],
     query: &'a str,
@@ -3466,14 +3743,14 @@ pub fn run_with_options(
                 }
                 first_frame = false;
             }
-            if let Some(text) = app.ui.clipboard.take() {
-                window.copy(&text);
-            }
             let had_action = action.is_some();
             if let Some(action) = action
                 && !app.action(action)
             {
                 break;
+            }
+            if let Some(text) = app.ui.clipboard.take() {
+                window.copy(&text);
             }
             redraw = had_event || had_action;
             if redraw {
@@ -3488,6 +3765,31 @@ pub fn run_with_options(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn updates_are_explicit_and_use_the_existing_cli_task() {
+        let mut app = App::new(None);
+        assert!(matches!(app.update, UpdateView::Idle));
+        assert!(
+            app.queue
+                .iter()
+                .all(|task| !matches!(task, Task::CheckUpdate))
+        );
+        app.queue.clear();
+        app.action(Action::Navigate(Page::System));
+        assert!(app.queue.is_empty());
+        app.action(Action::Start(Task::CheckUpdate));
+        assert!(matches!(app.update, UpdateView::Checking));
+        assert_eq!(app.queue.len(), 1);
+        app.action(Action::Start(Task::CheckUpdate));
+        assert_eq!(app.queue.len(), 1);
+        assert_eq!(Task::CheckUpdate.args(), ["update", "check", "--json"]);
+        app.queue.clear();
+        app.update = UpdateView::Failed("Offline".into());
+        app.action(Action::Start(Task::CheckUpdate));
+        assert!(matches!(app.update, UpdateView::Checking));
+        assert_eq!(app.queue.len(), 1);
+    }
 
     #[test]
     fn new_instance_suggests_a_free_name_and_fetches_releases_once() {

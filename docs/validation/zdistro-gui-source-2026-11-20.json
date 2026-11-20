@@ -1,0 +1,319 @@
+{
+  "binary": {
+    "bytes": 1504616,
+    "sha256": "586968d15c5187c0223d5223294ddcba585789d93934e6a37a3c7e1c516a3615",
+    "version_output": "zmcl 0.1.4"
+  },
+  "checks": [
+    {
+      "argv": [
+        "rustfmt",
+        "--check",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "src/update.rs",
+        "src/gui.rs",
+        "src/main.rs"
+      ],
+      "exit_code": 0,
+      "name": "rust-format",
+      "seconds": 0.114,
+      "status": "passed"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--workspace",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "name": "rust-tests",
+      "seconds": 196.69,
+      "status": "passed"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--offline",
+        "--workspace",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "name": "strict-clippy",
+      "seconds": 64.065,
+      "status": "passed"
+    },
+    {
+      "argv": [
+        "cargo",
+        "check",
+        "--locked",
+        "--offline",
+        "-p",
+        "zmcl-core",
+        "--no-default-features"
+      ],
+      "exit_code": 0,
+      "name": "core-no-default",
+      "seconds": 9.141,
+      "status": "passed"
+    },
+    {
+      "argv": [
+        "cargo",
+        "check",
+        "--locked",
+        "--offline",
+        "-p",
+        "zmcl",
+        "--no-default-features"
+      ],
+      "exit_code": 0,
+      "name": "app-no-gui",
+      "seconds": 1.467,
+      "status": "passed"
+    },
+    {
+      "argv": [
+        "python3",
+        "-I",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts",
+        "-p",
+        "test_zdistro*.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "name": "zdistro-tests",
+      "seconds": 3.875,
+      "status": "passed"
+    },
+    {
+      "argv": [
+        "python3",
+        "-I",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts",
+        "-p",
+        "test_install.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "name": "installer-tests",
+      "seconds": 0.365,
+      "status": "passed"
+    },
+    {
+      "argv": [
+        "python3",
+        "-I",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts",
+        "-p",
+        "test_package_metadata.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "name": "package-tests",
+      "seconds": 0.515,
+      "status": "passed"
+    },
+    {
+      "argv": [
+        "python3",
+        "-I",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts",
+        "-p",
+        "test_windows_distribution.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "name": "windows-contract-tests",
+      "seconds": 0.164,
+      "status": "passed"
+    },
+    {
+      "argv": [
+        "python3",
+        "-I",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "src/runtime",
+        "-p",
+        "test_installer.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "name": "integrated-runtime",
+      "seconds": 0.315,
+      "status": "passed"
+    },
+    {
+      "argv": [
+        "python3",
+        "-I",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "src/worlds",
+        "-p",
+        "test_manage.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "name": "integrated-worlds",
+      "seconds": 0.265,
+      "status": "passed"
+    },
+    {
+      "argv": [
+        "python3",
+        "-I",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "src/server",
+        "-p",
+        "test_process.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "name": "integrated-server",
+      "seconds": 0.766,
+      "status": "passed"
+    },
+    {
+      "argv": [
+        "cargo",
+        "build",
+        "--locked",
+        "--offline",
+        "--release"
+      ],
+      "exit_code": 0,
+      "name": "release-build",
+      "seconds": 16.65,
+      "status": "passed"
+    },
+    {
+      "argv": [
+        "{target_dir}/release/zmcl",
+        "--version"
+      ],
+      "exit_code": 0,
+      "name": "release-version",
+      "seconds": 0.004,
+      "status": "passed"
+    },
+    {
+      "argv": [
+        "python3",
+        "-I",
+        "-B",
+        "src/gui/update_smoke.py",
+        "--binary",
+        "{target_dir}/release/zmcl",
+        "--output",
+        "{validation}/update-smoke"
+      ],
+      "exit_code": 0,
+      "name": "update-gui",
+      "seconds": 17.058,
+      "status": "passed"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "name": "patch-whitespace",
+      "seconds": 0.032,
+      "status": "passed"
+    }
+  ],
+  "completed": true,
+  "ended_utc": "2026-11-20T12:39:42.551710+00:00",
+  "gui_automated_result_sha256": "6423d2735503b5fe03000e7c0c993393f934dd3f68d8cd10598c00b39bc3c458",
+  "gui_visual_review": {
+    "network": "Private PATH fixture; available 0.1.5 is scenario data, not an actual release.",
+    "passed": true,
+    "reviewed": [
+      "04-available-800.png",
+      "11-browser-failure-800.png"
+    ],
+    "viewport": [
+      800,
+      600
+    ]
+  },
+  "passed": true,
+  "rustc": "rustc 1.100.0 (0ef1bc386 2026-11-09)\nbinary: rustc\ncommit-hash: 0ef1bc386059596dada8fb65b50425aab2ea637a\ncommit-date: 2026-11-09\nhost: x86_64-unknown-linux-gnu\nrelease: 1.100.0\nLLVM version: 23.1.5\n",
+  "schema": 1,
+  "scope": "Integrated Linux source candidate before publication; source parent and file digests bind the tested changes. Package/native Windows acceptance is recorded separately.",
+  "source_candidate_memory_benchmark": "not measured in this distribution iteration",
+  "source_files": {
+    ".github/workflows/windows-distribution.yml": "7a6fd00e17b6d5f4b56e9718b376ff03787ca250a9771dfab85a0fb5ab297e9f",
+    "Cargo.lock": "5894dafd5e126e1f0d14f2eb0fdd6d3d7c79e3277468a70c709ea7525bdc7ce1",
+    "Cargo.toml": "d6ef522e3f08d933ac4e3d60cd0785231f98eaaf04f1f3d53d4d06bce605b8c2",
+    "README.md": "28f97504f9bc8a9aacc2b4713f01b53f47d8067ecc4025a143138452e4b71c97",
+    "docs/FEATURES.md": "03d4543a4e47581a5e2672574f071f33bb85ba1f9dbff5463a20c777158f432a",
+    "scripts/test_windows_distribution.py": "b8ae80386af798aefd6b9b9c5e035ec97405e27695c698fa832c489454bed0f8",
+    "scripts/test_zdistro_package.py": "a60d099cb13d883703bfa6622b758cee8b28401ed45477f352b8d0ab3337f408",
+    "scripts/windows_distribution.py": "4144da170fa198d45f6f7cd918834790d37cb75d728d2e64270538e5d43b8de1",
+    "scripts/zdistro_package.py": "f80819df5cab15a2b82911c299fd2eae238acc2044e64e35644b85909510ccfb",
+    "src/gui.rs": "eef93b7599bc9b687cb13577c83c43155bdbbae6e62b98728b8ec6b644055ae7",
+    "src/gui/update_smoke.py": "152796616caa43060a3898ebf7f69c389ade8d0ca8e323d7f140800cae953378",
+    "src/main.rs": "15de7ac9ac07a7f5128c1d2f23174dd5b5d9e569852c7935ae11a7dd24e98f40",
+    "src/update.rs": "edd2ea0eff79859593e80408090bb8c421c9060b3e54577858c13c0dcfa8ac94"
+  },
+  "source_parent": "85fc0389a2d1ff9399c0c20e4bd60f771de91113",
+  "started_utc": "2026-11-20T12:34:30.968358+00:00",
+  "submodules": [
+    " 4d87f3ae3743e81509d5ac5500909955667c860f vendor/zclap (v0.1.4)",
+    " 0af1f7eb0766ff0ce9db5cee7c6184eff511a8c1 vendor/zconv (v0.4.0-2-g0af1f7e)",
+    " 4aba3ba83815253fb7e4013baa8bcf894439d32d vendor/zgpui (v0.1.5)",
+    " b90984b48465a764bcb699ad2bb3251fa7020024 vendor/zi18n (v0.1.0)"
+  ],
+  "test_totals": {
+    "python": 131,
+    "rust": 114
+  },
+  "version": "0.1.4"
+}

@@ -1,0 +1,78 @@
+name: Windows distribution acceptance
+run-name: Windows distribution for ${{ inputs.source_commit }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_commit:
+        description: Full 40-character lowercase commit SHA to build and verify
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-distribution-${{ inputs.source_commit }}
+  cancel-in-progress: false
+
+jobs:
+  windows-distribution:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: windows-latest
+    timeout-minutes: 35
+    env:
+      SOURCE_COMMIT: ${{ inputs.source_commit }}
+      CARGO_TERM_COLOR: never
+      CARGO_BUILD_JOBS: "1"
+      PYTHONUTF8: "1"
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Validate the immutable source input
+        id: source
+        run: |
+          if ($env:SOURCE_COMMIT -cnotmatch '\A[0-9a-f]{40}\z') {
+            throw 'source_commit must be exactly 40 lowercase hexadecimal characters.'
+          }
+          git config --global core.autocrlf false
+          "sha=$env:SOURCE_COMMIT" >> $env:GITHUB_OUTPUT
+
+      - name: Check out the exact application and pinned submodules
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ steps.source.outputs.sha }}
+          fetch-depth: 0
+          submodules: recursive
+          persist-credentials: false
+
+      - name: Set up the packaging interpreter
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.11"
+          architecture: x64
+
+      - name: Read the repository Rust toolchain
+        id: toolchain
+        run: python -I -B scripts/windows_distribution.py toolchain
+
+      - name: Install the exact repository Rust toolchain
+        uses: dtolnay/rust-toolchain@39008827e6b4319a349e9a42dfc90579dd25f1ca # stable implementation
+        with:
+          toolchain: ${{ steps.toolchain.outputs.channel }}
+          components: ${{ steps.toolchain.outputs.components }}
+          targets: x86_64-pc-windows-msvc
+
+      - name: Build and verify the native Windows distribution
+        run: python -I -B scripts/windows_distribution.py validate --source-commit $env:SOURCE_COMMIT --output "$env:GITHUB_WORKSPACE\artifacts\windows-distribution"
+
+      - name: Preserve packages and all original acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: windows-distribution-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/windows-distribution/
+          if-no-files-found: warn
+          include-hidden-files: true
+          retention-days: 14

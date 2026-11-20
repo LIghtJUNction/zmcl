@@ -6,16 +6,58 @@
 
 [项目网站](https://lightjunction.github.io/zmcl/) · [预览版下载](https://github.com/LIghtJUNction/zmcl/releases) · [实际验收](docs/VALIDATION.md) · [性能测量](docs/PERFORMANCE.md)
 
-## 安装
+## 下载与安装
 
-Arch Linux 可直接安装 [AUR 包 zmcl-bin](https://aur.archlinux.org/packages/zmcl-bin)：
+从 [GitHub Releases](https://github.com/LIghtJUNction/zmcl/releases) 选择已发布版本，并按发行页实际列出的平台资产下载。每个版本的文件摘要、运行条件和原生验收范围随发行记录提供。
+
+| 使用环境 | 软件包 | 安装方式 |
+| --- | --- | --- |
+| Linux x86_64，用户级安装 | tar.gz | 解包后运行 Python 安装器，自行选择安装位置 |
+| Debian 系 Linux x86_64 | DEB | 确认运行库满足要求后，交给 apt 管理 |
+| Arch Linux x86_64 | AUR 的 zmcl-bin | 使用 yay 或 paru，以 AUR 当前配方版本为准 |
+| Windows amd64 | ZIP | 查看对应发行的原生 Windows 验收记录与安装说明 |
+
+Linux 预编译程序要求 **glibc 2.39+、Fontconfig 2.17.0+、FreeType 和 X11/XWayland**。文件与下载操作使用 curl、系统 CA 证书和 Python 3.8+；Java 与 Minecraft 单独安装。DEB 的具体依赖由二进制符号和发行元数据生成，安装前应核对目标系统的库版本。较旧的 Debian 或 Ubuntu 需要相应运行库，或在目标系统从源码构建。本项目暂未提供 macOS 下载包。
+
+### Linux 便携包
+
+校验并解包后，在包含 `scripts/install.py` 的包根目录运行：
+
+~~~sh
+python3 scripts/install.py install --prefix "$HOME/.local"
+"$HOME/.local/bin/zmcl" gui
+~~~
+
+`--prefix` 接受含空格的路径，例如 `--prefix "$HOME/Applications/zmcl preview"`。安装完成后会显示实际版本、安装位置、直接启动命令和更新方法；如果 PATH 中的 `zmcl` 指向另一份程序，也会同时显示两处路径。使用完成提示中的完整路径即可启动本次安装。
+
+从新版本解包目录再次运行安装器，并传入相同的 `--prefix`，即可升级这份安装。卸载也使用相同前缀：
+
+~~~sh
+python3 scripts/install.py uninstall --prefix "$HOME/.local"
+~~~
+
+安装器依据文件清单与摘要处理程序、图标、桌面入口和安装信息。用户修改过的文件、非受管文件以及 Minecraft 实例、存档和账号资料会保留。详细步骤见[安装说明](https://github.com/LIghtJUNction/zmcl/blob/main/docs/INSTALL.md)。
+
+### Arch Linux
+
+[AUR 包 zmcl-bin](https://aur.archlinux.org/packages/zmcl-bin) 提供预编译程序、桌面入口与图标：
 
 ~~~sh
 yay -S zmcl-bin
 # 或 paru -S zmcl-bin
 ~~~
 
-AUR 安装 GitHub 发布的 Linux x86_64 预编译程序，附带桌面入口与图标。当前发行版本、运行库下限、更新与卸载步骤见 [安装说明](docs/INSTALL.md)，每个包的实际依赖记录在 release.json 中。GUI 低于 10 MiB 仍需按静置、绘制和操作期间的主进程及完整进程树分别验收。
+AUR 与用户级安装分别由各自的安装记录管理。用 `zmcl --version` 核对 PATH 实际选中的版本；包管理器安装的副本继续通过同一包管理器更新。
+
+### 查看当前安装与检查更新
+
+**Settings** 展示当前程序版本、平台、位置和安装来源。点击 **Check for updates** 手动查询官方 GitHub 发行，包括开发预览，并检查是否有适合当前操作系统和架构的软件包。失败后可重试，也可打开或复制官方发行链接。当前构建比线上软件包更新时，会显示 **Newer build installed**。
+
+确认版本后，按原安装方式更新：便携安装重新运行同前缀安装器，DEB 与 AUR 使用对应包管理器。缺少有效来源信息的程序会显示 **Unknown / source build**。也可从命令行检查：
+
+~~~sh
+zmcl update check --json
+~~~
 
 ## 为什么体积可以小
 
@@ -46,7 +88,7 @@ cargo build --release --locked
 
 只有 CLI 时可用 `cargo build --release --locked --no-default-features`。启动器支持 `--root DIR` 或 `ZMCL_HOME` 选择数据目录；运行 `zmcl doctor` 查看系统程序与 Java 状态。文件助手要求 Python 3.8+；Windows 会尝试 `py -3`、`python`、`python3`，其他平台尝试 `python3`、`python`。`ZMCL_PYTHON` 可指定一个解释器可执行文件路径，含空格的路径作为单个参数处理。默认数据目录为 Linux 的 XDG data/zmcl、macOS 的 Application Support/zmcl、Windows 的 LocalAppData/zmcl。
 
-已记录的真实游戏与桌面验收在 Linux x86_64 完成。预编译包的 glibc 和 Fontconfig 下限由实际 ELF 符号生成，见包内 release.json；源码支持的条件分支不代表预编译程序兼容同样的旧运行库。较旧发行版可在本机构建，并验证运行条件。符号要求不能替代完整发行版兼容性验收；Windows GNU 完整 GUI 已正常跨编译；zgpui 0.1.5 的 Windows/macOS 原生探针已在对应系统运行。zmcl 应用本身的 Windows/macOS 实机安装、窗口与游戏启动仍未验收。
+已记录的真实游戏与桌面验收在 Linux x86_64 完成。预编译包的 glibc 和 Fontconfig 下限由实际 ELF 符号生成，见包内 release.json；源码支持的条件分支不代表预编译程序兼容同样的旧运行库。较旧发行版可在本机构建，并验证运行条件。符号要求不能替代完整发行版兼容性验收；Windows GNU 完整 GUI 已正常跨编译；zgpui 0.1.5 的 Windows/macOS 原生探针已在对应系统运行。zmcl 的原生 Windows 构建、安装、窗口和卸载由独立发行工作流记录实际结果；请查看对应版本的验收范围。macOS 应用流程与 Windows/macOS 的真实游戏启动仍待验收。
 
 ## 常用操作
 
@@ -167,6 +209,6 @@ python3 -B src/horizon/test_archive.py
 python3 -B scripts/test_bench_linux.py
 ```
 
-`scripts/package.py` 创建本地分发包，`scripts/install.py` 提供用户级安装和清单校验卸载。卸载不删除游戏数据，也不删除已被用户修改的安装文件。
+发行端通过固定版本的 `zdistro` 和 `scripts/zdistro_package.py` 生成并校验软件包；使用方法见[分发说明](https://github.com/LIghtJUNction/zmcl/blob/main/docs/DISTRIBUTION.md)。`scripts/install.py` 提供用户级安装和清单校验卸载，保留游戏数据和用户修改过的安装文件。
 
 本项目并非 Mojang/Microsoft 官方产品，也不是 XMCL 或 Horizon 的官方发行版。各上游项目和游戏资源保留各自许可。

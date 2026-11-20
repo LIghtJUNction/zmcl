@@ -13,6 +13,7 @@ mod resources;
 mod runtime;
 mod server;
 mod store;
+mod update;
 mod util;
 mod worlds;
 
@@ -147,6 +148,7 @@ fn help() {
   zmcl java list
   zmcl java install 21                Install an official verified JRE
   zmcl doctor [--json]
+  zmcl update check [--json]         Check official launcher releases; no installation
 
 Global: --root DIR (or ZMCL_HOME), --help, --version.
 Install data and Java/game memory are separate from launcher size.
@@ -171,6 +173,13 @@ pub fn run_cli(args: Vec<String>) -> Result<()> {
         return Ok(());
     }
     let command = cli.args.first().map(String::as_str).unwrap_or("gui");
+    if command == "update" {
+        if cli.args.len() != 2 || cli.args[1] != "check" {
+            return Err("Usage: zmcl update check --json".into());
+        }
+        println!("{}", update::check_json()?);
+        return Ok(());
+    }
     if command == "gui" {
         #[cfg(feature = "gui")]
         if cli.flags.contains("exit-after-launch") {

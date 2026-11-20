@@ -49,7 +49,7 @@ class ReleaseBoundaries(unittest.TestCase):
             "linux_direct_elf_minimum_fontconfig": "2.17.0",
         }}
         self.assertEqual(packaging.deb_dependencies(release),
-                         ["curl", "hicolor-icon-theme", "libc6 (>= 2.34)",
+                         ["ca-certificates", "curl", "hicolor-icon-theme", "libc6 (>= 2.34)",
                           "libfontconfig1 (>= 2.17.0)", "libx11-6", "python3 (>= 3.8)"])
 
     def test_archive_traversal_and_links_are_rejected_without_extracting(self):

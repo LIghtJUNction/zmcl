@@ -295,7 +295,7 @@ def deb_dependencies(release):
             require(re.fullmatch(r"[0-9]+(?:\.[0-9]+)+", minimum), "Invalid dependency version floor")
             dependencies.remove(dependency)
             dependencies.add(dependency + " (>= " + minimum + ")")
-    dependencies.update(("curl", "python3 (>= 3.8)", "hicolor-icon-theme"))
+    dependencies.update(("ca-certificates", "curl", "python3 (>= 3.8)", "hicolor-icon-theme"))
     return sorted(dependencies)
 
 

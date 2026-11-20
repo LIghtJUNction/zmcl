@@ -1,5 +1,15 @@
 # XMCL compatibility record
 
+## 0.1.4 distribution and installation
+
+The source connects the fixed zdistro 0.1.0 packager to Linux tar.gz/DEB and native Windows ZIP preparation. [Distribution instructions](https://github.com/LIghtJUNction/zmcl/blob/main/docs/DISTRIBUTION.md) describe the artifact and runtime-dependency checks. Availability and native acceptance belong to each published release; no macOS application package is provided.
+
+Settings now shows the running launcher version, platform, executable location and advisory installation source. A manual **Check for updates** action and `zmcl update check --json` inspect official GitHub releases, compare semantic versions, and select packages for the current OS and architecture. A newer local build is reported as ahead of the published package. Failures can be retried, and release links can be opened or copied; installation remains with the selected installer or package manager.
+
+The [portable installer](../scripts/install.py) reports the installed version, prefix, direct launch command and same-prefix update command. If PATH selects another zmcl, it identifies both copies. Validated distribution metadata and the generated installation receipt join the existing strict file/digest manifest. Upgrades refuse modified or unmanaged installation files; removal preserves modified files and game data. Windows installations use `bin/zmcl.exe`, and user-facing Python requirements remain 3.8+.
+
+The [wrapper-to-installer roundtrip](https://github.com/LIghtJUNction/zmcl/blob/85fc0389a2d1ff9399c0c20e4bd60f771de91113/docs/validation/zdistro-portable-roundtrip-2026-11-20.json) uses a real small ELF, the fixed zipapp and private prefixes with spaces. It verifies distribution/installation metadata, installed file digests, removal and synthetic game-data preservation. The Windows distribution workflow records its native build, install, window and removal results separately. These source-level improvements do not relabel the earlier application, account, game or memory evidence below.
+
 ## 0.1.3 management and distribution iteration
 
 [The 0.1.3 report](reports/2026-11-20-helper-memory.md) records source `9ef89bb92d46d324172d6ea8b13054c81434e178`, 97 Rust tests, 51 affected Python tests, real CLI file roundtrips, two six-flow native GUI observations, and another six-flow check of the AUR-installed binary. GitHub v0.1.3 and AUR 0.1.3-1 are published; normal host upgrade and public-index readback passed. Helpers load modules on demand, backup list entries release full archive indexes between inspections, and JSON output avoids a complete encoded duplicate. This reduces observed large-backup query peaks in the fixed paired fixture; the complete GUI below-10-MiB target remains unmet. No new Windows/macOS, real-account or game/server-launch acceptance is inferred, and the fixed XMCL baseline and feature gaps below remain unchanged.
