@@ -4,12 +4,10 @@ Each published ZIP contains a complete SHA-256 manifest. Credentials stored by
 the launcher and managed/runtime game roots are excluded. No network or shell.
 """
 import errno
-import hashlib
 import json
 import os
 from pathlib import Path
 import re
-import shutil
 import stat
 import struct
 import sys
@@ -253,6 +251,7 @@ def validate_state(game, stability, check_ctime=True):
 
 
 def snapshot(game, backup_dir, backup_id, instance_id, label, created, budget=None, stability=None):
+    import hashlib
     budget = budget or Budget()
     safe_token(backup_id)
     safe_token(instance_id)
@@ -439,6 +438,7 @@ def inspect_archive(source, expected_instance, budget):
 
 
 def unpack(source, destination, expected_instance, budget=None):
+    import hashlib
     budget = budget or Budget()
     identity(destination)
     if any(destination.iterdir()):
@@ -605,6 +605,7 @@ def check_identity(path, expected):
 
 
 def remove_stage(path, expected):
+    import shutil
     check_identity(path, expected)
     shutil.rmtree(path)
 
@@ -649,6 +650,7 @@ class SimulatedInterruption(BaseException):
 
 
 def restore(instance, backup_dir, backup_id, instance_id, fail_at=None):
+    import shutil
     safe_token(backup_id)
     guard_stopped(instance)
     recover(instance, backup_dir)

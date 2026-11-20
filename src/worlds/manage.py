@@ -4,9 +4,6 @@ or NBT rewriting. Invoked by Rust under the instance operation lock.
 NBT reference: Voxelum/minecraft-launcher-core-node packages/game-data/level.ts.
 World roots contain gzip-compressed Java NBT level.dat with a Data compound.
 """
-import ctypes
-import gzip
-import hashlib
 import json
 import os
 from pathlib import Path
@@ -246,6 +243,7 @@ class Nbt:
 
 
 def metadata(root):
+    import gzip
     root = real_dir(root)
     path = confined(root, ("level.dat",))
     before = path.lstat()
@@ -684,6 +682,8 @@ def fsync_directory(path):
 
 def publish_directory(stage, target):
     """Atomic publication that cannot replace an existing file or empty dir."""
+    import ctypes
+
     if stage.is_dir():
         fsync_directory(stage)
     if os.name == "nt":
@@ -760,6 +760,7 @@ def clone_world(source_instance, name, target_instance, new_name, stage):
 
 
 def export_world(instance, name, destination, stage):
+    import hashlib
     instance = real_dir(instance)
     guard_stopped(instance)
     source = real_dir(world_path(instance, name))

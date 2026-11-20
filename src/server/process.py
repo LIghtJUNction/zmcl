@@ -1,5 +1,5 @@
 """Linux server lifecycle using verified process identities and pidfd signaling."""
-import errno, json, os, pathlib, select, shutil, signal, subprocess, sys, tempfile, time, uuid
+import json, os, pathlib, signal, sys
 
 MAX_RECORD = 65536
 def bounded_json(path):
@@ -8,6 +8,7 @@ def bounded_json(path):
     return json.loads(data)
 
 def atomic_record(path, value):
+    import tempfile
     if path.is_symlink(): raise ValueError('Symbolic link process record rejected')
     fd,tmp=tempfile.mkstemp(prefix='.process-',suffix='.tmp',dir=path.parent)
     try:
@@ -96,6 +97,11 @@ def start(root, options):
     state=status(root)
     if state['state']!='stopped':raise RuntimeError('Server has an active or uncertain process record; inspect status before starting')
     if not eula_accepted(root):raise RuntimeError('Read the Minecraft EULA and explicitly set eula=true before starting; zmcl will not accept it for you')
+    # Status and rejected starts do not need process-launch or archive modules.
+    import shutil
+    import subprocess
+    import time
+    import uuid
     java=shutil.which(options.get('java',''))
     if not java:raise RuntimeError('Java executable was not found')
     java=os.path.realpath(java)
@@ -138,6 +144,7 @@ def start(root, options):
 
 def stop(root):
     if not supported():raise RuntimeError('Verified managed stopping requires Linux pidfd support')
+    import select
     record=record_for(root)
     if record is None:return {'state':'stopped','running':False,'verified':False,'stop_supported':True}
     try:fd=os.pidfd_open(record['pid'])
