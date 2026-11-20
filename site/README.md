@@ -59,3 +59,11 @@ The legacy `current_release_measurement` field is retained for schema compatibil
 The official Pages workflow validates and uploads `site/`. Run the local checker after the release report and structured receipt are present. Relative asset paths support both `/zmcl/` on Pages and a local HTTP root. Publish the page only after the three release assets are publicly downloadable; AUR publication is a separate fact.
 
 Writing follows the user-selected Research-Paper-Writing-Skills: one message per paragraph, evidence next to quantitative claims, and explicit validation boundaries. Keep the page arranged around download selection, first use, actual functions, the real window, resource costs and remaining work. Never publish private paths, raw session logs, account data or user saves.
+
+## Published 0.1.4 evidence
+
+The release tag is fixed at `25c243a593b187b0f0835e740665e1fce96d3621`. All eight public release assets were downloaded without credentials and matched their expected bytes and SHA-256. The public AUR recipe was rebuilt independently and the installed host was upgraded to 0.1.4-1.
+
+- [Release and installation report](https://github.com/LIghtJUNction/zmcl/blob/76c38d5dab19d9ac39b6831bd509528bcd1799f5/docs/reports/2026-11-20-zdistro.md)
+- [Linux and Windows release evidence](https://github.com/LIghtJUNction/zmcl/blob/76c38d5dab19d9ac39b6831bd509528bcd1799f5/docs/validation/zdistro-release-0.1.4.json)
+- [Public AUR build and installed GUI evidence](https://github.com/LIghtJUNction/zmcl/blob/76c38d5dab19d9ac39b6831bd509528bcd1799f5/docs/validation/aur-install-0.1.4-2026-11-20.json)
