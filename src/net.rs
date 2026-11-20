@@ -1,9 +1,9 @@
-use crate::util::Result;
+use crate::util::{self, Result};
 use std::{
     fs,
     io::{Read, Write},
     path::Path,
-    process::{Command, Stdio},
+    process::Stdio,
 };
 
 pub struct Response {
@@ -44,7 +44,7 @@ fn base(url: &str) -> Result<String> {
     ))
 }
 fn curl(config: &str, max_time: u32) -> Result<std::process::Child> {
-    let mut child=Command::new("curl").args(["--disable","--silent","--location","--proto","=https","--proto-redir","=https","--max-redirs","5","--connect-timeout","20","--max-time",&max_time.to_string(),"--config","-"])
+    let mut child=util::background_command("curl").args(["--disable","--silent","--location","--proto","=https","--proto-redir","=https","--max-redirs","5","--connect-timeout","20","--max-time",&max_time.to_string(),"--config","-"])
         .stdin(Stdio::piped()).stdout(Stdio::piped()).stderr(Stdio::null()).spawn()
         .map_err(|e|format!("Cannot start system curl: {e}. Install curl with your operating system package manager."))?;
     if let Err(e) = child
@@ -178,7 +178,7 @@ pub fn download_batch(transfers: &[(String, std::path::PathBuf, u64)], jobs: usi
         config.push_str(&base(url)?);
         config.push_str(&format!("silent\nlocation\nproto = \"=https\"\nproto-redir = \"=https\"\nmax-redirs = 5\nconnect-timeout = 20\nmax-time = 300\nfail\nretry = 2\nretry-delay = 1\nmax-filesize = {limit}\noutput = {}\n",config_value(&path.to_string_lossy())?));
     }
-    let mut child = Command::new("curl")
+    let mut child = util::background_command("curl")
         .args([
             "--disable",
             "--parallel",

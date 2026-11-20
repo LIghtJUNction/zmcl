@@ -117,8 +117,22 @@ pub fn object(fields: &[(&str, String)]) -> String {
     format!("{{{}}}", pairs.join(","))
 }
 
+/// Build a noninteractive helper command without a Windows console window.
+/// Explicit pipes and log files remain available to both CLI and GUI callers.
+pub fn background_command(program: impl AsRef<std::ffi::OsStr>) -> std::process::Command {
+    let command = std::process::Command::new(program);
+    #[cfg(windows)]
+    let command = {
+        use std::os::windows::process::CommandExt;
+        let mut command = command;
+        command.creation_flags(0x0800_0000); // CREATE_NO_WINDOW
+        command
+    };
+    command
+}
+
 pub fn command_exists(program: &str) -> bool {
-    std::process::Command::new(program)
+    background_command(program)
         .arg("--version")
         .stdout(std::process::Stdio::null())
         .stderr(std::process::Stdio::null())
@@ -153,13 +167,7 @@ fn cached_python(
 }
 
 fn python_process(program: &std::ffi::OsStr) -> std::process::Command {
-    let mut command = std::process::Command::new(program);
-    #[cfg(windows)]
-    {
-        use std::os::windows::process::CommandExt;
-        // Pipes still work; only the unwanted helper console is suppressed.
-        command.creation_flags(0x0800_0000); // CREATE_NO_WINDOW
-    }
+    let mut command = background_command(program);
     // A capability probe must not install a runtime or launch an installer.
     command
         .env("PYTHON_MANAGER_AUTOMATIC_INSTALL", "false")

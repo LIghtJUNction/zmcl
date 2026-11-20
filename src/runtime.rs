@@ -415,7 +415,7 @@ fn install_forge(
     let java = select_java(app, &instance.java, base.java_major.unwrap_or(8))?;
     let log = File::create(app.dir(&instance.id)?.join("loader-install.log"))
         .map_err(|e| e.to_string())?;
-    let status = Command::new(&java)
+    let status = util::background_command(&java)
         .args(["-Djava.awt.headless=true", "-jar"])
         .arg(&installer)
         .arg("--installClient")
@@ -458,7 +458,7 @@ fn install_forge(
     model::merge(base, child)
 }
 pub fn java_major(path: &str) -> Result<u32> {
-    let output = Command::new(path)
+    let output = util::background_command(path)
         .arg("-version")
         .output()
         .map_err(|e| e.to_string())?;
@@ -677,7 +677,7 @@ pub fn launch(
     #[cfg(windows)]
     {
         use std::os::windows::process::CommandExt;
-        command.creation_flags(0x00000200);
+        command.creation_flags(0x00000200 | 0x08000000); // New group, no console.
     }
     let mut child = command
         .spawn()

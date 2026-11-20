@@ -770,7 +770,7 @@ pub fn launch(app: &App, id: &str, dry: bool, wait: bool) -> Result<String> {
     #[cfg(windows)]
     {
         use std::os::windows::process::CommandExt;
-        command.creation_flags(0x00000200);
+        command.creation_flags(0x00000200 | 0x08000000); // New group, no console.
     }
     let mut child = command
         .spawn()

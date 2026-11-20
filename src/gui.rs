@@ -636,7 +636,7 @@ fn reader(mut stream: impl Read + Send + 'static, stderr: bool, tx: SyncSender<P
 }
 
 fn command_for_task(executable: &std::path::Path, task: &Task, root: Option<&str>) -> Command {
-    let mut command = Command::new(executable);
+    let mut command = crate::util::background_command(executable);
     if let Some(root) = root {
         command.args(["--root", root]);
     }
@@ -669,11 +669,6 @@ impl Job {
         {
             use std::os::unix::process::CommandExt;
             command.process_group(0);
-        }
-        #[cfg(windows)]
-        {
-            use std::os::windows::process::CommandExt;
-            command.creation_flags(0x08000000); // CREATE_NO_WINDOW for GUI helpers.
         }
         let mut child = command
             .spawn()
@@ -761,7 +756,7 @@ impl Job {
         }
         #[cfg(windows)]
         {
-            let _ = Command::new("taskkill")
+            let _ = crate::util::background_command("taskkill")
                 .args(["/F", "/T", "/PID", &self.child.id().to_string()])
                 .stdin(Stdio::null())
                 .stdout(Stdio::null())
@@ -1198,7 +1193,7 @@ impl App {
             Action::Quit => return false,
             Action::ManagementPage(page) => {
                 self.management_page = page;
-                self.management_rows.clear();
+                self.management_rows = Vec::new();
                 self.management_selected = None;
                 self.resource_recovery = false;
                 self.scroll = 0;
@@ -1224,15 +1219,17 @@ impl App {
                 self.version_picker = false;
                 self.show_logs = false;
                 self.management_form = None;
+                // Every visit loads fresh rows; hidden results are never reused.
+                // Drop their strings and backing allocation when leaving a page.
+                self.management_rows = Vec::new();
+                self.management_selected = None;
+                self.resource_recovery = false;
                 if matches!(page, Page::Manage | Page::Servers) {
                     self.management_page = if page == Page::Servers {
                         ManagementPage::Servers
                     } else {
                         ManagementPage::Worlds
                     };
-                    self.management_rows.clear();
-                    self.management_selected = None;
-                    self.resource_recovery = false;
                     self.notice.clear();
                     self.error = false;
                     if let Some(task) = self.management_list() {
