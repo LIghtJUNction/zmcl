@@ -20,8 +20,19 @@ pub struct Download {
 }
 impl Download {
     pub fn parse(value: Value<'_, '_>) -> Result<Self, String> {
+        Self::parse_with_local_artifact(value, false)
+    }
+    fn parse_library_artifact(value: Value<'_, '_>) -> Result<Self, String> {
+        Self::parse_with_local_artifact(value, true)
+    }
+    fn parse_with_local_artifact(value: Value<'_, '_>, allow_local: bool) -> Result<Self, String> {
         object(value, "download")?;
-        let url = normalize_url(&json::req_str(value, "url")?)?;
+        let raw_url = json::req_str(value, "url")?;
+        let url = if allow_local && raw_url.is_empty() {
+            String::new()
+        } else {
+            normalize_url(&raw_url)?
+        };
         let sha1 = optional_string(value, "sha1")?;
         if sha1.as_deref().is_some_and(|s| !path::valid_sha1(s)) {
             return Err("Download SHA-1 must have 40 hexadecimal digits".into());
@@ -30,6 +41,10 @@ impl Download {
         let file_path = optional_string(value, "path")?;
         if let Some(p) = &file_path {
             path::validate_relative(p)?;
+        }
+        if url.is_empty() && (sha1.is_none() || size.is_none_or(|n| n == 0) || file_path.is_none())
+        {
+            return Err("Local processor artifacts require a path, SHA-1 and nonzero size".into());
         }
         Ok(Self {
             url,
@@ -272,7 +287,10 @@ fn parse_library(value: Value<'_, '_>) -> Result<Library, String> {
                 classifiers.insert(key, d);
             }
         }
-        downloads.get("artifact").map(Download::parse).transpose()?
+        downloads
+            .get("artifact")
+            .map(Download::parse_library_artifact)
+            .transpose()?
     } else {
         let base = optional_string(value, "url")?
             .unwrap_or_else(|| "https://libraries.minecraft.net/".into());
@@ -760,6 +778,28 @@ mod tests {
             r#"{"id":"x","arguments":{"game":[{"value":123}]}}"#,
         ] {
             assert!(Version::parse(json.as_bytes()).is_err(), "{json}");
+        }
+    }
+    #[test]
+    fn generated_loader_artifacts_require_verified_local_content() {
+        let profile = br#"{"id":"forge-fixture","inheritsFrom":"1.21.1","libraries":[{"name":"net.minecraftforge:forge:1.21.1-52.1.20:client","downloads":{"artifact":{"path":"net/minecraftforge/forge/1.21.1-52.1.20/forge-1.21.1-52.1.20-client.jar","url":"","sha1":"28f7acaa0e9b1c2d2a7bf52c07ae16133bd3da4e","size":28056385}}}]}"#;
+        let version = Version::parse(profile).unwrap();
+        assert_eq!(version.libraries[0].artifact.as_ref().unwrap().url, "");
+        for body in [
+            r#"{"url":"","sha1":"0000000000000000000000000000000000000000","size":1,"path":"x.jar"}"#,
+            r#"{"url":"","size":1,"path":"x.jar"}"#,
+        ] {
+            assert!(json::with_json(body.as_bytes(), Download::parse).is_err());
+        }
+        for artifact in [
+            r#"{"url":"","size":1,"path":"x.jar"}"#,
+            r#"{"url":"","sha1":"0000000000000000000000000000000000000000","size":1}"#,
+            r#"{"url":"","sha1":"0000000000000000000000000000000000000000","size":0,"path":"x.jar"}"#,
+            r#"{"url":"","sha1":"0000000000000000000000000000000000000000","size":1,"path":"../x.jar"}"#,
+        ] {
+            assert!(
+                json::with_json(artifact.as_bytes(), Download::parse_library_artifact).is_err()
+            );
         }
     }
 }

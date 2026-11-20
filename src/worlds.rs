@@ -32,6 +32,11 @@ fn instance(app: &App, id: &str) -> Result<PathBuf> {
     app.read_instance(id)?;
     app.dir(id)
 }
+fn ready_instance(app: &App, id: &str) -> Result<PathBuf> {
+    let dir = instance(app, id)?;
+    util::check_pending_transactions(&dir)?;
+    Ok(dir)
+}
 fn saves(instance: &Path) -> Result<PathBuf> {
     util::safe_join(instance, "game/saves")
 }
@@ -187,7 +192,7 @@ pub fn assert_stopped(app: &App, id: &str) -> Result<()> {
 pub fn list(app: &App, id: &str) -> Result<String> {
     util::valid_id(id)?;
     let _lock = util::Lock::acquire(&app.root, &format!("instance-{id}"))?;
-    let dir = instance(app, id)?;
+    let dir = ready_instance(app, id)?;
     run(app, "list", &[dir.into_os_string()])
 }
 
@@ -197,7 +202,7 @@ pub fn info(app: &App, id: &str, name: &str) -> Result<String> {
     valid_name(name)?;
     util::valid_id(id)?;
     let _lock = util::Lock::acquire(&app.root, &format!("instance-{id}"))?;
-    let dir = instance(app, id)?;
+    let dir = ready_instance(app, id)?;
     world(&dir, name)?;
     run(app, "info", &[dir.into_os_string(), name.into()])
 }
@@ -214,7 +219,7 @@ pub fn import(app: &App, id: &str, source: &Path, name: &str) -> Result<String> 
     valid_name(name)?;
     util::valid_id(id)?;
     let _lock = util::Lock::acquire(&app.root, &format!("instance-{id}"))?;
-    let dir = instance(app, id)?;
+    let dir = ready_instance(app, id)?;
     let save_dir = saves(&dir)?;
     let target = world(&dir, name)?;
     if target.exists() {
@@ -240,7 +245,7 @@ pub fn export(app: &App, id: &str, name: &str, destination: &Path) -> Result<Str
     valid_name(name)?;
     util::valid_id(id)?;
     let _lock = util::Lock::acquire(&app.root, &format!("instance-{id}"))?;
-    let dir = instance(app, id)?;
+    let dir = ready_instance(app, id)?;
     let source = world(&dir, name)?;
     let absolute = std::path::absolute(destination).map_err(|e| e.to_string())?;
     let parent = absolute
@@ -296,9 +301,9 @@ pub fn clone(
     for id in ids {
         locks.push(util::Lock::acquire(&app.root, &format!("instance-{id}"))?);
     }
-    let source = instance(app, source_id)?;
+    let source = ready_instance(app, source_id)?;
     world(&source, name)?;
-    let target = instance(app, target_id)?;
+    let target = ready_instance(app, target_id)?;
     let target_world = world(&target, new_name)?;
     if target_world.exists() {
         return Err("A world with this folder name already exists".into());
@@ -359,6 +364,15 @@ mod tests {
         assert_stopped(&app, "demo").unwrap();
         drop(lock);
         assert_eq!(list(&app, "demo").unwrap(), "[]");
+        fs::write(
+            app.dir("demo").unwrap().join(".resources-journal.json"),
+            b"{}",
+        )
+        .unwrap();
+        assert!(list(&app, "demo").is_err());
+        let lock = util::Lock::acquire(&app.root, "instance-demo").unwrap();
+        assert_stopped(&app, "demo").unwrap();
+        drop(lock);
         drop(scratch);
     }
 }

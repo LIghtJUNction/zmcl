@@ -154,17 +154,30 @@ fn maven_checksums(artifacts: &mut [Artifact]) -> Result<()> {
     }
     Ok(())
 }
+fn ensure_install_java(app: &App, instance: &Instance, major: u32) -> Result<()> {
+    match select_java(app, &instance.java, major) {
+        Ok(_) => Ok(()),
+        Err(_) if instance.java.is_empty() => {
+            eprintln!("Installing a verified Temurin Java {major} runtime");
+            crate::java::install(app, major).map(|_| ())
+        }
+        Err(error) => Err(error),
+    }
+}
+
 pub fn install(app: &App, id: &str, jobs: usize) -> Result<()> {
     if !(1..=16).contains(&jobs) {
         return Err("Download concurrency must be 1–16".into());
     }
     let _lock = util::Lock::acquire(&app.root, &format!("instance-{id}"))?;
+    util::check_pending_transactions(&app.dir(id)?)?;
     crate::worlds::assert_stopped(app, id)?;
     let mut instance = app.read_instance(id)?;
     instance.installed = false;
     app.write_instance(&instance)?;
     eprintln!("Resolving Minecraft {}", instance.version);
     let base = resolve(app, &instance.version, true, &mut BTreeSet::new())?;
+    ensure_install_java(app, &instance, base.java_major.unwrap_or(8))?;
     let version = match instance.loader.as_str() {
         "vanilla" => base,
         "fabric" | "quilt" => {
@@ -174,6 +187,7 @@ pub fn install(app: &App, id: &str, jobs: usize) -> Result<()> {
         "forge" | "neoforge" => install_forge(app, &mut instance, base, jobs)?,
         _ => return Err("Unsupported loader".into()),
     };
+    ensure_install_java(app, &instance, version.java_major.unwrap_or(8))?;
     let mut installation = plan::install_plan(&version, &environment())?;
     maven_checksums(&mut installation.downloads)?;
     store::batch(app, &installation.downloads, jobs)?;
@@ -310,15 +324,17 @@ fn install_forge(
         .arg(&installer)
         .arg("--installClient")
         .arg(app.shared())
+        .current_dir(app.dir(&instance.id)?)
         .stdin(Stdio::null())
         .stdout(Stdio::from(log.try_clone().map_err(|e| e.to_string())?))
         .stderr(Stdio::from(log))
         .status()
         .map_err(|e| format!("Cannot start loader installer: {e}"))?;
     if !status.success() {
-        return Err(
-            "Official loader installer failed; inspect the instance's loader-install.log".into(),
-        );
+        return Err(format!(
+            "Official loader installer failed; inspect the instance's loader-install.log. If a processor reports an output checksum mismatch, install official Temurin with 'zmcl java install {}' and retry, or select a compatible runtime with --java.",
+            base.java_major.unwrap_or(8)
+        ));
     }
     let mut candidates = Vec::new();
     for entry in fs::read_dir(app.shared().join("versions")).map_err(|e| e.to_string())? {
@@ -466,6 +482,7 @@ pub fn launch(
     wait: bool,
 ) -> Result<String> {
     let _lock = util::Lock::acquire(&app.root, &format!("instance-{id}"))?;
+    util::check_pending_transactions(&app.dir(id)?)?;
     if !dry {
         crate::worlds::assert_stopped(app, id)?;
     }

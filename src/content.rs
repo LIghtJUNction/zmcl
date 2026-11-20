@@ -3,6 +3,7 @@
 use crate::{
     App, net, store,
     util::{self, Lock},
+    worlds,
 };
 use std::{
     collections::{BTreeMap, BTreeSet, VecDeque},
@@ -21,6 +22,10 @@ const MAX_FILES: usize = 50_000;
 const MAX_LOCK: usize = 8 * 1024 * 1024;
 const ZIP_CODEC: &str = include_str!("content/archive.py");
 static NEXT: AtomicU64 = AtomicU64::new(0);
+mod management;
+mod transaction;
+pub use management::{install_project_pack, pack_search, remove, update};
+pub use transaction::recover;
 
 #[derive(Clone, Debug, PartialEq)]
 struct Entry {
@@ -32,6 +37,10 @@ struct Entry {
     url: String,
     size: u64,
     enabled: bool,
+    project_slug: String,
+    explicit: bool,
+    dependencies: Option<Vec<(bool, String)>>,
+    incompatible: Vec<(bool, String)>,
 }
 impl Entry {
     fn actual_path(&self) -> String {
@@ -56,6 +65,16 @@ impl Entry {
             ("url", quote(&self.url)),
             ("size", self.size.to_string()),
             ("enabled", self.enabled.to_string()),
+            ("project_slug", quote(&self.project_slug)),
+            ("explicit", self.explicit.to_string()),
+            (
+                "dependencies",
+                self.dependencies
+                    .as_deref()
+                    .map(dependency_json)
+                    .unwrap_or_else(|| "null".into()),
+            ),
+            ("incompatible", dependency_json(&self.incompatible)),
         ])
     }
     fn parse(v: Value<'_, '_>) -> Result<Self> {
@@ -81,8 +100,55 @@ impl Entry {
             url,
             size,
             enabled: v.get("enabled").and_then(Value::as_bool).unwrap_or(true),
+            project_slug: get_str(v, "project_slug").unwrap_or_default(),
+            explicit: v.get("explicit").and_then(Value::as_bool).unwrap_or(true),
+            dependencies: v
+                .get("dependencies")
+                .filter(|x| x.kind() == Kind::Array)
+                .map(parse_dependencies)
+                .transpose()?,
+            incompatible: v
+                .get("incompatible")
+                .filter(|x| x.kind() == Kind::Array)
+                .map(parse_dependencies)
+                .transpose()?
+                .unwrap_or_default(),
         })
     }
+}
+
+fn dependency_json(dependencies: &[(bool, String)]) -> String {
+    format!(
+        "[{}]",
+        dependencies
+            .iter()
+            .map(|(exact, id)| util::object(&[("exact", exact.to_string()), ("id", quote(id))]))
+            .collect::<Vec<_>>()
+            .join(",")
+    )
+}
+fn parse_dependencies(value: Value<'_, '_>) -> Result<Vec<(bool, String)>> {
+    let mut dependencies = Vec::new();
+    for value in value.array() {
+        let exact = value
+            .get("exact")
+            .and_then(Value::as_bool)
+            .ok_or("Invalid cached dependency kind")?;
+        let id = req_str(value, "id")?;
+        slug(&id)?;
+        dependencies.push((exact, id));
+        if dependencies.len() > 512 {
+            return Err("Cached dependency list exceeds its budget".into());
+        }
+    }
+    Ok(dependencies)
+}
+fn client_supported(value: Value<'_, '_>) -> bool {
+    get_str(value, "client_side").as_deref() != Some("unsupported")
+        && !matches!(
+            get_str(value, "environment").as_deref(),
+            Some("server_only" | "dedicated_server_only")
+        )
 }
 
 fn portable_path(path: &str) -> Result<()> {
@@ -165,7 +231,7 @@ fn parse_lock(bytes: &[u8]) -> Result<Vec<Entry>> {
 }
 fn read_lock(instance: &Path) -> Result<Vec<Entry>> {
     if instance.join(".content-journal.json").exists() {
-        return Err("An interrupted content transaction needs recovery; preserve .content-stage-* and inspect .content-journal.json before changing this instance".into());
+        return Err("An interrupted content transaction needs recovery; run zmcl mods recover INSTANCE. Preserve all stage directories until recovery succeeds".into());
     }
     let path = util::safe_join(instance, "mods-lock.json")?;
     if !path.exists() {
@@ -211,13 +277,22 @@ fn supports(v: Value<'_, '_>, game: &str, loader: &str) -> bool {
     contains("game_versions", game) && contains("loaders", loader)
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 struct Version {
     entry: Entry,
     dependencies: Vec<(bool, String)>,
+    incompatible: Vec<(bool, String)>,
 }
 fn version(v: Value<'_, '_>, game: &str, loader: &str) -> Result<Version> {
-    if !supports(v, game, loader) {
+    version_file(v, game, loader, None)
+}
+fn version_file(
+    v: Value<'_, '_>,
+    game: &str,
+    loader: &str,
+    file_hash: Option<&str>,
+) -> Result<Version> {
+    if !supports(v, game, loader) || !client_supported(v) {
         return Err("Required Mod version does not support this game version and loader".into());
     }
     let project = req_str(v, "project_id")?;
@@ -229,6 +304,15 @@ fn version(v: Value<'_, '_>, game: &str, loader: &str) -> Result<Version> {
         .array()
         .filter(|f| {
             get_str(*f, "filename").is_some_and(|n| n.to_ascii_lowercase().ends_with(".jar"))
+                && !matches!(
+                    get_str(*f, "file_type").as_deref(),
+                    Some("sources-jar" | "dev-jar" | "javadoc-jar" | "signature")
+                )
+                && file_hash.is_none_or(|wanted| {
+                    f.get("hashes")
+                        .and_then(|h| get_str(h, "sha1"))
+                        .is_some_and(|actual| actual.eq_ignore_ascii_case(wanted))
+                })
         })
         .collect();
     let file = candidates
@@ -256,12 +340,14 @@ fn version(v: Value<'_, '_>, game: &str, loader: &str) -> Result<Version> {
         return Err("Mod file exceeds 512 MiB".into());
     }
     let mut dependencies = Vec::new();
+    let mut incompatible = Vec::new();
     if let Some(values) = v.get("dependencies") {
         if values.kind() != Kind::Array {
             return Err("Invalid Mod dependency list".into());
         }
         for dep in values.array() {
-            if get_str(dep, "dependency_type").as_deref() != Some("required") {
+            let kind = get_str(dep, "dependency_type").unwrap_or_default();
+            if kind != "required" && kind != "incompatible" {
                 continue;
             }
             let dependency = if let Some(id) = get_str(dep, "version_id") {
@@ -274,7 +360,14 @@ fn version(v: Value<'_, '_>, game: &str, loader: &str) -> Result<Version> {
                 );
             };
             slug(&dependency.1)?;
-            dependencies.push(dependency);
+            if kind == "required" {
+                dependencies.push(dependency);
+            } else {
+                incompatible.push(dependency);
+            }
+            if dependencies.len() + incompatible.len() > 512 {
+                return Err("Mod version dependency list exceeds its budget".into());
+            }
         }
     }
     Ok(Version {
@@ -287,20 +380,25 @@ fn version(v: Value<'_, '_>, game: &str, loader: &str) -> Result<Version> {
             url,
             size,
             enabled: true,
+            project_slug: String::new(),
+            explicit: false,
+            dependencies: Some(dependencies.clone()),
+            incompatible: incompatible.clone(),
         },
         dependencies,
+        incompatible,
     })
 }
 
 fn fetch_version(exact: bool, id: &str, game: &str, loader: &str) -> Result<Version> {
     slug(id)?;
-    let selected = if exact {
+    let mut selected = if exact {
         with_json(&net::get(&format!("{API}/version/{id}"))?, |v| {
             version(v, game, loader)
         })?
     } else {
         let url = format!(
-            "{API}/project/{id}/version?game_versions={}&loaders={}",
+            "{API}/project/{id}/version?include_changelog=false&game_versions={}&loaders={}",
             net::encode(&format!("[{}]", quote(game))),
             net::encode(&format!("[{}]", quote(loader)))
         );
@@ -328,49 +426,17 @@ fn fetch_version(exact: bool, id: &str, game: &str, loader: &str) -> Result<Vers
             if get_str(v, "project_type").as_deref() != Some("mod") {
                 return Err("This command only installs Mod projects".into());
             }
-            if get_str(v, "client_side").as_deref() == Some("unsupported") {
+            if !client_supported(v) {
                 return Err("Required Mod is server-only".into());
             }
+            if req_str(v, "id")? != selected.entry.project {
+                return Err("Modrinth returned inconsistent project metadata".into());
+            }
+            selected.entry.project_slug = req_str(v, "slug")?;
             Ok(())
         },
     )?;
     Ok(selected)
-}
-
-fn resolve(project: &str, game: &str, loader: &str) -> Result<Vec<Entry>> {
-    let mut queue = VecDeque::from([(false, project.to_string(), 0usize)]);
-    let mut requested = BTreeSet::new();
-    let mut projects: BTreeMap<String, Entry> = BTreeMap::new();
-    while let Some((exact, id, depth)) = queue.pop_front() {
-        if !requested.insert((exact, id.clone())) {
-            continue;
-        }
-        if depth > 32 || requested.len() > 512 {
-            return Err("Mod dependency graph exceeds its budget".into());
-        }
-        let selected = fetch_version(exact, &id, game, loader)?;
-        if let Some(existing) = projects.get(&selected.entry.project) {
-            if existing.version != selected.entry.version {
-                return Err(format!(
-                    "Conflicting required versions of project {}",
-                    selected.entry.project
-                ));
-            }
-            continue;
-        }
-        for (exact, id) in selected.dependencies {
-            queue.push_back((exact, id, depth + 1));
-        }
-        projects.insert(selected.entry.project.clone(), selected.entry);
-    }
-    let result: Vec<_> = projects.into_values().collect();
-    let total = result.iter().try_fold(0u64, |sum, x| {
-        sum.checked_add(x.size).ok_or("Content size overflow")
-    })?;
-    if total > MAX_TOTAL {
-        return Err("Mod dependency set exceeds 4 GiB".into());
-    }
-    Ok(result)
 }
 
 struct Temp {
@@ -459,218 +525,27 @@ fn verify_entry(game: &Path, entry: &Entry) -> Result<()> {
     Ok(())
 }
 
-/// Commit a complete mods directory and its lock, retaining a recovery journal
-/// if rollback itself fails. A successful call leaves neither journal nor backup.
+/// Commit a complete mods directory and its lock. Failed transactions retain
+/// identified staging data; a successful call removes its temporary journal.
 fn commit_mods(instance: &Path, temp: &mut Temp, entries: &[Entry]) -> Result<()> {
-    let target = util::safe_join(instance, "game/mods")?;
-    let previous = temp.path.join("previous-mods");
-    let lock = util::safe_join(instance, "mods-lock.json")?;
-    let old_lock = if lock.exists() {
-        Some(util::read_limited(&lock, MAX_LOCK)?)
-    } else {
-        None
-    };
-    if let Some(bytes) = &old_lock {
-        util::atomic_write(&temp.path.join("previous-lock.json"), bytes)?;
-    }
-    let journal = util::safe_join(instance, ".content-journal.json")?;
-    let had_mods = target.exists();
-    util::atomic_write(
-        &journal,
-        util::object(&[
-            (
-                "stage",
-                quote(
-                    &temp
-                        .path
-                        .file_name()
-                        .ok_or("Invalid stage")?
-                        .to_string_lossy(),
-                ),
-            ),
-            ("had_mods", had_mods.to_string()),
-            ("had_lock", old_lock.is_some().to_string()),
-        ])
-        .as_bytes(),
-    )?;
-    temp.retain = true;
-    if had_mods && let Err(error) = fs::rename(&target, &previous) {
-        let _ = fs::remove_file(&journal);
-        temp.retain = false;
-        return Err(error.to_string());
-    }
-    let result = fs::rename(temp.path.join("mods"), &target)
-        .map_err(|e| e.to_string())
-        .and_then(|_| util::atomic_write(&lock, lock_json(entries).as_bytes()));
-    if let Err(error) = result {
-        let rollback = (|| {
-            if target.exists() {
-                fs::remove_dir_all(&target).map_err(|e| e.to_string())?;
-            }
-            if had_mods {
-                fs::rename(&previous, &target).map_err(|e| e.to_string())?;
-            }
-            if let Some(bytes) = old_lock {
-                util::atomic_write(&lock, &bytes)?;
-            } else if lock.exists() {
-                fs::remove_file(&lock).map_err(|e| e.to_string())?;
-            }
-            fs::remove_file(&journal).map_err(|e| e.to_string())?;
-            Ok::<_, String>(())
-        })();
-        if rollback.is_ok() {
-            temp.retain = false;
-        }
-        return Err(format!(
-            "Content transaction failed: {error}; rollback {}",
-            if rollback.is_ok() {
-                "completed"
-            } else {
-                "requires recovery from the retained journal"
-            }
-        ));
-    }
-    fs::remove_file(&journal)
-        .map_err(|e| format!("Content committed, but recovery journal cleanup failed: {e}"))?;
-    temp.retain = false;
-    Ok(())
+    transaction::commit(instance, temp, entries)
 }
 
 /// Install a Mod and all required dependencies. Unsupported or conflicting
 /// dependencies fail before changing the instance's active files.
 pub fn add(app: &App, id: &str, project: &str) -> Result<()> {
-    slug(project)?;
-    let _lock = Lock::acquire(&app.root, &format!("instance-{id}"))?;
-    let instance = app.read_instance(id)?;
-    if !matches!(
-        instance.loader.as_str(),
-        "fabric" | "quilt" | "forge" | "neoforge"
-    ) {
-        return Err("Create a Mod loader instance before installing Mods".into());
-    }
-    let dir = app.dir(id)?;
-    let game = util::safe_join(&dir, "game")?;
-    let mut old = read_lock(&dir)?;
-    let selected = resolve(project, &instance.version, &instance.loader)?;
-    let mut new_paths = BTreeSet::new();
-    for entry in &selected {
-        if !new_paths.insert(entry.path.to_lowercase()) {
-            return Err("Two required projects use the same filename".into());
-        }
-        if let Some(existing) = old
-            .iter()
-            .find(|x| x.project == entry.project && !x.project.is_empty())
-        {
-            if existing.version != entry.version {
-                return Err(format!(
-                    "Project {} is already locked at another version; create a separate instance to change the dependency set",
-                    entry.project
-                ));
-            }
-            if !existing.enabled {
-                return Err(format!(
-                    "Required project {} is disabled; enable it before adding this Mod",
-                    entry.project
-                ));
-            }
-            verify_entry(&game, existing)?;
-        } else if old.iter().any(|x| x.path.eq_ignore_ascii_case(&entry.path))
-            || util::safe_join(&game, &entry.path)?.exists()
-        {
-            return Err(format!(
-                "Mod filename collides with existing content: {}",
-                entry.path
-            ));
-        }
-    }
-    let mut downloaded = Vec::new();
-    for entry in selected {
-        if old
-            .iter()
-            .any(|x| x.project == entry.project && !x.project.is_empty())
-        {
-            continue;
-        }
-        let file = store::ensure(
-            app,
-            &format!("content/sha1/{}", entry.sha1),
-            &entry.url,
-            Some(&entry.sha1),
-            None,
-            Some(entry.size),
-        )?;
-        downloaded.push((entry, file));
-    }
-    if downloaded.is_empty() {
-        return Ok(());
-    }
-    let mut temp = Temp::new(&dir)?;
-    clone_mods(&util::safe_join(&game, "mods")?, &temp.path.join("mods"))?;
-    for (entry, file) in downloaded {
-        let relative = entry.path.strip_prefix("mods/").ok_or("Invalid Mod path")?;
-        store::materialize(
-            &file,
-            &util::safe_join(&temp.path.join("mods"), relative)?,
-            true,
-        )?;
-        old.push(entry);
-    }
-    old.sort_by(|a, b| a.path.cmp(&b.path));
-    commit_mods(&dir, &mut temp, &old)
+    management::add(app, id, project)
 }
 
 pub fn list(app: &App, id: &str) -> Result<String> {
+    util::valid_id(id)?;
     let _lock = Lock::acquire(&app.root, &format!("instance-{id}"))?;
     app.read_instance(id)?;
     Ok(lock_json(&read_lock(&app.dir(id)?)?))
 }
 
 pub fn toggle(app: &App, id: &str, project_or_filename: &str, enabled: bool) -> Result<()> {
-    let _lock = Lock::acquire(&app.root, &format!("instance-{id}"))?;
-    app.read_instance(id)?;
-    let dir = app.dir(id)?;
-    let game = util::safe_join(&dir, "game")?;
-    let mut entries = read_lock(&dir)?;
-    let indices: Vec<_> = entries
-        .iter()
-        .enumerate()
-        .filter(|(_, e)| {
-            e.path.starts_with("mods/")
-                && (e.project == project_or_filename
-                    || e.path == project_or_filename
-                    || e.path.strip_prefix("mods/") == Some(project_or_filename))
-        })
-        .map(|(i, _)| i)
-        .collect();
-    if indices.len() != 1 {
-        return Err("Select exactly one managed Mod by project ID or filename".into());
-    }
-    let index = indices[0];
-    if entries[index].enabled == enabled {
-        return Ok(());
-    }
-    verify_entry(&game, &entries[index])?;
-    let before = entries[index].actual_path();
-    entries[index].enabled = enabled;
-    let after = entries[index].actual_path();
-    if util::safe_join(&game, &after)?.exists() {
-        return Err("Mod toggle destination already exists".into());
-    }
-    let mut temp = Temp::new(&dir)?;
-    clone_mods(&util::safe_join(&game, "mods")?, &temp.path.join("mods"))?;
-    let target = temp.path.join("mods");
-    fs::rename(
-        util::safe_join(
-            &target,
-            before.strip_prefix("mods/").ok_or("Invalid Mod path")?,
-        )?,
-        util::safe_join(
-            &target,
-            after.strip_prefix("mods/").ok_or("Invalid Mod path")?,
-        )?,
-    )
-    .map_err(|e| e.to_string())?;
-    commit_mods(&dir, &mut temp, &entries)
+    management::toggle(app, id, project_or_filename, enabled)
 }
 
 #[derive(Debug)]
@@ -708,6 +583,8 @@ fn parse_pack(bytes: &[u8]) -> Result<Pack> {
             let mapped = match key.as_str() {
                 "fabric-loader" => "fabric",
                 "quilt-loader" => "quilt",
+                "forge" => "forge",
+                "neoforge" => "neoforge",
                 _ => {
                     return Err(format!(
                         "Pack dependency '{key}' is not yet supported by this importer"
@@ -791,6 +668,10 @@ fn parse_pack(bytes: &[u8]) -> Result<Pack> {
                 url,
                 size,
                 enabled: true,
+                project_slug: String::new(),
+                explicit: true,
+                dependencies: None,
+                incompatible: Vec::new(),
             });
         }
         Ok(Pack {
@@ -825,9 +706,15 @@ fn python(args: &[&std::ffi::OsStr]) -> Result<()> {
 /// Import into a new instance using a private staging tree. Existing instances
 /// are never replaced. Optional/client-unsupported downloads are omitted.
 pub fn import_pack(app: &App, path: &Path, id: &str) -> Result<()> {
+    import_pack_inner(app, path, id, None)
+}
+fn import_pack_inner(app: &App, path: &Path, id: &str, provenance: Option<&[u8]>) -> Result<()> {
+    util::valid_id(id)?;
     let _lock = Lock::acquire(&app.root, &format!("instance-{id}"))?;
     let destination = app.dir(id)?;
     if destination.exists() {
+        transaction::recover_locked(app, id)?;
+        worlds::assert_stopped(app, id)?;
         return Err("Pack import requires a new instance ID".into());
     }
     let temp = Temp::new(&app.root)?;
@@ -874,6 +761,9 @@ pub fn import_pack(app: &App, path: &Path, id: &str) -> Result<()> {
         &staged.join("mods-lock.json"),
         lock_json(&pack.files).as_bytes(),
     )?;
+    if let Some(provenance) = provenance {
+        util::atomic_write(&staged.join("pack-source.json"), provenance)?;
+    }
     if destination.exists() {
         return Err("Another operation created the destination instance".into());
     }
@@ -886,9 +776,13 @@ pub fn import_pack(app: &App, path: &Path, id: &str) -> Result<()> {
 /// and a conservative set of configuration overrides. Accounts, logs, saves,
 /// launcher runtimes, unknown Mod JARs, and secret-bearing configs are excluded.
 pub fn export_pack(app: &App, id: &str, path: &Path) -> Result<()> {
+    util::valid_id(id)?;
     let _lock = Lock::acquire(&app.root, &format!("instance-{id}"))?;
     let instance = app.read_instance(id)?;
+    transaction::recover_locked(app, id)?;
+    worlds::assert_stopped(app, id)?;
     let dir = app.dir(id)?;
+    util::check_pending_transactions(&dir)?;
     let game = util::safe_join(&dir, "game")?;
     let entries = read_lock(&dir)?;
     if path.exists() || fs::symlink_metadata(path).is_ok() {
@@ -904,7 +798,9 @@ pub fn export_pack(app: &App, id: &str, path: &Path) -> Result<()> {
         "vanilla" => (),
         "fabric" => dependencies.push(("fabric-loader", quote(&instance.loader_version))),
         "quilt" => dependencies.push(("quilt-loader", quote(&instance.loader_version))),
-        _ => return Err("This loader is not yet supported by .mrpack export".into()),
+        "forge" => dependencies.push(("forge", quote(&instance.loader_version))),
+        "neoforge" => dependencies.push(("neoforge", quote(&instance.loader_version))),
+        _ => return Err("This loader is not supported by .mrpack export".into()),
     }
     let mut files = Vec::new();
     for entry in entries.iter().filter(|entry| entry.enabled) {
@@ -985,6 +881,10 @@ mod tests {
             url: "https://cdn.modrinth.com/a.jar".into(),
             size: 3,
             enabled: false,
+            project_slug: "fixture".into(),
+            explicit: true,
+            dependencies: Some(Vec::new()),
+            incompatible: Vec::new(),
         }
     }
     #[test]

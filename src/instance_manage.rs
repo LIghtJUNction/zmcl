@@ -115,6 +115,7 @@ pub fn clone_instance(app: &App, source_id: &str, destination_id: &str) -> Resul
     ids.sort();
     let _first = util::Lock::acquire(&app.root, &format!("instance-{}", ids[0]))?;
     let _second = util::Lock::acquire(&app.root, &format!("instance-{}", ids[1]))?;
+    util::check_pending_transactions(&app.dir(source_id)?)?;
     worlds::assert_stopped(app, source_id)?;
     let mut instance = app.read_instance(source_id)?;
     let source = app.dir(source_id)?;
@@ -138,6 +139,7 @@ pub fn clone_instance(app: &App, source_id: &str, destination_id: &str) -> Resul
     instance.name = format!("{} (copy)", instance.name);
     instance.installed = false;
     util::atomic_write(&stage.0.join("instance.json"), instance.json().as_bytes())?;
+    util::check_pending_transactions(&app.dir(source_id)?)?;
     worlds::assert_stopped(app, source_id)?;
     fs::rename(&stage.0, &destination).map_err(|e| e.to_string())?;
     Ok(util::object(&[
@@ -151,6 +153,7 @@ pub fn clone_instance(app: &App, source_id: &str, destination_id: &str) -> Resul
 pub fn trash(app: &App, id: &str) -> Result<String> {
     util::valid_id(id)?;
     let _lock = util::Lock::acquire(&app.root, &format!("instance-{id}"))?;
+    util::check_pending_transactions(&app.dir(id)?)?;
     worlds::assert_stopped(app, id)?;
     let instance = app.read_instance(id)?;
     let base = util::safe_join(&app.root, "trash")?;

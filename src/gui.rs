@@ -235,6 +235,19 @@ impl Task {
     }
 }
 
+fn should_exit_after_launch(enabled: bool, task: &Task, succeeded: bool, output: &[u8]) -> bool {
+    if !enabled || !succeeded || !matches!(task, Task::Launch { .. }) {
+        return false;
+    }
+    with_json(output, |root| {
+        Ok(root
+            .get("pid")
+            .and_then(Value::as_u64)
+            .is_some_and(|pid| pid > 0 && pid <= u64::from(u32::MAX)))
+    })
+    .unwrap_or(false)
+}
+
 enum PipeMessage {
     Data(bool, Vec<u8>),
     End,
@@ -425,6 +438,8 @@ enum Action {
 
 struct App {
     root: Option<String>,
+    exit_after_launch: bool,
+    exit_requested: bool,
     ui: Ui,
     page: Page,
     instances: Vec<Instance>,
@@ -466,6 +481,8 @@ impl App {
     fn new(root: Option<String>) -> Self {
         Self {
             root,
+            exit_after_launch: false,
+            exit_requested: false,
             ui: Ui::default(),
             page: Page::Library,
             instances: Vec::new(),
@@ -532,6 +549,15 @@ impl App {
                 } else {
                     self.apply_result(&job.task, &job.stdout)
                 };
+                if should_exit_after_launch(
+                    self.exit_after_launch,
+                    &job.task,
+                    result.is_ok(),
+                    &job.stdout,
+                ) {
+                    self.exit_requested = true;
+                    self.queue.clear();
+                }
                 if let Err(error) = result {
                     self.notice = truncate_chars(error.trim(), 220);
                     self.error = true;
@@ -558,7 +584,8 @@ impl App {
                 changed = true;
             }
         }
-        if self.job.is_none()
+        if !self.exit_requested
+            && self.job.is_none()
             && let Some(task) = self.queue.pop_front()
         {
             match Job::start(task, self.root.as_deref()) {
@@ -2099,12 +2126,22 @@ pub fn run(smoke_seconds: Option<u64>) -> Result<(), String> {
 
 /// Forward an explicit storage root to CLI children without changing process environment.
 pub fn run_with_root(smoke_seconds: Option<u64>, root: Option<String>) -> Result<(), String> {
+    run_with_options(smoke_seconds, root, false)
+}
+
+/// Optionally release launcher resources after a successful detached game launch.
+pub fn run_with_options(
+    smoke_seconds: Option<u64>,
+    root: Option<String>,
+    exit_after_launch: bool,
+) -> Result<(), String> {
     let started = Instant::now();
     let metrics = std::env::var("ZMCL_GUI_METRICS").as_deref() == Ok("1");
     let mut first_frame = true;
     let mut window = Window::new("zmcl — Minecraft Launcher", 1120, 760)?;
     window.set_theme(Theme::Dark);
     let mut app = App::new(root);
+    app.exit_after_launch = exit_after_launch;
     let mut event = None;
     let mut redraw = true;
     loop {
@@ -2115,6 +2152,9 @@ pub fn run_with_root(smoke_seconds: Option<u64>, root: Option<String>) -> Result
             break;
         }
         redraw |= app.poll();
+        if app.exit_requested {
+            break;
+        }
         if let Some(Event::Move(x, y)) = event.as_ref()
             && !app.ui.pointer_changed(*x, *y)
         {
@@ -2159,6 +2199,50 @@ pub fn run_with_root(smoke_seconds: Option<u64>, root: Option<String>) -> Result
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn automatic_exit_requires_a_successful_game_pid() {
+        let task = Task::Launch {
+            id: "world".into(),
+            offline: Some("Player_1".into()),
+            account: None,
+        };
+        let valid = br#"{"pid":1234}"#;
+        assert!(should_exit_after_launch(true, &task, true, valid));
+        assert!(!should_exit_after_launch(false, &task, true, valid));
+        assert!(!should_exit_after_launch(true, &task, false, valid));
+        for invalid in [
+            "",
+            "not json",
+            "{}",
+            r#"{"pid":0}"#,
+            r#"{"pid":-1}"#,
+            r#"{"pid":null}"#,
+            r#"{"pid":"1234"}"#,
+            r#"{"pid":1.5}"#,
+            r#"{"pid":4294967296}"#,
+            r#"{"command":["java"],"dry_run":true}"#,
+        ] {
+            assert!(!should_exit_after_launch(
+                true,
+                &task,
+                true,
+                invalid.as_bytes()
+            ));
+        }
+        for other in [
+            Task::Install("world".into()),
+            Task::Doctor,
+            Task::Instances,
+            Task::Login(String::new()),
+            Task::ExportPack {
+                path: "world.mrpack".into(),
+                id: "world".into(),
+            },
+        ] {
+            assert!(!should_exit_after_launch(true, &other, true, valid));
+        }
+    }
 
     #[test]
     fn game_arguments_do_not_enter_a_shell() {

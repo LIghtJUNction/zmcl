@@ -9,6 +9,7 @@ mod horizon;
 mod instance_manage;
 mod java;
 mod net;
+mod resources;
 mod runtime;
 mod server;
 mod store;
@@ -26,10 +27,12 @@ const ARGS: &[zclap::Arg<'static>] = &[
     zclap::Arg::flag("json"),
     zclap::Arg::flag("dry-run"),
     zclap::Arg::flag("wait"),
+    zclap::Arg::flag("exit-after-launch"),
     zclap::Arg::value("root"),
     zclap::Arg::value("version"),
     zclap::Arg::value("loader"),
     zclap::Arg::value("loader-version"),
+    zclap::Arg::value("pack-version"),
     zclap::Arg::value("name"),
     zclap::Arg::value("memory"),
     zclap::Arg::value("java"),
@@ -85,7 +88,7 @@ fn help() {
     println!(
         r#"zmcl — a small native Minecraft launcher
 
-  zmcl gui                           Open the native interface
+  zmcl gui [--exit-after-launch]      Open the native interface
   zmcl versions [--json]             List official Minecraft versions
   zmcl instance list [--json]
   zmcl instance create ID --version 1.21.1 [--loader fabric|quilt|forge|neoforge]
@@ -107,8 +110,21 @@ fn help() {
   zmcl mods list ID
   zmcl mods enable ID PROJECT
   zmcl mods disable ID PROJECT
+  zmcl mods update ID [PROJECT]
+  zmcl mods remove ID PROJECT
+  zmcl mods recover ID
+  zmcl pack search QUERY [--version MINECRAFT_VERSION]
+  zmcl pack install PROJECT ID [--pack-version MODRINTH_VERSION_ID]
   zmcl pack import FILE.mrpack ID
   zmcl pack export ID FILE.mrpack
+  zmcl resources search resourcepack|shader QUERY [--version VERSION]
+  zmcl resources add ID resourcepack|shader PROJECT
+  zmcl resources list ID [resourcepack|shader]
+  zmcl resources update ID [resourcepack|shader] [PROJECT]
+  zmcl resources remove|enable|disable ID resourcepack|shader PROJECT
+  zmcl resources history ID
+  zmcl resources restore ID REVISION
+  zmcl resources recover ID
   zmcl storage stats [--json]
   zmcl world list ID
   zmcl world info ID NAME
@@ -156,6 +172,14 @@ pub fn run_cli(args: Vec<String>) -> Result<()> {
     }
     let command = cli.args.first().map(String::as_str).unwrap_or("gui");
     if command == "gui" {
+        #[cfg(feature = "gui")]
+        if cli.flags.contains("exit-after-launch") {
+            return gui::run_with_options(
+                cli.val("smoke-seconds").and_then(|x| x.parse().ok()),
+                cli.val("root").map(str::to_owned),
+                true,
+            );
+        }
         if let Some(root) = cli.val("root") {
             // Child processes inherit the root via explicit arguments, never process-wide environment mutation.
             #[cfg(feature = "gui")]
@@ -173,6 +197,47 @@ pub fn run_cli(args: Vec<String>) -> Result<()> {
     }
     let app = App::new(cli.val("root").map(str::to_owned))?;
     match command {
+        "resources" => match cli.pos(1)? {
+            "search" => println!(
+                "{}",
+                resources::search(cli.pos(2)?, cli.pos(3)?, cli.val("version"))?
+            ),
+            "list" => println!(
+                "{}",
+                resources::list(&app, cli.pos(2)?, cli.args.get(3).map(String::as_str))?
+            ),
+            "add" => println!(
+                "{}",
+                resources::add(&app, cli.pos(2)?, cli.pos(3)?, cli.pos(4)?)?
+            ),
+            "update" => println!(
+                "{}",
+                resources::update(
+                    &app,
+                    cli.pos(2)?,
+                    cli.args.get(3).map(String::as_str),
+                    cli.args.get(4).map(String::as_str)
+                )?
+            ),
+            "remove" => println!(
+                "{}",
+                resources::remove(&app, cli.pos(2)?, cli.pos(3)?, cli.pos(4)?)?
+            ),
+            "enable" | "disable" => println!(
+                "{}",
+                resources::toggle(
+                    &app,
+                    cli.pos(2)?,
+                    cli.pos(3)?,
+                    cli.pos(4)?,
+                    cli.pos(1)? == "enable"
+                )?
+            ),
+            "recover" => println!("{}", resources::recover(&app, cli.pos(2)?)?),
+            "history" => println!("{}", resources::history(&app, cli.pos(2)?)?),
+            "restore" => println!("{}", resources::restore(&app, cli.pos(2)?, cli.pos(3)?)?),
+            _ => return Err("Unknown resources command".into()),
+        },
         "horizon" => match cli.pos(1)? {
             "versions" => println!("{}", horizon::versions()?),
             "install" => println!(
@@ -360,9 +425,33 @@ pub fn run_cli(args: Vec<String>) -> Result<()> {
                 content::toggle(&app, cli.pos(2)?, cli.pos(3)?, cli.pos(1)? == "enable")?;
                 println!("{{\"updated\":true}}");
             }
+            "update" => {
+                content::update(&app, cli.pos(2)?, cli.args.get(3).map(String::as_str))?;
+                println!("{{\"updated\":true}}");
+            }
+            "remove" => {
+                content::remove(&app, cli.pos(2)?, cli.pos(3)?)?;
+                println!("{{\"removed\":true}}");
+            }
+            "recover" => {
+                content::recover(&app, cli.pos(2)?)?;
+                println!("{{\"recovered\":true}}");
+            }
             _ => return Err("Unknown mods command".into()),
         },
         "pack" => match cli.pos(1)? {
+            "search" => println!("{}", content::pack_search(cli.pos(2)?, cli.val("version"))?),
+            "install" => {
+                let id = cli.pos(3)?;
+                content::install_project_pack(&app, cli.pos(2)?, id, cli.val("pack-version"))?;
+                let jobs = cli
+                    .val("jobs")
+                    .unwrap_or("4")
+                    .parse()
+                    .map_err(|_| "Invalid jobs")?;
+                runtime::install(&app, id, jobs)?;
+                println!("{{\"installed\":true}}");
+            }
             "import" => {
                 content::import_pack(&app, Path::new(cli.pos(2)?), cli.pos(3)?)?;
                 println!("{{\"imported\":true}}");

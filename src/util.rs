@@ -168,6 +168,27 @@ impl Drop for Lock {
     }
 }
 
+/// Refuse to use a half-published instance. Each owning subsystem is responsible
+/// for proving and recovering its own journal before this gate can pass.
+pub fn check_pending_transactions(instance: &Path) -> Result<()> {
+    let id = instance
+        .file_name()
+        .and_then(|x| x.to_str())
+        .unwrap_or("ID");
+    for (file, action) in [
+        (".content-journal.json", "mods recover"),
+        (".resources-journal.json", "resources recover"),
+        (".backup-restore.json", "backup create"),
+    ] {
+        if fs::symlink_metadata(instance.join(file)).is_ok() {
+            return Err(format!(
+                "Unfinished instance transaction {file}; run 'zmcl {action} {id}' to recover it before using this instance."
+            ));
+        }
+    }
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

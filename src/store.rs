@@ -241,6 +241,12 @@ pub fn batch(app: &App, artifacts: &[zmcl_core::plan::Artifact], jobs: usize) ->
                 continue;
             }
         }
+        if item.download.url.is_empty() {
+            return Err(format!(
+                "Loader-generated file is missing or invalid: {}. Reinstall the loader with a compatible Java runtime.",
+                item.path
+            ));
+        }
         pending.push(item);
     }
     let count = pending.len();
