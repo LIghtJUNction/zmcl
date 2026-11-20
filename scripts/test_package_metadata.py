@@ -59,5 +59,76 @@ class RuntimeDependencyTests(unittest.TestCase):
         self.assertNotIn("XWayland", text)
 
 
+class FontconfigAbiTests(unittest.TestCase):
+    def inspect(self, symbol_rows):
+        result = packager.subprocess.CompletedProcess([], 0, stdout=symbol_rows, stderr="")
+        with patch.object(packager.platform, "system", return_value="Linux"), \
+                patch.object(packager.subprocess, "run", return_value=result):
+            return packager.fontconfig_requirements("zmcl")
+
+    def test_new_mandatory_import_sets_binary_minimum(self):
+        requirements = self.inspect(
+            "49: 0000000000000000 0 FUNC GLOBAL DEFAULT UND FcConfigSetDefaultSubstitute\n"
+        )
+        self.assertEqual(requirements["minimum_version"], "2.17.0")
+        self.assertEqual(requirements["symbol_version_basis"],
+                         {"FcConfigSetDefaultSubstitute": "2.17.0"})
+        with patch.object(packager.platform, "system", return_value="Linux"):
+            metadata = packager.runtime_dependencies(
+                ["libX11.so.6", "libfontconfig.so.1"], None, requirements
+            )
+        self.assertEqual(metadata["linux_direct_elf_minimum_fontconfig"], "2.17.0")
+        self.assertEqual(metadata["linux_direct_elf_fontconfig_version_basis"],
+                         requirements["symbol_version_basis"])
+        self.assertIn("Fontconfig >= 2.17.0", metadata["native_gui"])
+        self.assertIn("Source-level fallbacks", metadata["linux_fontconfig_scope"])
+
+    def test_old_api_does_not_invent_new_minimum(self):
+        requirements = self.inspect(
+            "49: 0000000000000000 0 FUNC GLOBAL DEFAULT UND FcDefaultSubstitute\n"
+        )
+        self.assertIsNone(requirements["minimum_version"])
+        self.assertEqual(requirements["symbol_version_basis"], {})
+        with patch.object(packager.platform, "system", return_value="Linux"):
+            metadata = packager.runtime_dependencies(
+                ["libX11.so.6", "libfontconfig.so.1"], None, requirements
+            )
+        self.assertIsNone(metadata["linux_direct_elf_minimum_fontconfig"])
+        self.assertEqual(metadata["linux_direct_elf_fontconfig_version_basis"], {})
+        self.assertIn("Fontconfig", metadata["native_gui"])
+        self.assertNotIn("Fontconfig >=", metadata["native_gui"])
+
+    def test_defined_weak_and_similarly_named_symbols_do_not_set_minimum(self):
+        for row in (
+            "49: 0000000000001000 25 FUNC GLOBAL DEFAULT 12 FcConfigSetDefaultSubstitute",
+            "49: 0000000000000000 0 FUNC WEAK DEFAULT UND FcConfigSetDefaultSubstitute",
+            "49: 0000000000000000 0 FUNC GLOBAL DEFAULT UND FcConfigSetDefaultSubstituteOther",
+        ):
+            with self.subTest(row=row):
+                self.assertIsNone(self.inspect(row)["minimum_version"])
+
+    def test_version_suffix_preserves_required_symbol_identity(self):
+        requirements = self.inspect(
+            "49: 0000000000000000 0 FUNC GLOBAL DEFAULT UND "
+            "FcConfigSetDefaultSubstitute@FONTCONFIG_2.17.0 (2)\n"
+        )
+        self.assertEqual(requirements["minimum_version"], "2.17.0")
+
+    def test_failed_inspection_is_not_reported_as_no_requirement(self):
+        result = packager.subprocess.CompletedProcess([], 1, stdout="", stderr="invalid ELF")
+        with patch.object(packager.platform, "system", return_value="Linux"), \
+                patch.object(packager.subprocess, "run", return_value=result):
+            with self.assertRaisesRegex(ValueError, "ELF dynamic symbols"):
+                packager.fontconfig_requirements("zmcl")
+
+    def test_other_platforms_do_not_run_elf_inspection(self):
+        for system in ("Windows", "Darwin"):
+            with self.subTest(system=system), \
+                    patch.object(packager.platform, "system", return_value=system), \
+                    patch.object(packager.subprocess, "run") as run:
+                self.assertIsNone(packager.fontconfig_requirements("zmcl"))
+                run.assert_not_called()
+
+
 if __name__ == "__main__":
     unittest.main()

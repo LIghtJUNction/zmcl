@@ -158,7 +158,31 @@ def glibc_requirements(binary):
             "required_symbol_versions": versions}
 
 
-def native_gui_requirements(libraries):
+def fontconfig_requirements(binary):
+    """Infer a known ABI floor from mandatory imports in this Linux executable."""
+    if platform.system() != "Linux":
+        return None
+    result = subprocess.run(
+        ["readelf", "--dyn-syms", "--wide", str(binary)],
+        capture_output=True, text=True, check=False,
+        env={**os.environ, "LC_ALL": "C"},
+    )
+    require(result.returncode == 0, "readelf could not inspect ELF dynamic symbols")
+    required = set()
+    for line in result.stdout.splitlines():
+        fields = line.split()
+        # Defined symbols and optional weak imports do not impose this ABI floor.
+        if len(fields) >= 8 and fields[4] == "GLOBAL" and fields[6] == "UND":
+            required.add(fields[7].split("@", 1)[0])
+    # The upstream reference dates this API to 2.17.0:
+    # https://fontconfig.pages.freedesktop.org/fontconfig/fontconfig-devel/
+    versions = {"FcConfigSetDefaultSubstitute": "2.17.0"}
+    basis = {symbol: version for symbol, version in versions.items() if symbol in required}
+    minimum = max(basis.values(), key=lambda value: tuple(map(int, value.split(".")))) if basis else None
+    return {"minimum_version": minimum, "symbol_version_basis": basis}
+
+
+def native_gui_requirements(libraries, fontconfig=None):
     """Describe the packaged renderer without imposing unused GPU dependencies."""
     system = platform.system()
     if system == "Linux":
@@ -182,7 +206,8 @@ def native_gui_requirements(libraries):
         if any(name.startswith("libfreetype.so") for name in libraries):
             fonts.append("FreeType")
         if any(name.startswith("libfontconfig.so") for name in libraries):
-            fonts.append("Fontconfig")
+            minimum = fontconfig["minimum_version"] if fontconfig else None
+            fonts.append("Fontconfig" + (" >= " + minimum if minimum else ""))
         font_note = " Font libraries: " + ", ".join(fonts) + "." if fonts else ""
         return "Linux " + window_system + "; " + rendering + "." + font_note
     if system == "Windows":
@@ -192,14 +217,17 @@ def native_gui_requirements(libraries):
     return "GUI-enabled builds use platform-native window and rendering libraries."
 
 
-def runtime_dependencies(libraries, glibc):
+def runtime_dependencies(libraries, glibc, fontconfig=None):
     return {
         "bundled_runtimes": [],
         "linux_direct_elf_needed": libraries,
         "linux_direct_elf_minimum_glibc": glibc["minimum_version"] if glibc else None,
         "linux_direct_elf_glibc_symbol_versions": glibc["required_symbol_versions"] if glibc else None,
         "linux_glibc_scope": "Highest GLIBC_* version required directly by this executable; this is not a complete distribution compatibility test. Shared libraries and external helpers have their own requirements.",
-        "native_gui": native_gui_requirements(libraries),
+        "linux_direct_elf_minimum_fontconfig": fontconfig["minimum_version"] if fontconfig else None,
+        "linux_direct_elf_fontconfig_version_basis": fontconfig["symbol_version_basis"] if fontconfig else None,
+        "linux_fontconfig_scope": "Known ABI floor from mandatory undefined ELF symbols, currently FcConfigSetDefaultSubstitute (Fontconfig 2.17.0). Null means no floor was established by this check, not compatibility with all versions. Source-level fallbacks do not remove the requirements of this prebuilt executable.",
+        "native_gui": native_gui_requirements(libraries, fontconfig),
         "downloads": "System curl with HTTPS and its certificate store.",
         "archive_metadata_and_process_helpers": "Python 3 standard library, started on demand.",
         "horizon_signature_verification": "Optional system OpenSSL with Ed25519 verification support.",
@@ -475,7 +503,10 @@ def main():
         "source_identity_basis": "Explicit --source-commit; never inferred from an existing executable.",
         "platform": platform_name, "platform_basis": "Packaging host; native executable required.",
         "binary": {"path": executable_name, "bytes": len(binary_data), "sha256": binary_digest},
-        "packager": packager, "runtime_dependencies": runtime_dependencies(dynamic_libraries(binary), glibc_requirements(binary)),
+        "packager": packager,
+        "runtime_dependencies": runtime_dependencies(
+            dynamic_libraries(binary), glibc_requirements(binary), fontconfig_requirements(binary)
+        ),
         "markdown_links": {"repository_branch": "main", "rewritten_counts": link_counts},
         "files": [{"path": key, "bytes": len(value["data"]), "sha256": sha256(value["data"])}
                   for key, value in sorted(payload.items())],
