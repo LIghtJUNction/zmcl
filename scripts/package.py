@@ -356,17 +356,39 @@ def verify_install(contents, payload, version):
             label="install")
         manifest = prefix / "share/zmcl/install.json"
         installed = json.loads(manifest.read_text())
-        require(len(installed) == 3, "Unexpected installed-file manifest")
+        expected_paths = {
+            "bin/zmcl", "share/icons/hicolor/scalable/apps/zmcl.svg",
+            "share/applications/zmcl.desktop", "share/zmcl/installation.json",
+        }
+        distribution_path = "share/zmcl/distribution.json"
+        if distribution_path in contents:
+            expected_paths.add(distribution_path)
+        require(isinstance(installed, list) and len(installed) == len(expected_paths),
+                "Unexpected installed-file manifest")
         installed_files = []
+        seen = set()
         for entry in installed:
+            require(isinstance(entry, dict) and set(entry) == {"path", "sha256"},
+                    "Installer manifest has an invalid entry")
             relative = entry["path"]
-            require(relative in ("bin/zmcl", "share/icons/hicolor/scalable/apps/zmcl.svg",
-                                 "share/applications/zmcl.desktop"),
-                    "Installer manifest has an unexpected target")
+            require(isinstance(relative, str) and relative in expected_paths and relative not in seen,
+                    "Installer manifest has an unexpected or duplicate target")
+            seen.add(relative)
             path = prefix / relative
+            require(path.is_file() and not path.is_symlink(), "Installed target is not a regular file")
             require(file_sha256(path) == entry["sha256"], "Installed digest mismatch")
             installed_files.append({"path": relative, "bytes": path.stat().st_size,
                                     "sha256": entry["sha256"]})
+        require(seen == expected_paths, "Installer manifest is missing a managed target")
+        receipt = json.loads((prefix / "share/zmcl/installation.json").read_text())
+        require(receipt == {
+            "schema": 1, "application": "zmcl", "version": version, "channel": "portable",
+            "executable": str(prefix / "bin/zmcl"), "prefix": str(prefix),
+            "release_url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v" + version,
+        }, "Installed receipt does not describe this release and prefix")
+        if distribution_path in expected_paths:
+            require((prefix / distribution_path).read_bytes() == contents[distribution_path],
+                    "Installed distribution marker differs from the checked payload")
         installed_files.append({"path": "share/zmcl/install.json",
                                 "bytes": manifest.stat().st_size,
                                 "sha256": file_sha256(manifest)})
@@ -397,7 +419,7 @@ def verify_install(contents, payload, version):
             "installed_regular_file_bytes": sum(item["bytes"] for item in installed_files),
             "installed_files": installed_files,
             "prefix_character_count": len(str(prefix)),
-            "size_scope": "Binary, icon, desktop entry and install manifest; desktop size depends on the prefix.",
+            "size_scope": "Binary, icon, desktop entry, installation receipt, optional distribution marker and install manifest; generated paths depend on the prefix.",
             "simulated_game_data_preserved_inside_and_outside_prefix": True,
         }
 
@@ -421,8 +443,8 @@ def verify_install(contents, payload, version):
         require(modified_game.read_bytes() == marker_bytes, "Uninstall changed simulated game data")
         require((modified_prefix / "share/zmcl/install.json").is_file(),
                 "Partial uninstall discarded the remaining-file record")
-        require(not (modified_prefix / "bin/zmcl").exists()
-                and not (modified_prefix / "share/icons/hicolor/scalable/apps/zmcl.svg").exists(),
+        require(all(not (modified_prefix / relative).exists()
+                    for relative in expected_paths - {"share/applications/zmcl.desktop"}),
                 "Partial uninstall failed to remove unchanged installed files")
         checks["modified_file_protection"] = {
             "passed": True, "modified_file": "share/applications/zmcl.desktop",

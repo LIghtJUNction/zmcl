@@ -1,0 +1,53 @@
+{
+  "checks": [
+    {
+      "suite": "test_install.py",
+      "exit_code": 0,
+      "seconds": 2.295,
+      "test_count": 38,
+      "log_sha256": "65dcf16c274b4dce0d47670db2960c425277a8b0f55ff33a2135cf6841e7f846"
+    },
+    {
+      "suite": "test_package_metadata.py",
+      "exit_code": 0,
+      "seconds": 2.561,
+      "test_count": 15,
+      "log_sha256": "ee76c6a95d9f5d00bf183e0a60391cffa5b965ff951480c1944d99d8672661c6"
+    },
+    {
+      "check": "installer_and_tests_python_3_8_syntax",
+      "passed": true,
+      "python3_8_available": false
+    }
+  ],
+  "source_sha256": {
+    "scripts/install.py": "2c48a9e59127f451e850c63018b5b96ed3a00982c4607a8f1e57b7c5f4ca9563",
+    "scripts/test_install.py": "9b19af525ff19c9fe0cf19120e6360a0f04ab503fd317474e9a544f087651fe9",
+    "scripts/package.py": "c45ab4e175f6d70dcb2abd4d7ade00bf1ea312948c17558b61bf47f185c61f14",
+    "scripts/test_package_metadata.py": "f21fb02e83839b83f2cda2c995f715064454887561003e23d4ed268c638eea63"
+  },
+  "passed": true,
+  "base_commit": "9ef89bb92d46d324172d6ea8b13054c81434e178",
+  "python_version": "3.14.10",
+  "system": "Linux",
+  "changed_files": [
+    "scripts/install.py",
+    "scripts/test_install.py",
+    "scripts/package.py",
+    "scripts/test_package_metadata.py"
+  ],
+  "diff_check_passed": true,
+  "index_unchanged": true,
+  "scope": {
+    "isolated_prefixes_only": true,
+    "host_installation_changed": false,
+    "shell_or_launcher_executed_by_installer": false,
+    "package_acceptance_runs_fixture_version_command": true,
+    "game_or_account_access": false,
+    "windows_native_runtime_test": "Delegated to the coordinated Windows release workflow; not run here",
+    "python_3_8_check": "Syntax and compatible standard-library API use; local suite uses the recorded interpreter",
+    "real_zmcl_release_installation": "Recorded separately after frozen application packaging"
+  },
+  "candidate_patch_sha256": "439b7f3a8f1987774f284c85ea1e9e6e9f32465f536db5097625d62529e7ca15",
+  "schema": 1
+}

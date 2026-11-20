@@ -1,4 +1,9 @@
 """Regression checks for release metadata across native rendering backends."""
+import hashlib
+import json
+from pathlib import Path
+import sys
+import tempfile
 import unittest
 from unittest.mock import patch
 
@@ -128,6 +133,52 @@ class FontconfigAbiTests(unittest.TestCase):
                     patch.object(packager.subprocess, "run") as run:
                 self.assertIsNone(packager.fontconfig_requirements("zmcl"))
                 run.assert_not_called()
+
+
+@unittest.skipUnless(sys.platform.startswith("linux"), "Private-prefix install acceptance is Linux-only")
+class PortableInstallAcceptanceTests(unittest.TestCase):
+    def check_roundtrip(self, with_marker):
+        version = "0.1.2"
+        files = {
+            "zmcl": {"data": b"#!/bin/sh\nprintf 'zmcl 0.1.2\\n'\n", "mode": 0o755},
+            "assets/zmcl.svg": {"data": b"<svg xmlns='http://www.w3.org/2000/svg'/>", "mode": 0o644},
+            "scripts/install.py": {"data": Path(__file__).with_name("install.py").read_bytes(), "mode": 0o755},
+        }
+        if with_marker:
+            files["share/zmcl/distribution.json"] = {"data": json.dumps({
+                "schema": 1, "application": "zmcl", "version": version,
+                "format": "portable", "packager": "zdistro", "packager_version": "0.1.0",
+                "packager_commit": "6a54a137fc697d372b54ef85105315f2ce522b3d",
+                "release_url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v" + version,
+            }).encode(), "mode": 0o644}
+        entries = [{"path": name, "bytes": len(value["data"]),
+                    "sha256": hashlib.sha256(value["data"]).hexdigest()}
+                   for name, value in sorted(files.items())]
+        release = {
+            "schema": 1, "application": "zmcl", "version": version,
+            "binary": next(entry for entry in entries if entry["path"] == "zmcl"),
+            "files": entries,
+        }
+        files["release.json"] = {"data": json.dumps(release).encode(), "mode": 0o644}
+        contents = {name: value["data"] for name, value in files.items()}
+        with tempfile.TemporaryDirectory(prefix="zmcl-package-install-test-") as directory:
+            with patch.object(packager, "ROOT", Path(directory)):
+                result = packager.verify_install(contents, files, version)
+        self.assertTrue(result["clean_install_uninstall"]["passed"])
+        self.assertTrue(result["modified_file_protection"]["passed"])
+        installed = result["clean_install_uninstall"]["installed_files"]
+        paths = {row["path"] for row in installed}
+        self.assertIn("share/zmcl/installation.json", paths)
+        self.assertEqual("share/zmcl/distribution.json" in paths, with_marker)
+        self.assertEqual(len(paths), 6 if with_marker else 5)
+        self.assertFalse(result["gui_started"])
+        self.assertFalse(result["game_started"])
+
+    def test_legacy_payload_and_new_receipt_roundtrip(self):
+        self.check_roundtrip(with_marker=False)
+
+    def test_zdistro_payload_and_both_sidecars_roundtrip(self):
+        self.check_roundtrip(with_marker=True)
 
 
 if __name__ == "__main__":

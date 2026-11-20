@@ -14,6 +14,7 @@ import io
 import json
 import os
 from pathlib import Path
+import shlex
 import shutil
 import stat
 import subprocess
@@ -33,13 +34,17 @@ installer = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = installer
 SPEC.loader.exec_module(installer)
 
+EXECUTABLE_NAME = "zmcl.exe" if os.name == "nt" else "zmcl"
+BINARY_PATH = "bin/" + EXECUTABLE_NAME
 PAYLOAD_PATHS = (
-    "bin/zmcl",
+    BINARY_PATH,
     "share/icons/hicolor/scalable/apps/zmcl.svg",
     "share/applications/zmcl.desktop",
 )
 MANIFEST_PATH = "share/zmcl/install.json"
-MANAGED_PATHS = (*PAYLOAD_PATHS, MANIFEST_PATH)
+INSTALLATION_PATH = "share/zmcl/installation.json"
+DISTRIBUTION_PATH = "share/zmcl/distribution.json"
+MANAGED_PATHS = (*PAYLOAD_PATHS, INSTALLATION_PATH, MANIFEST_PATH)
 REFUSAL_ERRORS = (ValueError, RuntimeError, OSError)
 
 
@@ -100,9 +105,9 @@ class InstallerTests(unittest.TestCase):
             self.assertFalse(path.is_symlink(), relative)
             self.assertIn(relative, serialized)
             self.assertIn(sha256(path.read_bytes()), serialized)
-        self.assertEqual((prefix / "bin/zmcl").read_bytes(), binary.read_bytes())
+        self.assertEqual((prefix / BINARY_PATH).read_bytes(), binary.read_bytes())
         if os.name != "nt":
-            self.assertTrue((prefix / "bin/zmcl").stat().st_mode & stat.S_IXUSR)
+            self.assertTrue((prefix / BINARY_PATH).stat().st_mode & stat.S_IXUSR)
 
     def old_manifest(self, prefix=None):
         prefix = prefix or self.prefix
@@ -115,6 +120,9 @@ class InstallerTests(unittest.TestCase):
         prefix = prefix or self.prefix
         record = prefix / MANIFEST_PATH
         record.write_text(json.dumps(self.old_manifest(prefix), indent=2), encoding="utf-8")
+        # Recreate an actual old installation, which did not have these sidecars.
+        for relative in (INSTALLATION_PATH, DISTRIBUTION_PATH):
+            (prefix / relative).unlink(missing_ok=True)
 
     def assert_refused_without_changes(self, action, prefix=None):
         prefix = prefix or self.prefix
@@ -211,14 +219,14 @@ class InstallerTests(unittest.TestCase):
 
     def test_upgrade_preserves_modified_binary(self):
         self.install()
-        (self.prefix / "bin/zmcl").write_bytes(b"user supplied executable\n")
+        (self.prefix / BINARY_PATH).write_bytes(b"user supplied executable\n")
         self.assert_refused_without_changes(lambda: self.install(binary=self.new_binary))
 
     def test_install_refuses_unmanaged_files_even_if_bytes_match(self):
         for index, body in enumerate((b"unmanaged executable\n", self.old_binary.read_bytes())):
             with self.subTest(same_bytes=index == 1):
                 prefix = self.root / f"unmanaged-{index}"
-                target = prefix / "bin/zmcl"
+                target = prefix / BINARY_PATH
                 target.parent.mkdir(parents=True)
                 target.write_bytes(body)
                 self.assert_refused_without_changes(lambda: self.install(prefix), prefix)
@@ -238,7 +246,7 @@ class InstallerTests(unittest.TestCase):
         self.assertTrue(icon.is_symlink())
         self.assertEqual(outside.read_bytes(), b"outside file\n")
         self.assertEqual((self.prefix / MANIFEST_PATH).read_bytes(), original_record)
-        self.assertFalse((self.prefix / "bin/zmcl").exists())
+        self.assertFalse((self.prefix / BINARY_PATH).exists())
         self.assertFalse((self.prefix / "share/applications/zmcl.desktop").exists())
 
     def test_install_and_uninstall_refuse_symlink_parents(self):
@@ -275,7 +283,7 @@ class InstallerTests(unittest.TestCase):
         self.assertEqual(outside.read_bytes(), original)
 
     def test_install_and_uninstall_refuse_directory_target(self):
-        for index, relative in enumerate((*PAYLOAD_PATHS, MANIFEST_PATH)):
+        for index, relative in enumerate(MANAGED_PATHS):
             with self.subTest(target=relative):
                 prefix = self.root / f"directory-target-{index}"
                 self.install(prefix)
@@ -326,7 +334,7 @@ class InstallerTests(unittest.TestCase):
             self.uninstall()
         self.assertEqual(path.read_bytes(), edited)
         self.assertTrue((self.prefix / MANIFEST_PATH).is_file())
-        self.assertFalse((self.prefix / "bin/zmcl").exists())
+        self.assertFalse((self.prefix / BINARY_PATH).exists())
         self.assertFalse((self.prefix / "share/icons/hicolor/scalable/apps/zmcl.svg").exists())
         self.assert_game_fixtures(self.prefix, game)
 
@@ -338,8 +346,9 @@ class InstallerTests(unittest.TestCase):
                 self.write_old_manifest(prefix)
                 game = self.install_game_fixtures(prefix)
                 if os.name != "nt":
-                    for name, mode in zip(MANAGED_PATHS, (0o700, 0o600, 0o640, 0o640)):
-                        (prefix / name).chmod(mode)
+                    for name, mode in zip(MANAGED_PATHS, (0o700, 0o600, 0o640, 0o644, 0o640)):
+                        if (prefix / name).exists():
+                            (prefix / name).chmod(mode)
                 before = managed_state(prefix)
                 patch, failures = self.injected_failure(prefix, relative)
                 with patch:
@@ -390,7 +399,7 @@ class InstallerTests(unittest.TestCase):
                 self.write_old_manifest(prefix)
                 original_record = (prefix / MANIFEST_PATH).read_bytes()
                 old_bytes = self.old_binary.read_bytes()
-                target = prefix / "bin/zmcl"
+                target = prefix / BINARY_PATH
                 original_replace = installer.os.replace
                 interrupted = []
 
@@ -461,6 +470,234 @@ except (OSError, RuntimeError):
         self.assertEqual(holder.stdout.strip(), "acquired")
         with installer.installation_lock(self.prefix):
             self.assertEqual(list(self.prefix.iterdir()), [])
+
+
+    def package_fixture(self, version="0.1.2", with_marker=True, binary=None):
+        package = self.root / ("package-" + version)
+        (package / "assets").mkdir(parents=True, exist_ok=True)
+        (package / "assets/zmcl.svg").write_bytes(b"<svg xmlns='http://www.w3.org/2000/svg'/>")
+        (package / "zmcl").write_bytes((binary or self.old_binary).read_bytes())
+        if with_marker:
+            marker = package / DISTRIBUTION_PATH
+            marker.parent.mkdir(parents=True)
+            marker.write_text(json.dumps({
+                "schema": 1, "application": "zmcl", "version": version,
+                "format": "portable", "packager": "zdistro", "packager_version": "0.1.0",
+                "packager_commit": "6a54a137fc697d372b54ef85105315f2ce522b3d",
+                "release_url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v" + version,
+            }), encoding="utf-8")
+        self.write_release(package, version)
+        return package
+
+    def write_release(self, package, version):
+        files = []
+        for relative in ("zmcl", "assets/zmcl.svg", DISTRIBUTION_PATH):
+            path = package / relative
+            if path.exists():
+                body = path.read_bytes()
+                files.append({"path": relative, "bytes": len(body), "sha256": sha256(body)})
+        (package / "release.json").write_text(json.dumps({
+            "schema": 1, "application": "zmcl", "version": version,
+            "binary": files[0], "files": files,
+        }), encoding="utf-8")
+
+    def installed_receipt(self):
+        return json.loads((self.prefix / INSTALLATION_PATH).read_text(encoding="utf-8"))
+
+    def test_receipt_is_checked_and_legacy_manifest_remains_a_list(self):
+        self.install()
+        self.assertEqual(self.installed_receipt(), {
+            "schema": 1, "application": "zmcl", "version": "unknown",
+            "channel": "portable", "executable": str(self.prefix / BINARY_PATH),
+            "prefix": str(self.prefix), "release_url": None,
+        })
+        rows = json.loads((self.prefix / MANIFEST_PATH).read_text())
+        self.assertIsInstance(rows, list)
+        self.assertEqual(len(rows), 4)
+        for row in rows:
+            self.assertEqual(set(row), {"path", "sha256"})
+            self.assertEqual(row["sha256"], sha256((self.prefix / row["path"]).read_bytes()))
+        self.assertIn("Installed zmcl unknown", self.output.getvalue())
+
+    def test_verified_distribution_is_copied_and_removed_by_roundtrip(self):
+        package = self.package_fixture()
+        game = self.install_game_fixtures(self.prefix)
+        with mock.patch.object(installer, "ROOT", package):
+            self.install(binary=package / "zmcl")
+        self.assertEqual(self.installed_receipt()["version"], "0.1.2")
+        self.assertEqual(self.installed_receipt()["release_url"],
+                         "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.2")
+        marker = self.prefix / DISTRIBUTION_PATH
+        self.assertEqual(marker.read_bytes(), (package / DISTRIBUTION_PATH).read_bytes())
+        rows = json.loads((self.prefix / MANIFEST_PATH).read_text())
+        self.assertEqual(len(rows), 5)
+        self.assertIn({"path": DISTRIBUTION_PATH, "sha256": sha256(marker.read_bytes())}, rows)
+        self.assertIn("Installed zmcl 0.1.2", self.output.getvalue())
+        self.uninstall()
+        self.assertFalse(marker.exists())
+        self.assertFalse((self.prefix / INSTALLATION_PATH).exists())
+        self.assert_game_fixtures(self.prefix, game)
+
+    def test_verified_upgrade_refreshes_version_and_receipt(self):
+        for version, binary in (("0.1.2", self.old_binary), ("0.1.3", self.new_binary)):
+            package = self.package_fixture(version, binary=binary)
+            with mock.patch.object(installer, "ROOT", package):
+                self.install(binary=package / "zmcl")
+            self.assertEqual(self.installed_receipt()["version"], version)
+            self.assert_installed(self.prefix, binary)
+        marker = json.loads((self.prefix / DISTRIBUTION_PATH).read_text())
+        self.assertEqual(marker["version"], "0.1.3")
+
+    def test_legacy_archive_without_marker_has_verified_version(self):
+        package = self.package_fixture(with_marker=False)
+        with mock.patch.object(installer, "ROOT", package):
+            self.install(binary=package / "zmcl")
+        self.assertEqual(self.installed_receipt()["version"], "0.1.2")
+        self.assertFalse((self.prefix / DISTRIBUTION_PATH).exists())
+
+    def test_incomplete_legacy_metadata_is_unknown(self):
+        package = self.package_fixture(with_marker=False)
+        (package / "release.json").write_text(json.dumps({
+            "schema": 1, "application": "zmcl", "version": "99.0.0",
+        }))
+        with mock.patch.object(installer, "ROOT", package):
+            self.install(binary=package / "zmcl")
+        self.assertEqual(self.installed_receipt()["version"], "unknown")
+
+    def test_checked_release_rejects_different_binary_before_any_write(self):
+        package = self.package_fixture()
+        with mock.patch.object(installer, "ROOT", package):
+            self.assert_refused_without_changes(lambda: self.install(binary=self.new_binary))
+
+    def test_changed_distribution_is_rejected_before_install(self):
+        package = self.package_fixture()
+        marker = package / DISTRIBUTION_PATH
+        marker.write_bytes(marker.read_bytes() + b" ")
+        with mock.patch.object(installer, "ROOT", package):
+            self.assert_refused_without_changes(lambda: self.install(binary=package / "zmcl"))
+
+    def test_unlisted_distribution_is_not_accepted_as_provenance(self):
+        package = self.package_fixture()
+        release = package / "release.json"
+        metadata = json.loads(release.read_text())
+        metadata["files"] = [entry for entry in metadata["files"] if entry["path"] != DISTRIBUTION_PATH]
+        release.write_text(json.dumps(metadata))
+        with mock.patch.object(installer, "ROOT", package):
+            self.assert_refused_without_changes(lambda: self.install(binary=package / "zmcl"))
+
+    def test_marker_requires_release_manifest(self):
+        package = self.package_fixture()
+        (package / "release.json").unlink()
+        with mock.patch.object(installer, "ROOT", package):
+            self.assert_refused_without_changes(lambda: self.install(binary=package / "zmcl"))
+
+    def test_wrong_channel_version_and_release_url_are_rejected(self):
+        for field, value in (
+            ("format", "arch"), ("format", "deb"), ("version", "0.1.3"),
+            ("application", "other"), ("release_url", "https://example.invalid/download"),
+            ("schema", True), ("packager_commit", "not-a-commit"),
+        ):
+            with self.subTest(field=field, value=value):
+                package = self.package_fixture("0.1.2-" + str(len(list(self.root.glob("package-*")))))
+                marker = package / DISTRIBUTION_PATH
+                data = json.loads(marker.read_text())
+                version = data["version"]
+                data[field] = value
+                marker.write_text(json.dumps(data))
+                self.write_release(package, version)
+                with mock.patch.object(installer, "ROOT", package):
+                    self.assert_refused_without_changes(lambda: self.install(binary=package / "zmcl"))
+
+    def test_modified_receipt_is_preserved_during_upgrade_and_uninstall(self):
+        self.install()
+        game = self.install_game_fixtures(self.prefix)
+        receipt = self.prefix / INSTALLATION_PATH
+        changed = receipt.read_bytes() + b"\n"
+        receipt.write_bytes(changed)
+        self.assert_refused_without_changes(lambda: self.install(binary=self.new_binary))
+        with self.assertRaisesRegex(RuntimeError, "Modified files preserved"):
+            self.uninstall()
+        self.assertEqual(receipt.read_bytes(), changed)
+        self.assertTrue((self.prefix / MANIFEST_PATH).exists())
+        self.assertFalse((self.prefix / BINARY_PATH).exists())
+        self.assert_game_fixtures(self.prefix, game)
+
+    def test_modified_distribution_is_preserved_even_when_new_source_has_no_marker(self):
+        package = self.package_fixture()
+        with mock.patch.object(installer, "ROOT", package):
+            self.install(binary=package / "zmcl")
+        marker = self.prefix / DISTRIBUTION_PATH
+        changed = marker.read_bytes() + b"\n"
+        marker.write_bytes(changed)
+        self.assert_refused_without_changes(lambda: self.install(binary=self.new_binary))
+        self.assertEqual(marker.read_bytes(), changed)
+        with self.assertRaisesRegex(RuntimeError, "Modified files preserved"):
+            self.uninstall()
+        self.assertEqual(marker.read_bytes(), changed)
+        self.assertTrue((self.prefix / MANIFEST_PATH).exists())
+
+    def test_old_managed_marker_is_removed_when_installing_unlabelled_source(self):
+        package = self.package_fixture()
+        with mock.patch.object(installer, "ROOT", package):
+            self.install(binary=package / "zmcl")
+        self.install(binary=self.new_binary)
+        self.assertFalse((self.prefix / DISTRIBUTION_PATH).exists())
+        self.assertEqual(self.installed_receipt()["version"], "unknown")
+        self.assertNotIn(DISTRIBUTION_PATH, installer.read_manifest(self.prefix / MANIFEST_PATH))
+
+    def test_unmanaged_sidecars_are_never_adopted_or_removed(self):
+        for index, relative in enumerate((INSTALLATION_PATH, DISTRIBUTION_PATH)):
+            with self.subTest(path=relative):
+                prefix = self.root / ("unmanaged-sidecar-" + str(index))
+                path = prefix / relative
+                path.parent.mkdir(parents=True)
+                path.write_bytes(b"leave this local information alone\n")
+                before = path.read_bytes()
+                self.assert_refused_without_changes(lambda: self.install(prefix), prefix)
+                self.assertEqual(path.read_bytes(), before)
+                self.uninstall(prefix)
+                self.assertEqual(path.read_bytes(), before)
+
+    def test_path_shadow_reports_both_paths_without_running_either(self):
+        other = self.root / "other bin"
+        other.mkdir()
+        selected = other / EXECUTABLE_NAME
+        selected.write_bytes(b"not an executable program\n")
+        selected.chmod(0o755)
+        with mock.patch.dict(os.environ, {"PATH": os.pathsep.join((str(other), str(self.prefix / "bin")))}):
+            self.install()
+        output = self.output.getvalue()
+        self.assertIn("PATH selects another zmcl: " + str(selected), output)
+        self.assertIn("This installation: " + str(self.prefix / BINARY_PATH), output)
+        self.assertEqual(selected.read_bytes(), b"not an executable program\n")
+        launch = next(line[len("Launch: "):] for line in output.splitlines() if line.startswith("Launch: "))
+        self.assertEqual(launch, installer.display_command([self.prefix / BINARY_PATH, "gui"]))
+
+    def test_matching_path_and_missing_path_have_useful_guidance(self):
+        with mock.patch.dict(os.environ, {"PATH": str(self.prefix / "bin")}):
+            self.install()
+        self.assertIn("PATH selects this installation", self.output.getvalue())
+        self.output.seek(0)
+        self.output.truncate()
+        with mock.patch.dict(os.environ, {"PATH": str(self.root / "empty-bin")}):
+            self.install()
+        output = self.output.getvalue()
+        self.assertIn("PATH does not contain zmcl", output)
+        self.assertIn("Update: Download a newer release from https://github.com/LIghtJUNction/zmcl/releases", output)
+        self.assertIn("scripts/install.py", output)
+        self.assertIn("--prefix", output)
+
+    def test_posix_completion_quotes_special_characters_as_literal_arguments(self):
+        if os.name == "nt":
+            self.skipTest("POSIX shell quoting")
+        prefix = self.root / ("literal $HOME; " + chr(96) + "none" + chr(96) + " 'quotes'")
+        self.install(prefix)
+        output = self.output.getvalue()
+        launch = next(line[len("Launch: "):] for line in output.splitlines() if line.startswith("Launch: "))
+        self.assertEqual(shlex.split(launch), [str(prefix / BINARY_PATH), "gui"])
+        update = next(line.strip() for line in output.splitlines() if line.startswith("  "))
+        self.assertEqual(shlex.split(update)[-2:], ["--prefix", str(prefix)])
+
 
 
 if __name__ == "__main__":
