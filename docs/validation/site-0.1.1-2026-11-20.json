@@ -1,0 +1,323 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "checked_at_utc": "2026-11-20T08:39:19.663Z",
+  "prepared_from": "35eb8a3242a6ba637266ba1480354138389c9cb0",
+  "local_candidate_commit": "663163b9ef97c7b0bdeaa3505ae626e925fcc75e",
+  "scope": "Website release facts and UI; existing CSS and copy script unchanged. Private browser profiles; no shared desktop input.",
+  "files": [
+    {
+      "path": "site/assets/backups-0.1.1.png",
+      "bytes": 46110,
+      "sha256": "3dc0b4dd35d856855671bee30390187aed0b10f05b9ee009c166c98f026a7ff3",
+      "git_blob_sha": "70467e1365e435c4ce9f08da6affe364a9c6e703"
+    },
+    {
+      "path": "site/data.json",
+      "bytes": 18935,
+      "sha256": "1c3735c621a3ed0e1c7e4231d0f3f7e52d8c77a7584127ef9bd89268109491a7",
+      "git_blob_sha": "7331f623984bb63b7018a2e49fe0ff694387fd56"
+    },
+    {
+      "path": "site/index.html",
+      "bytes": 13514,
+      "sha256": "e6646cfe02013b9e52baeea79a09993848ee382cf43b1d831ff61a920e4ec9a1",
+      "git_blob_sha": "53652d58aeccea3f86d39128e34b2b3fac3b80e7"
+    }
+  ],
+  "deleted": {
+    "path": "site/assets/launcher.jpg",
+    "old_bytes": 29547,
+    "old_sha256": "56dcdf7ebc25643969c4c4b28262052eebcd7f0b0eb349414215dea35ee5e471",
+    "old_git_blob_sha": "e40656bdef1a350206a4f1203dff02744e4ea911"
+  },
+  "static": {
+    "status": "passed",
+    "feature_groups": 16,
+    "metrics": 11,
+    "html_links_checked": 33,
+    "site_bytes": 96201,
+    "remote_http_checks": "Not requested; source targets checked against the local repository"
+  },
+  "historical_measurement_values_unchanged": true,
+  "style_and_copy_script_unchanged": true,
+  "screenshot_asset": {
+    "bytes": 46110,
+    "sha256": "3dc0b4dd35d856855671bee30390187aed0b10f05b9ee009c166c98f026a7ff3",
+    "git_blob_sha": "70467e1365e435c4ce9f08da6affe364a9c6e703",
+    "width": 1120,
+    "height": 760,
+    "original_unchanged": true,
+    "success_text": "Backup restored. A pre-restore snapshot was saved."
+  },
+  "browser": {
+    "name": "Google Chrome",
+    "version": "158.0.8127.36",
+    "headless": true,
+    "viewport_emulation": true,
+    "viewports": [
+      {
+        "name": "desktop",
+        "width": 1440,
+        "height": 1000,
+        "document_scroll_width": 1440,
+        "exact_copy_checks": 3,
+        "navigation_checks": 6,
+        "data_json_navigation": true,
+        "html_page_errors": [],
+        "json_viewer_console_messages": [
+          "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        ],
+        "failed_requests": []
+      },
+      {
+        "name": "mobile390",
+        "width": 390,
+        "height": 844,
+        "document_scroll_width": 390,
+        "exact_copy_checks": 3,
+        "navigation_checks": 6,
+        "data_json_navigation": true,
+        "html_page_errors": [],
+        "json_viewer_console_messages": [],
+        "failed_requests": []
+      },
+      {
+        "name": "mobile320",
+        "width": 320,
+        "height": 760,
+        "document_scroll_width": 320,
+        "exact_copy_checks": 3,
+        "navigation_checks": 6,
+        "data_json_navigation": true,
+        "html_page_errors": [],
+        "json_viewer_console_messages": [],
+        "failed_requests": []
+      }
+    ],
+    "copy_fallback": {
+      "condition": "Clipboard API deliberately unavailable in isolated browser context",
+      "selected": "paru -S zmcl-bin",
+      "status": "已选中命令，请手动复制。"
+    },
+    "no_javascript": {
+      "context_javaScriptEnabled": false,
+      "sections": [
+        "安装",
+        "开始使用",
+        "当前功能",
+        "界面",
+        "资源占用",
+        "开发计划"
+      ],
+      "native_details": true,
+      "anchor_navigation": true,
+      "manual_commands_readable": true,
+      "copy_status_empty": true,
+      "horizontal_overflow": false
+    },
+    "screenshots": [
+      {
+        "name": "desktop-top.png",
+        "bytes": 97683,
+        "sha256": "1df213fce4dcd9958beefd266186e02d777c2555d1182a8425a1cb5db8464a51"
+      },
+      {
+        "name": "desktop-full.png",
+        "bytes": 550200,
+        "sha256": "799f792db222d8f4ce09d4087d42846fec760c0b11815de831a809885bebfe18"
+      },
+      {
+        "name": "desktop-memory.png",
+        "bytes": 126820,
+        "sha256": "a6c0f7c002332365c612f5be5b335724a324148778bf6831121e6dd0654e372a"
+      },
+      {
+        "name": "desktop-memory-section.png",
+        "bytes": 151027,
+        "sha256": "898411ee036de404ab38994bff5c7046d0cf917c18374d96a39c3c057846dd90"
+      },
+      {
+        "name": "desktop-interface.png",
+        "bytes": 42550,
+        "sha256": "b0499037469ae66d726288ae42afdf4e3817533892215cd71c5e165bd8d53d28"
+      },
+      {
+        "name": "mobile390-top.png",
+        "bytes": 54007,
+        "sha256": "9530777a9d49d35d660aa895bbdb9cedeafe6962b11d7208a2c260ef98cc5f68"
+      },
+      {
+        "name": "mobile390-full.png",
+        "bytes": 466801,
+        "sha256": "64b3104bc1238102fd540a64fd4181a5facb4b19f32f7f8faba21a58d11de86c"
+      },
+      {
+        "name": "mobile390-memory.png",
+        "bytes": 84340,
+        "sha256": "c9b67561d04addc341b4ff82e4f3625342fc6932e08a8aa2925657db05cc4462"
+      },
+      {
+        "name": "mobile390-memory-section.png",
+        "bytes": 145583,
+        "sha256": "3d183bae893c194adc49e0d51cd0ecdb82a60d0ab48fcb380b116adc7bfdfcbb"
+      },
+      {
+        "name": "mobile390-interface.png",
+        "bytes": 18127,
+        "sha256": "1cf831996aad3150f06cad3081d02a03b0a157754c59bbc67ad91c98002ca30e"
+      },
+      {
+        "name": "mobile320-top.png",
+        "bytes": 44844,
+        "sha256": "74dcd44fe0949b4ed8be7d4c7e3490db42a09389fa6a33bbd861aff890197815"
+      },
+      {
+        "name": "mobile320-full.png",
+        "bytes": 462954,
+        "sha256": "8d4f406340dfed8219da1be749af392fb413ab5898731e73d969e35fa27caa09"
+      },
+      {
+        "name": "mobile320-memory.png",
+        "bytes": 61559,
+        "sha256": "932d8c3933ff75fd3ce46823698d5ffd322662d11c04c45579db3154396a1ef5"
+      },
+      {
+        "name": "mobile320-memory-section.png",
+        "bytes": 147301,
+        "sha256": "8222ae4d47c26c3bec1e3878d4eadcc4fef9e06578df66b0e43db60ff011ebe3"
+      },
+      {
+        "name": "mobile320-interface.png",
+        "bytes": 15295,
+        "sha256": "8f2fb6dfe86fd10495dbe01a5c6586675a0d98e5caa395dd4aca1232b4701316"
+      },
+      {
+        "name": "mobile390-copy-fallback.png",
+        "bytes": 55271,
+        "sha256": "bf55160aaaed14ef3c575c8d5c297011997749082e8b594a1f129aebf1293618"
+      },
+      {
+        "name": "mobile390-nojs-memory.png",
+        "bytes": 84339,
+        "sha256": "935e448d31e8b928b87e7192ae450733a4611ebd33df97e8f3ddce0468a7d629"
+      },
+      {
+        "name": "mobile390-nojs-top.png",
+        "bytes": 54007,
+        "sha256": "9530777a9d49d35d660aa895bbdb9cedeafe6962b11d7208a2c260ef98cc5f68"
+      }
+    ],
+    "closed_successfully": true,
+    "remaining_private_profile_processes": 0,
+    "private_profiles_removed": true
+  },
+  "public_https_links": {
+    "checked_at": "2026-11-20T08:29:56.585188+00:00",
+    "method": "Anonymous curl HEAD with redirects; real page navigation checked separately in Chrome.",
+    "status": "passed",
+    "links": [
+      {
+        "url": "https://aur.archlinux.org/packages/zmcl-bin",
+        "http_status": 200,
+        "exit_code": 0,
+        "error": ""
+      },
+      {
+        "url": "https://github.com/LIghtJUNction/zmcl",
+        "http_status": 200,
+        "exit_code": 0,
+        "error": ""
+      },
+      {
+        "url": "https://github.com/LIghtJUNction/zmcl/blob/main/LICENSE",
+        "http_status": 200,
+        "exit_code": 0,
+        "error": ""
+      },
+      {
+        "url": "https://github.com/LIghtJUNction/zmcl/blob/main/README.md",
+        "http_status": 200,
+        "exit_code": 0,
+        "error": ""
+      },
+      {
+        "url": "https://github.com/LIghtJUNction/zmcl/blob/main/docs/ARCHITECTURE.md",
+        "http_status": 200,
+        "exit_code": 0,
+        "error": ""
+      },
+      {
+        "url": "https://github.com/LIghtJUNction/zmcl/blob/main/docs/FEATURES.md",
+        "http_status": 200,
+        "exit_code": 0,
+        "error": ""
+      },
+      {
+        "url": "https://github.com/LIghtJUNction/zmcl/blob/main/docs/INSTALL.md",
+        "http_status": 200,
+        "exit_code": 0,
+        "error": ""
+      },
+      {
+        "url": "https://github.com/LIghtJUNction/zmcl/blob/main/docs/PERFORMANCE.md",
+        "http_status": 200,
+        "exit_code": 0,
+        "error": ""
+      },
+      {
+        "url": "https://github.com/LIghtJUNction/zmcl/blob/main/docs/VALIDATION.md",
+        "http_status": 200,
+        "exit_code": 0,
+        "error": ""
+      },
+      {
+        "url": "https://github.com/LIghtJUNction/zmcl/commit/35eb8a3242a6ba637266ba1480354138389c9cb0",
+        "http_status": 200,
+        "exit_code": 0,
+        "error": ""
+      },
+      {
+        "url": "https://github.com/LIghtJUNction/zmcl/issues",
+        "http_status": 200,
+        "exit_code": 0,
+        "error": ""
+      },
+      {
+        "url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.1/zmcl-0.1.1-linux-x86_64.tar.gz",
+        "http_status": 200,
+        "exit_code": 0,
+        "error": ""
+      },
+      {
+        "url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.1/zmcl-0.1.1-linux-x86_64.tar.gz.sha256",
+        "http_status": 200,
+        "exit_code": 0,
+        "error": ""
+      },
+      {
+        "url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.1",
+        "http_status": 200,
+        "exit_code": 0,
+        "error": ""
+      },
+      {
+        "url": "https://github.com/Voxelum/x-minecraft-launcher/releases/tag/v0.73.1",
+        "http_status": 200,
+        "exit_code": 0,
+        "error": ""
+      }
+    ]
+  },
+  "limitations": [
+    "Desktop Chrome with emulated narrow viewports; not physical mobile, Safari or a full accessibility certification.",
+    "Chrome's raw JSON viewer probes favicon.ico and receives 404; HTML references load successfully. The probe is retained in evidence.",
+    "GUI memory target for all states remains false; website QA does not repeat application/game/network measurements.",
+    "Public Pages deployment and live-page readback remain the parent coordinator's next step."
+  ],
+  "aur_publication_gate": {
+    "version": "0.1.1-1",
+    "confirmed_at_utc": "2026-11-20T08:30:32Z",
+    "source": "Release coordinator reports current/legacy/search AUR RPC plus yay and paru all read back 0.1.1-1."
+  }
+}

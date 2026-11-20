@@ -7,14 +7,34 @@
     "updated": "2026-11-20",
     "stage": "development",
     "release": {
-      "version": "0.1.0",
+      "version": "0.1.1",
       "type": "prerelease",
-      "url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.0",
+      "url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.1",
       "platform": "linux-x86_64",
-      "minimum_direct_elf_glibc": "2.43",
-      "archive_bytes": 648849,
-      "archive_sha256": "304f7a0e3c2ed5dd84ecc98093715793b3f5eb4cb484449b8342b619116d9ea5",
-      "packager_commit": "a8f72474c4f5289ea881226299ae7706b8024b59"
+      "source_commit": "35eb8a3242a6ba637266ba1480354138389c9cb0",
+      "minimum_direct_elf_glibc": "2.39",
+      "minimum_fontconfig": "2.17.0",
+      "requires_opengl": false,
+      "native_backend": {
+        "library": "zgpui",
+        "version": "0.1.2",
+        "commit": "5b268da910639abd2fb8e581acb4f6eed50b7516",
+        "renderer": "native Linux CPU"
+      },
+      "archive_bytes": 664850,
+      "archive_sha256": "c61a83ce918d7fe3d58a080bc41bc1c5f301c259396cc4a96a5acf81c3ee9f0b",
+      "binary_bytes": 1439712,
+      "binary_sha256": "a28998952b42d09f652ac95da47ddb15930cd556b6fa4e9b7e7ebbd23a4ac2e9",
+      "payload_regular_files": 7,
+      "payload_regular_file_bytes": 1490322,
+      "packager_commit": "35eb8a3242a6ba637266ba1480354138389c9cb0",
+      "download_url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.1/zmcl-0.1.1-linux-x86_64.tar.gz",
+      "checksum_url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.1/zmcl-0.1.1-linux-x86_64.tar.gz.sha256",
+      "aur": {
+        "package": "zmcl-bin",
+        "version": "0.1.1-1",
+        "url": "https://aur.archlinux.org/packages/zmcl-bin"
+      }
     }
   },
   "measurement": {
@@ -43,9 +63,9 @@
     {
       "name": "原生界面与命令行",
       "state": "verified",
-      "label": "Linux 交互已验证",
-      "summary": "实例创建、安装/修复、单机与账号启动、Modrinth 搜索/添加、mrpack 和诊断已接入。实际验证了基础交互和启动后退出；新增管理能力仍以 CLI 为主。",
-      "evidence": "src/gui.rs"
+      "label": "0.1.1 Linux 窗口验收",
+      "summary": "当前界面使用 zgpui 0.1.2 原生 CPU 后端。实例与内容入口继续保留，新增世界、备份、资源和服务器页面；本轮通过六项真实窗口与文件效果验收，真实账号及联网流程不在本轮范围。",
+      "evidence": "src/gui/manage_smoke.py"
     },
     {
       "name": "实例与共享存储",
@@ -58,14 +78,14 @@
       "name": "原版 Java Edition",
       "state": "verified",
       "label": "真实游戏已验证",
-      "summary": "Linux Minecraft 1.21.1 欢迎页与 26.3 主菜单已有记录。安装、Java 要求与启动参数按版本解析；游玩和保存世界仍是独立验收项目。",
+      "summary": "Linux Minecraft 1.21.1 欢迎页与 26.3 主菜单已有记录。安装、Java 要求与启动参数按版本解析；游玩和保存世界仍是独立验收项目。 本版未重跑实际游戏，历史记录的版本和构建见验收文档。",
       "evidence": "docs/FEATURES.md"
     },
     {
       "name": "Fabric / Quilt / Forge",
       "state": "verified",
       "label": "1.21.1 实测",
-      "summary": "三种加载器分别进入真实主菜单；Fabric API / Mod Menu 有指定组合的画面记录。覆盖不等于所有历史版本或 mod 组合均已验证。",
+      "summary": "三种加载器分别进入真实主菜单；Fabric API / Mod Menu 有指定组合的画面记录。覆盖不等于所有历史版本或 mod 组合均已验证。 本版未重跑实际游戏，历史记录的版本和构建见验收文档。",
       "evidence": "docs/FEATURES.md"
     },
     {
@@ -99,9 +119,9 @@
     {
       "name": "资源包与光影包",
       "state": "verified",
-      "label": "20 条 CLI 验收",
-      "summary": "真实下载、追踪文件、更新、启停、历史版本、恢复和手工修改保护。GUI 尚未覆盖；光影引擎安装与游戏内渲染另行验收。",
-      "evidence": "src/resources/test_cli.py"
+      "label": "GUI 文件保留与历史 CLI 验收",
+      "summary": "资源包与光影包已有 GUI 管理入口。本版实际窗口验收覆盖未托管资源文件保留；此前 20 条 CLI 验收保留原构建身份。GUI 真实联网下载、光影引擎安装和游戏内渲染仍待验收。",
+      "evidence": "src/gui/manage_smoke.py"
     },
     {
       "name": "Java 管理",
@@ -113,16 +133,16 @@
     {
       "name": "存档与备份",
       "state": "verified",
-      "label": "CLI / 合成夹具验收",
-      "summary": "世界目录/ZIP 导入导出、克隆、手动快照、校验与受保护恢复已有真实 CLI 和合成存档验收；没有把合成样本写成实际游戏存档游玩。",
-      "evidence": "docs/FEATURES.md"
+      "label": "0.1.1 GUI 合成存档往返",
+      "summary": "GUI 已验收世界目录导入、ZIP 导出、备份及确认恢复，并保留 pre-restore 快照；测试端 CLI 回导校验文件内容。CLI 仍提供克隆等操作，小型合成样本不代表实际游戏游玩或大存档。",
+      "evidence": "src/gui/manage_smoke.py"
     },
     {
       "name": "本地 Java 服务端",
       "state": "implemented",
-      "label": "安装与保护路径已验",
-      "summary": "创建、安装、状态、启动/停止与协议探测已实现；已验安装及未接受 EULA 时拒绝启动。真实服务端世界运行需用户明确授权。",
-      "evidence": "src/server.rs"
+      "label": "GUI 创建与 EULA 保护已验",
+      "summary": "本地服务器管理已接入原生窗口。本版验收创建服务器，以及合成已安装状态下 EULA=false 拒绝启动；没有真实服务器开服。既有 CLI 安装与保护路径记录保留原构建身份。",
+      "evidence": "src/gui/manage_smoke.py"
     },
     {
       "name": "Horizon",
@@ -326,20 +346,158 @@
       "url": "https://github.com/LIghtJUNction/zmcl/blob/main/docs/PERFORMANCE.md"
     },
     {
-      "title": "最终基准脚本",
+      "title": "Linux 基准脚本",
       "url": "https://github.com/LIghtJUNction/zmcl/blob/main/scripts/bench_linux.py"
     },
     {
-      "title": "最终派生汇总",
+      "title": "历史基准派生汇总",
       "url": "https://github.com/LIghtJUNction/zmcl/blob/main/docs/measurements/2026-11-20-comparison.json"
     },
     {
-      "title": "Linux 开发预览下载",
+      "title": "历史 Linux v0.1.0 开发预览",
       "url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.0"
     },
     {
-      "title": "最终分发包与安装验收",
+      "title": "历史 v0.1.0 分发包与安装验收",
       "url": "https://github.com/LIghtJUNction/zmcl/blob/main/docs/validation/package-install-2026-11-20.json"
+    },
+    {
+      "title": "当前 Linux v0.1.1 开发预览",
+      "url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.1"
+    },
+    {
+      "title": "当前 GUI 活动测量脚本",
+      "url": "https://github.com/LIghtJUNction/zmcl/blob/main/scripts/bench_gui_activity.py"
     }
-  ]
+  ],
+  "historical_releases": [
+    {
+      "version": "0.1.0",
+      "type": "prerelease",
+      "url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.0",
+      "platform": "linux-x86_64",
+      "minimum_direct_elf_glibc": "2.43",
+      "archive_bytes": 648849,
+      "archive_sha256": "304f7a0e3c2ed5dd84ecc98093715793b3f5eb4cb484449b8342b619116d9ea5",
+      "packager_commit": "a8f72474c4f5289ea881226299ae7706b8024b59"
+    }
+  ],
+  "historical_measurement_scope": "measurement 与 measurements 保留原样：zmcl 0.1.0 固定源码 0337762 和 XMCL v0.73.1 的历史对照，不是当前发行版结果。",
+  "current_release_measurement": {
+    "artifact_version": "0.1.1",
+    "source_commit": "35eb8a3242a6ba637266ba1480354138389c9cb0",
+    "binary_sha256": "a28998952b42d09f652ac95da47ddb15930cd556b6fa4e9b7e7ebbd23a4ac2e9",
+    "recorded_at_utc": "2026-11-20T07:48:13Z",
+    "status": "completed_with_limits",
+    "all_states_below_10_mib": false,
+    "environment": "Linux x86_64，私有 Xvfb，真实 zgpui 0.1.2 原生 CPU 窗口，1120×760；共享开发机存在外部编译。",
+    "scope": "主进程和观察到的完整应用进程族/会话均报告；GUI 自己派生的 CLI/Python 计入，显示服务和测试控制器另列。没有 Java/Minecraft 游戏进程。",
+    "conditions": {
+      "trials": 3,
+      "warmup_seconds": 20,
+      "idle_samples_per_trial": 11,
+      "idle_interval_seconds": 1,
+      "expose_seconds": 6,
+      "expose_requests_per_second": 60,
+      "sampling_sleep_seconds": 0.005,
+      "window": [
+        1120,
+        760
+      ],
+      "activity_display": [
+        1280,
+        800,
+        24
+      ],
+      "management_display": [
+        1280,
+        900,
+        24
+      ]
+    },
+    "metrics_kib": {
+      "empty_home_idle": {
+        "main_rss_median": 9784,
+        "main_pss_median": 4647,
+        "tree_rss_median": 9784,
+        "tree_pss_median": 4647,
+        "main_and_tree_rss_sampled_peak": 9864,
+        "swap_pss": 0,
+        "processes": 1
+      },
+      "drawing": {
+        "main_rss_sampled_peak": 13192,
+        "main_pss_sampled_peak": 8256,
+        "tree_rss_sampled_peak": 13192,
+        "tree_pss_sampled_peak": 8256,
+        "processes": 1
+      },
+      "lifetime_main_vm_hwm_max": 17204,
+      "management_startup": {
+        "main_rss_sampled_peak": 16972,
+        "main_pss_sampled_peak": 9989
+      },
+      "management_actions": {
+        "main_rss_sampled_peak": 13892,
+        "main_pss_sampled_peak": 9306,
+        "tree_rss_sampled_peak": 60860,
+        "tree_pss_sampled_peak": 49269,
+        "max_processes": 3,
+        "tree_rss_median": null,
+        "tree_pss_median": null
+      },
+      "management_main_rss_overall_median": 10424,
+      "swap_event": {
+        "trial": 2,
+        "phase": "settled",
+        "main_pss": 3301,
+        "main_swap_pss": 1336,
+        "main_pss_plus_swap_pss": 4637,
+        "xvfb_swap_pss": 8432
+      },
+      "xvfb_idle": {
+        "rss_median": 39124,
+        "pss_median": 32861,
+        "rss_median_delta_range": [
+          1248,
+          1512
+        ],
+        "pss_median_delta_range": [
+          1061,
+          1269
+        ]
+      },
+      "minimum_host_mem_available": 2009508
+    },
+    "cpu": {
+      "drawing_seconds": 6,
+      "gui_cpu_seconds_median": 3.21,
+      "controller_cpu_seconds_per_drawing": [
+        3.176069772,
+        3.114506342,
+        2.81854469
+      ],
+      "management_sampling_thread_cpu_seconds": 15.546504656
+    },
+    "management_validation": {
+      "functional_cases_passed": 6,
+      "samples": 2938,
+      "unread_samples": 129,
+      "memory_status": "needs_review",
+      "fixtures": "小型合成 Java 存档；GUI 创建及 EULA 保护，不含真实账号、联网下载和实际服务器运行。"
+    },
+    "limitations": [
+      "采样峰值是观察下界，完全位于采样间隔内的短时进程可能遗漏。",
+      "第二轮重绘后出现 swap，驻留下降不能算作优化收益。",
+      "129 条管理样本有相关进程缺读，完整树中位数留空；主进程和显示服务读取成功。",
+      "外部编译、共享页和内存压力不同，不给出普遍性能倍数。",
+      "测试控制器、xdotool、截图程序及测试端夹具 CLI 不属于部署应用；GUI 派生的 CLI/Python 计入应用树。"
+    ],
+    "evidence": [
+      "docs/PERFORMANCE.md",
+      "docs/VALIDATION.md",
+      "scripts/bench_gui_activity.py",
+      "src/gui/manage_smoke.py"
+    ]
+  }
 }
