@@ -15,7 +15,7 @@ yay -S zmcl-bin
 # 或 paru -S zmcl-bin
 ~~~
 
-当前 AUR 版本为 **0.1.0-1 开发预览**。Linux x86_64 预编译包要求 glibc 2.43 或更新；GUI 低于 10 MiB 仍是优化目标。安装、更新、卸载、其他 Linux 系统和实际验收范围见 [安装说明](docs/INSTALL.md)。
+AUR 安装 GitHub 发布的 Linux x86_64 预编译程序，附带桌面入口与图标。当前发行版本、运行库下限、更新与卸载步骤见 [安装说明](docs/INSTALL.md)，每个包的实际依赖记录在 release.json 中。GUI 低于 10 MiB 仍需按静置、绘制和操作期间的主进程及完整进程树分别验收。
 
 ## 为什么体积可以小
 
@@ -27,7 +27,7 @@ yay -S zmcl-bin
 
 性能对照使用固定 XMCL 0.73.1、完整进程树、重复样本，并同时记录 RSS、PSS、SwapPss 和宿主内存压力。软件渲染结果不能替代硬件 GPU 实测，现阶段功能范围也不同。
 
-主线已接入统一后的 `zgpui` 0.1.1：实际窗口、输入和绘制调用来自 `zgpui::native`，启用 `native` 和 `linux-software`，不保留旧包别名。Library 的 Manage 入口提供世界、备份与资源管理，侧栏提供本地服务器管理。源码能力与当前 AUR 发行版本分别记录，详见[架构说明](docs/ARCHITECTURE.md)和[功能记录](docs/FEATURES.md)。
+主线已接入统一后的 `zgpui` 0.1.2：实际窗口、输入和绘制调用来自 `zgpui::native`，启用 `native` 和 `linux-software`，不保留旧包别名。Library 的 Manage 入口提供世界、备份与资源管理，侧栏提供本地服务器管理。源码能力与当前 AUR 发行版本分别记录，详见[架构说明](docs/ARCHITECTURE.md)和[功能记录](docs/FEATURES.md)。
 
 ## 构建与运行
 
@@ -42,7 +42,7 @@ cargo build --release --locked
 
 只有 CLI 时可用 `cargo build --release --locked --no-default-features`。启动器支持 `--root DIR` 或 `ZMCL_HOME` 选择数据目录；运行 `zmcl doctor` 查看系统程序与 Java 状态。默认数据目录为 Linux 的 XDG data/zmcl、macOS 的 Application Support/zmcl、Windows 的 LocalAppData/zmcl。
 
-本轮真实游戏与桌面验收在 Linux x86_64 完成。当前预编译包的主程序引用到 `GLIBC_2.43`，因此需要 **glibc 2.43 或更新版本**及上述系统库；较旧发行版请按前面的步骤在本机从源码构建。这个符号要求只描述主程序的 ABI 下限，不能替代完整发行版兼容性验收。其他平台的实现分支和启动计划测试不等于对应系统已经通过真实桌面验收。
+已记录的真实游戏与桌面验收在 Linux x86_64 完成。预编译包的 glibc 和 Fontconfig 下限由实际 ELF 符号生成，见包内 release.json；源码支持的条件分支不代表预编译程序兼容同样的旧运行库。较旧发行版可在本机构建，并验证运行条件。符号要求不能替代完整发行版兼容性验收；其他平台的实现分支和启动计划测试也不等于对应系统已经通过真实桌面验收。
 
 ## 常用操作
 
