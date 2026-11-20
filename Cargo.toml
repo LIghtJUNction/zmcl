@@ -5,7 +5,7 @@ resolver = "3"
 
 [package]
 name = "zmcl"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
 rust-version = "1.100"
 description = "A small native Minecraft launcher built on Project Z"
@@ -19,7 +19,7 @@ gui = ["dep:zgpui", "dep:zi18n"]
 [dependencies]
 zmcl-core = { path = "crates/zmcl-core", version = "=0.1.0" }
 zclap = { path = "vendor/zclap", version = "=0.1.4" }
-zgpui = { path = "vendor/zgpui", version = "=0.1.2", default-features = false, features = ["native", "linux-software"], optional = true }
+zgpui = { path = "vendor/zgpui", version = "=0.1.5", default-features = false, features = ["native", "linux-software"], optional = true }
 zi18n = { path = "vendor/zi18n", version = "=0.1.0", default-features = false, optional = true }
 
 [profile.release]

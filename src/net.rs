@@ -39,8 +39,9 @@ fn base(url: &str) -> Result<String> {
         return Err("Invalid HTTPS authority".into());
     }
     Ok(format!(
-        "url = {}\nuser-agent = \"zmcl/0.1.0 (https://github.com/LIghtJUNction/zmcl)\"\n",
-        config_value(url)?
+        "url = {}\nuser-agent = \"zmcl/{} (https://github.com/LIghtJUNction/zmcl)\"\n",
+        config_value(url)?,
+        env!("CARGO_PKG_VERSION")
     ))
 }
 fn curl(config: &str, max_time: u32) -> Result<std::process::Child> {
