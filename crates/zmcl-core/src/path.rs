@@ -34,6 +34,20 @@ pub fn validate_id(id: &str) -> Result<(), String> {
         Ok(())
     }
 }
+/// Mojang version names may contain spaces; instance and classifier IDs may not.
+pub fn validate_version_id(id: &str) -> Result<(), String> {
+    if id.len() > 128
+        || id.starts_with(' ')
+        || !segment(id)
+        || !id
+            .bytes()
+            .all(|b| b.is_ascii_alphanumeric() || b"._-+ ".contains(&b))
+    {
+        Err("Invalid Minecraft version ID: expected 1..128 portable ASCII letters, digits, internal spaces, '.', '_', '+' or '-'".into())
+    } else {
+        Ok(())
+    }
+}
 pub fn validate_relative(path: &str) -> Result<(), String> {
     if path.len() > 4096 || !path.split('/').all(segment) {
         return Err(format!("Unsafe relative path: {path:?}"));
@@ -101,6 +115,44 @@ pub fn join(root: &str, path: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn official_version_names_do_not_relax_instance_or_classifier_ids() {
+        for id in ["1.14 Pre-Release 1", "3D Shareware v1.34"] {
+            assert!(validate_version_id(id).is_ok(), "{id:?}");
+            assert!(validate_id(id).is_err(), "{id:?}");
+        }
+        for id in ["1.21.1", "24w14potato", "fixture-1+build"] {
+            assert!(validate_version_id(id).is_ok(), "{id:?}");
+        }
+        assert!(validate_version_id(&"a".repeat(128)).is_ok());
+        assert!(validate_version_id(&"a".repeat(129)).is_err());
+    }
+    #[test]
+    fn version_names_keep_portable_path_boundaries() {
+        for id in [
+            "",
+            ".",
+            "..",
+            "../1.14",
+            "a/1.14",
+            "a\\1.14",
+            "C:1.14",
+            "CON",
+            "NUL.jar",
+            "COM1",
+            "LPT9.txt",
+            "1.14.",
+            "1.14 ",
+            " 1.14",
+            "1.14\tpre",
+            "1.14\npre",
+            "1.14\0pre",
+            "版本",
+            "a|b",
+        ] {
+            assert!(validate_version_id(id).is_err(), "{id:?}");
+        }
+    }
     #[test]
     fn blocks_cross_platform_traversal_and_special_files() {
         for p in [

@@ -140,10 +140,10 @@ impl Version {
     pub fn from_value(value: Value<'_, '_>) -> Result<Self, String> {
         object(value, "version")?;
         let id = json::req_str(value, "id")?;
-        path::validate_id(&id)?;
+        path::validate_version_id(&id)?;
         let inherits_from = optional_string(value, "inheritsFrom")?;
         if let Some(s) = &inherits_from {
-            path::validate_id(s)?;
+            path::validate_version_id(s)?;
         }
         if inherits_from.as_deref() == Some(&id) {
             return Err("Version cannot inherit itself".into());
@@ -182,7 +182,7 @@ impl Version {
             client_id = Some(id.clone());
         }
         if let Some(s) = &client_id {
-            path::validate_id(s)?;
+            path::validate_version_id(s)?;
         }
         let asset_id = optional_string(value, "assets")?;
         if let Some(s) = &asset_id {
@@ -772,6 +772,10 @@ mod tests {
         for json in [
             r#"{"id":"../evil"}"#,
             r#"{"id":"x","inheritsFrom":"x"}"#,
+            r#"{"id":"x","inheritsFrom":"../base"}"#,
+            r#"{"id":"x","jar":"../base"}"#,
+            r#"{"id":"x","assets":"asset index"}"#,
+            r#"{"id":"x","libraries":[{"name":"a:b:1","downloads":{"classifiers":{"natives windows":{"url":"https://example.org/native"}}}}]}"#,
             r#"{"id":"x","libraries":[{"name":"a:b:1","downloads":{"artifact":{"url":"https://x/a","path":"../../bad"}}}]}"#,
             r#"{"id":"x","downloads":{"client":{"url":"file:///tmp/game.jar"}}}"#,
             r#"{"id":"x","javaVersion":{"majorVersion":null}}"#,

@@ -51,7 +51,7 @@ pub fn install_plan(version: &Version, env: &Environment) -> Result<InstallPlan,
     if !matches!(env.os.as_str(), "linux" | "windows" | "osx") {
         return Err("Unsupported target OS".into());
     }
-    path::validate_id(&version.id)?;
+    path::validate_version_id(&version.id)?;
     let mut plan = InstallPlan::default();
     for library in &version.libraries {
         if !library.client_required || !env.rules_allow(&library.rules)? {
@@ -102,7 +102,7 @@ pub fn install_plan(version: &Version, env: &Environment) -> Result<InstallPlan,
         }
     }
     let client_id = version.client_id.as_deref().unwrap_or(&version.id);
-    path::validate_id(client_id)?;
+    path::validate_version_id(client_id)?;
     let jar = format!("versions/{client_id}/{client_id}.jar");
     if let Some(client) = &version.client {
         insert_download(&mut plan, jar.clone(), client.clone())?;
@@ -561,6 +561,63 @@ mod tests {
         assert!(!plan.args.contains(&"--demo".into()));
         assert!(plan.redacted_args().contains(&"<redacted>".into()));
         assert!(!plan.redacted_args().contains(&"secret-token".into()));
+    }
+    #[test]
+    fn inherited_preview_version_keeps_its_jar_and_argv_on_each_platform() {
+        let parent = Version::parse(
+            br#"{
+            "id":"1.14 Pre-Release 1",
+            "mainClass":"net.minecraft.client.main.Main",
+            "downloads":{"client":{"url":"https://example.org/game","size":100}},
+            "minecraftArguments":"--version ${version_name} --gameDir ${game_directory}"
+        }"#,
+        )
+        .unwrap();
+        let child = Version::parse(
+            br#"{
+            "id":"fixture-1.14 Pre-Release 1",
+            "inheritsFrom":"1.14 Pre-Release 1",
+            "jar":"1.14 Pre-Release 1"
+        }"#,
+        )
+        .unwrap();
+        let version = crate::model::merge(parent, child).unwrap();
+        let jar = "versions/1.14 Pre-Release 1/1.14 Pre-Release 1.jar";
+        assert_eq!(version.client_id.as_deref(), Some("1.14 Pre-Release 1"));
+        for os in ["linux", "windows", "osx"] {
+            let env = Environment::new(os, "x86_64");
+            let options = LaunchOptions {
+                root: if os == "windows" {
+                    "C:/Minecraft shared".into()
+                } else {
+                    "/Minecraft shared".into()
+                },
+                game_dir: if os == "windows" {
+                    "C:/instances/preview game".into()
+                } else {
+                    "/instances/preview game".into()
+                },
+                ..Default::default()
+            };
+            let install = install_plan(&version, &env).unwrap();
+            assert_eq!(install.downloads[0].path, jar, "{os}");
+            assert_eq!(install.classpath, vec![jar], "{os}");
+            let launch = launch_plan(&version, &env, &options).unwrap();
+            let cp = launch.args.iter().position(|arg| arg == "-cp").unwrap();
+            assert_eq!(launch.args[cp + 1], path::join(&options.root, jar), "{os}");
+            let id = launch
+                .args
+                .iter()
+                .position(|arg| arg == "--version")
+                .unwrap();
+            assert_eq!(launch.args[id + 1], version.id, "{os}");
+            let game = launch
+                .args
+                .iter()
+                .position(|arg| arg == "--gameDir")
+                .unwrap();
+            assert_eq!(launch.args[game + 1], options.game_dir, "{os}");
+        }
     }
     #[test]
     fn modern_and_legacy_natives_are_planned() {

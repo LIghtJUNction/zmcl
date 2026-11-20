@@ -20,15 +20,7 @@ pub struct Instance {
 }
 
 fn validate_version_id(version: &str) -> Result<()> {
-    if version.is_empty()
-        || version.len() > 128
-        || !version
-            .bytes()
-            .all(|x| x.is_ascii_alphanumeric() || b"-_. ".contains(&x))
-    {
-        return Err("Invalid Minecraft version ID".into());
-    }
-    Ok(())
+    zmcl_core::path::validate_version_id(version)
 }
 
 impl Instance {
@@ -190,5 +182,31 @@ impl App {
         }
         out.sort_by(|a, b| a.id.cmp(&b.id));
         Ok(out)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn instance_metadata_uses_the_same_version_names_as_launch_planning() {
+        for version in [
+            "1.14 Pre-Release 1",
+            "3D Shareware v1.34",
+            "fixture-1+build",
+        ] {
+            let metadata = util::object(&[("id", quote("preview")), ("version", quote(version))]);
+            let instance = Instance::parse(metadata.as_bytes()).unwrap();
+            assert_eq!(instance.version, version);
+            assert_eq!(
+                Instance::parse(instance.json().as_bytes()).unwrap().version,
+                version
+            );
+        }
+        for version in [".", "..", "CON", "NUL.jar", "1.14.", "1.14 ", "a/b"] {
+            let metadata = util::object(&[("id", quote("preview")), ("version", quote(version))]);
+            assert!(Instance::parse(metadata.as_bytes()).is_err(), "{version:?}");
+        }
     }
 }
