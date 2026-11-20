@@ -36,6 +36,25 @@ class BenchmarkAccountingTests(unittest.TestCase):
             ):
                 self.assertEqual(bench.family(100, {101}), {100, 101, 102})
 
+    def test_real_sample_separates_main_and_total_without_dropping_missing(self):
+        snapshot = bench.sample({bench.os.getpid(), 2147483647})
+        main = bench.main_process_memory(snapshot, bench.os.getpid())
+        self.assertIsNotNone(main)
+        self.assertGreater(main["rss_kib"], 0)
+        self.assertGreater(main["pss_kib"], 0)
+        self.assertIn(2147483647, snapshot["unread_processes"])
+        self.assertEqual(snapshot["rss_kib"], sum(x["rss_kib"] for x in snapshot["process_memory"].values()))
+        self.assertIsNone(bench.complete_main_median(
+            [{"main_process": main}, {"main_process": None}], "pss_kib"))
+
+    def test_display_delta_retains_cost_and_rejects_replacement(self):
+        before = {"unread_processes": [], "processes": 1, "cpu_ticks": {"2:100": 1},
+                  "rss_kib": 5000, "pss_kib": 3000, "swap_kib": 0, "swap_pss_kib": 0}
+        after = dict(before, rss_kib=8000, pss_kib=6000)
+        self.assertEqual(bench.display_change([{"display_server": after}], before)["pss_kib"], 3000)
+        after["cpu_ticks"] = {"2:200": 1}
+        self.assertIsNone(bench.display_change([{"display_server": after}], before))
+
     def test_stable_processes_report_complete_cpu(self):
         result = bench.summarize_cpu([self.before, self.after], 100)
         self.assertTrue(result["cpu_process_set_stable_at_sample_points"])

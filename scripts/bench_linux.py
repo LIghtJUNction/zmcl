@@ -57,6 +57,7 @@ def sample(pids):
     rss = pss = swap = swap_pss = 0
     ticks = {}
     names = []
+    memory = {}
     unread = []
     for pid in sorted(pids):
         try:
@@ -73,6 +74,9 @@ def sample(pids):
             identity = str(pid) + ":" + parts[19]
             ticks[identity] = int(parts[11]) + int(parts[12])
             names.append(name)
+            memory[identity] = {"pid": pid, "name": name,
+                                "rss_kib": values["Rss"], "pss_kib": values["Pss"],
+                                "swap_kib": values["Swap"], "swap_pss_kib": values["SwapPss"]}
             rss += values["Rss"]
             pss += values["Pss"]
             swap += values["Swap"]
@@ -80,8 +84,33 @@ def sample(pids):
         except (FileNotFoundError, PermissionError, ProcessLookupError, ValueError, KeyError):
             unread.append(pid)
     return {"rss_kib": rss, "pss_kib": pss, "swap_kib": swap, "swap_pss_kib": swap_pss, "processes": len(ticks),
-            "cpu_ticks": ticks, "process_names": sorted(names),
+            "cpu_ticks": ticks, "process_names": sorted(names), "process_memory": memory,
             "unread_processes": unread}
+
+def main_process_memory(snapshot, pid):
+    rows = [row for row in snapshot["process_memory"].values() if row["pid"] == pid]
+    return rows[0] if len(rows) == 1 else None
+
+
+def complete_main_median(samples, metric):
+    # Never silently discard a failed main-process read to report a lower median.
+    if not samples or any(s.get("main_process") is None for s in samples):
+        return None
+    return statistics.median(s["main_process"][metric] for s in samples)
+
+
+def display_change(samples, before):
+    # Keep external display cost visible, including negative deltas caused by
+    # shared-page accounting. Replacement or unread processes invalidate it.
+    snapshots = [s["display_server"] for s in samples]
+    if before["unread_processes"] or before["processes"] != 1 or not snapshots:
+        return None
+    if any(s["unread_processes"] or s["processes"] != 1 or
+           s["cpu_ticks"].keys() != before["cpu_ticks"].keys() for s in snapshots):
+        return None
+    return {metric: statistics.median(s[metric] for s in snapshots) - before[metric]
+            for metric in ["rss_kib", "pss_kib", "swap_kib", "swap_pss_kib"]}
+
 
 def summarize_cpu(samples, clock_ticks):
     intervals = []
@@ -231,6 +260,7 @@ def trial(options, number):
                         "XMCL_E2E_GAME_DATA": str(game)})
             command = [str(options.binary), "--ozone-platform=x11"]
             title = "XMCL|X Minecraft|xmcl"
+        display_before = sample({xvfb.pid})
         started = time.monotonic()
         process = subprocess.Popen(command, cwd=options.binary.parent, env=env,
                                    stdout=log, stderr=subprocess.STDOUT,
@@ -250,7 +280,7 @@ def trial(options, number):
         if window is None:
             raise RuntimeError("No visible launcher window within 90 seconds")
         visible_ms = round((time.monotonic() - started) * 1000, 3)
-        subprocess.run(["xdotool", "windowsize", window, "1024", "720"], env=env, check=True)
+        subprocess.run(["xdotool", "windowsize", window, str(options.width), str(options.height)], env=env, check=True)
         warmup_end = time.monotonic() + options.warmup
         while time.monotonic() < warmup_end:
             known = family(process.pid, known)
@@ -264,6 +294,8 @@ def trial(options, number):
                 raise RuntimeError("Launcher exited during sampling")
             known = family(process.pid, known)
             data = sample(known)
+            data["main_process"] = main_process_memory(data, process.pid)
+            data["display_server"] = sample({xvfb.pid})
             data["elapsed_seconds"] = time.monotonic() - sampled_at
             samples.append(data)
             if index + 1 < options.samples:
@@ -275,6 +307,11 @@ def trial(options, number):
         cpu = summarize_cpu(samples, os.sysconf("SC_CLK_TCK"))
         result = {
             "trial": number, "window_visible_ms": visible_ms,
+            "window_size": {"width": options.width, "height": options.height},
+            "main_rss_median_kib": complete_main_median(samples, "rss_kib"),
+            "main_pss_median_kib": complete_main_median(samples, "pss_kib"),
+            "display_server_before_app": display_before,
+            "display_server_change_kib": display_change(samples, display_before),
             "rss_median_kib": statistics.median(x["rss_kib"] for x in memory_samples),
             "pss_median_kib": statistics.median(x["pss_kib"] for x in memory_samples),
             "pss_min_kib": min(x["pss_kib"] for x in memory_samples),
@@ -330,11 +367,15 @@ def main():
     parser.add_argument("--warmup", type=float, default=20)
     parser.add_argument("--samples", type=int, default=11)
     parser.add_argument("--interval", type=float, default=1)
+    parser.add_argument("--width", type=int, default=1120)
+    parser.add_argument("--height", type=int, default=760)
     options = parser.parse_args()
     if platform.system() != "Linux":
         parser.error("This script measures Linux /proc only")
     if not 1 <= options.trials <= 10 or not 2 <= options.samples <= 120 or options.interval <= 0 or options.warmup < 0:
         parser.error("Invalid measurement bounds")
+    if not 640 <= options.width <= 1280 or not 480 <= options.height <= 800:
+        parser.error("Window must fit the fixed 1280x800 display")
     options.binary = options.binary.resolve(strict=True)
     options.output = options.output.absolute()
     options.output.mkdir(parents=True, exist_ok=True)
@@ -342,7 +383,7 @@ def main():
         if shutil.which(program) is None:
             parser.error(f"Missing system tool: {program}")
     report = {
-        "schema": 4, "app": options.app, "version": options.version,
+        "schema": 5, "app": options.app, "version": options.version,
         "recorded_at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "revision": options.revision, "binary_sha256": digest(options.binary),
         "benchmark_script_sha256": digest(Path(__file__)),
@@ -350,8 +391,8 @@ def main():
         "system": {"os": platform.system(), "arch": platform.machine(),
                    "kernel": platform.release()},
         "scenario": "Fresh isolated data, no account, no instance, visible default home/library",
-        "display": "Owned Xvfb :100-:199 1280x800x24; launcher window 1024x720; LIBGL_ALWAYS_SOFTWARE=1",
-        "scope": "Launcher processes/session; excludes Xvfb, controller, Java and Minecraft",
+        "display": f"Owned Xvfb :100-:199 1280x800x24; launcher window {options.width}x{options.height}; LIBGL_ALWAYS_SOFTWARE=1",
+        "scope": "Main launcher and full launcher processes/session are both reported; Xvfb is measured separately before and during the app; controller, Java and Minecraft are excluded",
         "conditions": {"warmup_seconds": options.warmup, "samples_per_trial": options.samples,
                        "interval_seconds": options.interval, "os_caches_flushed": False,
                        "cpu_clock_ticks_per_second": os.sysconf("SC_CLK_TCK"),
