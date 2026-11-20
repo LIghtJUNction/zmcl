@@ -17,7 +17,7 @@
   <header class="header">
     <a class="wordmark" href="#top">zmcl</a>
     <nav aria-label="项目链接">
-      <a href="https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.2">下载</a>
+      <a href="https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.3">下载</a>
       <a href="https://github.com/LIghtJUNction/zmcl">GitHub <span aria-hidden="true">↗</span></a>
     </nav>
   </header>
@@ -36,7 +36,7 @@
 
     <main id="main">
       <div class="intro" id="top">
-        <p class="version">Project Z <span aria-hidden="true">/</span> v0.1.2 · 开发预览</p>
+        <p class="version">Project Z <span aria-hidden="true">/</span> v0.1.3 · 开发预览</p>
         <h1>Minecraft 启动器</h1>
         <p class="lead">zmcl 是基于 Rust 与 Project Z 的原生启动器。提供 Java 版实例、加载器和内容管理，支持图形界面与命令行。</p>
         <p class="intro-note">目前主要在 Linux 上开发和验证。功能覆盖与内存优化仍在进行中。</p>
@@ -54,11 +54,11 @@
           <div class="command-heading"><span>AUR</span><button type="button" data-copy="aur-command" aria-label="复制 AUR 安装命令">复制</button></div>
           <pre><code id="aur-command">paru -S zmcl-bin</code></pre>
         </div>
-        <p class="note" id="aur-status">当前包为 0.1.2-1 开发预览，已完成公共新克隆构建、正常升级和安装后窗口验收。也可运行 <code>yay -S zmcl-bin</code>，用 <code>zmcl --version</code> 核对实际安装版本。</p>
+        <p class="note" id="aur-status">当前包为 0.1.3-1 开发预览，已完成公共新克隆构建、正常升级和安装后窗口验收。也可运行 <code>yay -S zmcl-bin</code>，用 <code>zmcl --version</code> 核对实际安装版本。</p>
 
         <h3>Linux x86_64</h3>
-        <p><a href="https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.2/zmcl-0.1.2-linux-x86_64.tar.gz">下载 v0.1.2 开发预览（tar.gz，679,358 字节）</a>。此预编译包要求 <code>glibc ≥ 2.39</code>、<code>Fontconfig ≥ 2.17.0</code>、X11/XWayland 与 FreeType。默认使用 CPU 绘制，无需 OpenGL；Python ≥ 3.8 和 curl 在相应操作期间运行，Java 与 Minecraft 单独安装。</p>
-        <p class="note"><a href="https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.2/zmcl-0.1.2-linux-x86_64.tar.gz.sha256">SHA-256 校验文件 ↗</a> · <a href="https://github.com/LIghtJUNction/zmcl/blob/main/docs/INSTALL.md">安装与卸载说明 ↗</a> · <a href="https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.2">发行记录 ↗</a></p>
+        <p><a href="https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.3/zmcl-0.1.3-linux-x86_64.tar.gz">下载 v0.1.3 开发预览（tar.gz，679,517 字节）</a>。此预编译包要求 <code>glibc ≥ 2.39</code>、<code>Fontconfig ≥ 2.17.0</code>、X11/XWayland 与 FreeType。默认使用 CPU 绘制，无需 OpenGL；Python ≥ 3.8 和 curl 在相应操作期间运行，Java 与 Minecraft 单独安装。</p>
+        <p class="note"><a href="https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.3/zmcl-0.1.3-linux-x86_64.tar.gz.sha256">SHA-256 校验文件 ↗</a> · <a href="https://github.com/LIghtJUNction/zmcl/blob/main/docs/INSTALL.md">安装与卸载说明 ↗</a> · <a href="https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.3">发行记录 ↗</a></p>
 
         <details class="source-build">
           <summary>从源码构建</summary>
@@ -90,7 +90,7 @@ zmcl launch survival --offline Player</code></pre>
 
       <section id="features" aria-labelledby="features-title">
         <h2 id="features-title">当前功能</h2>
-        <p>v0.1.2 完善了发行版筛选、自动建议实例名和创建安装流程。最终 Linux 程序通过四组创建与六项管理操作验收；实际游戏、加载器和联网流程保留各自原构建的记录。</p>
+        <p>v0.1.3 接续既有的发行版筛选、实例命名和创建安装流程，继续减少世界与备份管理中的临时分配。AUR 安装后的程序再次通过六组原生管理操作；0.1.2 的创建流程和实际游戏、加载器及联网结果保留各自原构建的记录。</p>
         <dl class="feature-list">
           <div><dt>游戏与加载器</dt><dd>Java 版安装、修复和启动。原版 26.3、Fabric / Quilt / Forge 1.21.1 已有此前构建的真实菜单记录；本版未重跑实际游戏，NeoForge 仍待实机验收。</dd></div>
           <div><dt>实例</dt><dd>筛选官方发行版、建议不重复的名称，选择创建并安装或仅创建。保留配置、克隆、回收站和恢复，以及下载校验、缓存复用与损坏修复。</dd></div>
@@ -113,10 +113,22 @@ zmcl launch survival --offline Player</code></pre>
 
       <section id="memory" aria-labelledby="memory-title">
         <h2 id="memory-title">资源占用</h2>
-        <p><strong>低于 10 MiB 的完整 GUI 内存目标仍未达到。</strong>下面分别列出当前发行包体积、两组预发行候选对照和历史测量。</p>
-        <p class="note">v0.1.2 Linux 主程序为 1,473,144 bytes，下载包为 679,358 bytes；展开后 7 个常规文件共 1,526,666 bytes。应用源码为 <a href="https://github.com/LIghtJUNction/zmcl/commit/e86b5841532ef04cc74cea5585ae396150452408">e86b584</a>，使用 zgpui 0.1.5。文件体积不含系统库、Java、游戏和缓存，也不等同于运行内存。</p>
+        <p><strong>低于 10 MiB 的完整 GUI 内存目标仍未达到。</strong>下面列出 0.1.3 制品与完整进程树测量，并保留各自原身份的历史对照。</p>
+        <p class="note">v0.1.3 Linux 主程序为 1,473,752 bytes，下载包为 679,517 bytes；展开后 7 个常规文件共 1,527,273 bytes。应用源码为 <a href="https://github.com/LIghtJUNction/zmcl/commit/9ef89bb92d46d324172d6ea8b13054c81434e178">9ef89bb</a>，使用 zgpui 0.1.5。文件体积不含系统库、Java、游戏和缓存，也不等同于运行内存。</p>
 
-        <h3>两组预发行候选对照</h3>
+        <h3>0.1.3 原生管理流程</h3>
+        <table class="measurements">
+          <caption>最终二进制 · 六组管理流程 · 完整应用树观测峰值</caption>
+          <thead><tr><th scope="col">运行条件</th><th scope="col">RSS / PSS</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">默认 PATH，含 mise 转发程序</th><td>59,884 / 48,651 KiB <span>包含 GUI、CLI、Python 与观察到的转发程序</span></td></tr>
+            <tr><th scope="row">明确指定系统 Python</th><td>37,948 / 19,306 KiB <span>环境条件变化，不能记为代码优化</span></td></tr>
+          </tbody>
+        </table>
+        <p class="note">主进程 RSS 中位数分别为 11,316 / 11,020 KiB；观察窗包含启动和流程间等待。两组存在短进程缺读，完整树中位数保持未知，峰值为采样下界；显示服务和观察成本在报告中单列。</p>
+        <p class="note">固定两份各含 10,000 个文件的备份，在相同系统 Python 条件下三对交错查询，完整 CLI 树的最大观测 RSS 为 45,692 → 35,368 KiB、PSS 为 35,099 → 24,824 KiB。世界列表结果有波动，完整 GUI 的峰值尚未稳定下降。<a href="https://github.com/LIghtJUNction/zmcl/blob/main/docs/reports/2026-11-20-helper-memory.md">0.1.3 安装、截图与测量边界 ↗</a></p>
+
+        <h3>历史 0.1.2 预发行候选对照</h3>
         <table class="measurements">
           <caption>不同的固定候选与场景 · Linux · 主 GUI 进程</caption>
           <thead><tr><th scope="col">工作负载</th><th scope="col">对应指标</th></tr></thead>

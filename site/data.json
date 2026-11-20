@@ -7,11 +7,11 @@
     "updated": "2026-11-20",
     "stage": "development",
     "release": {
-      "version": "0.1.2",
+      "version": "0.1.3",
       "type": "prerelease",
-      "url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.2",
+      "url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.3",
       "platform": "linux-x86_64",
-      "source_commit": "e86b5841532ef04cc74cea5585ae396150452408",
+      "source_commit": "9ef89bb92d46d324172d6ea8b13054c81434e178",
       "minimum_direct_elf_glibc": "2.39",
       "minimum_fontconfig": "2.17.0",
       "requires_opengl": false,
@@ -21,38 +21,37 @@
         "commit": "4aba3ba83815253fb7e4013baa8bcf894439d32d",
         "renderer": "native Linux CPU"
       },
-      "archive_bytes": 679358,
-      "archive_sha256": "5cb7945cb5888d1ec02d84e55a4b91576161ddb6fe6c3a6be2644c8f058fb3c4",
-      "binary_bytes": 1473144,
-      "binary_sha256": "71bf4017072703a91359ea84e2493db218d9962456ece2060d0f2e42b3500c32",
+      "archive_bytes": 679517,
+      "archive_sha256": "b15024e99dd1275db15020ef26669f24aaad9026d948dd6683cacac5c7647e0e",
+      "binary_bytes": 1473752,
+      "binary_sha256": "02620a8ec4fac34e63fcbe483268149b2ed4032ac2d7bf42975ff6b19b72a1aa",
       "payload_regular_files": 7,
-      "payload_regular_file_bytes": 1526666,
-      "packager_commit": "dc9e586ed541cc3e1d75661c54caacdd021834a9",
-      "download_url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.2/zmcl-0.1.2-linux-x86_64.tar.gz",
-      "checksum_url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.2/zmcl-0.1.2-linux-x86_64.tar.gz.sha256",
+      "payload_regular_file_bytes": 1527273,
+      "packager_commit": "9ef89bb92d46d324172d6ea8b13054c81434e178",
+      "download_url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.3/zmcl-0.1.3-linux-x86_64.tar.gz",
+      "checksum_url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.3/zmcl-0.1.3-linux-x86_64.tar.gz.sha256",
       "aur": {
         "package": "zmcl-bin",
-        "version": "0.1.2-1",
+        "version": "0.1.3-1",
         "url": "https://aur.archlinux.org/packages/zmcl-bin",
-        "source_commit": "16b688237f8c54b47085a16279535db8f6c5c553",
+        "source_commit": "60c9ad8e1be8204c6a4e0024c83a4a5851ada0f5",
         "publication_status": "published",
         "fresh_public_build_validation": "passed",
         "installed_upgrade_and_window_validation": "passed",
-        "validation_note": "Normal pacman upgrade from 0.1.1-1 to 0.1.2-1 passed; official executable SHA-256 and all 19 package entries match. Four installed native creation fixture groups passed; no real sign-in or game launch was added.",
-        "initial_rpc_helper_version": "0.1.1-1",
+        "validation_note": "Normal pacman upgrade from 0.1.2-1 to 0.1.3-1 passed; official executable SHA-256 and all 19 package entries match. Six installed native management fixture flows passed. No real sign-in or game/server launch was added.",
+        "initial_rpc_helper_version": "0.1.2-1",
         "latest_rpc_helper_status": "verified",
         "metadata_verification": {
-          "checked_at": "2026-11-20T10:44:22.414102+00:00",
+          "checked_at": "2026-11-20T11:46:59Z",
           "sources": [
             "current RPC",
-            "legacy RPC",
             "yay -Si",
             "paru -Si"
           ],
-          "version": "0.1.2-1"
+          "version": "0.1.3-1"
         },
-        "validation_evidence": "docs/validation/aur-install-0.1.2-2026-11-20.json",
-        "installed_gui_evidence": "docs/validation/installed-gui-0.1.2-2026-11-20.json"
+        "validation_evidence": "docs/validation/aur-install-0.1.3-2026-11-20.json",
+        "installed_gui_evidence": "docs/validation/installed-gui-0.1.3-2026-11-20.json"
       },
       "minimum_python": "3.8"
     }
@@ -390,12 +389,20 @@
       "url": "https://github.com/LIghtJUNction/zmcl/blob/main/scripts/bench_gui_activity.py"
     },
     {
-      "title": "当前 Linux v0.1.2 开发预览",
+      "title": "历史 Linux v0.1.2 开发预览",
       "url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.2"
     },
     {
       "title": "0.1.2 GUI 功能、性能与跨平台验收",
       "url": "https://github.com/LIghtJUNction/zmcl/blob/main/docs/reports/2026-11-20-gui-iteration.md"
+    },
+    {
+      "title": "当前 Linux v0.1.3 开发预览",
+      "url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.3"
+    },
+    {
+      "title": "0.1.3 AUR 与管理助手内存报告",
+      "url": "https://github.com/LIghtJUNction/zmcl/blob/6ef39c8f16e5d8ccf198545e9deabeeb72095ee4/docs/reports/2026-11-20-helper-memory.md"
     }
   ],
   "historical_releases": [
@@ -438,6 +445,56 @@
         "version": "0.1.1-1",
         "url": "https://aur.archlinux.org/packages/zmcl-bin"
       }
+    },
+    {
+      "version": "0.1.2",
+      "type": "prerelease",
+      "url": "https://github.com/LIghtJUNction/zmcl/releases/tag/v0.1.2",
+      "platform": "linux-x86_64",
+      "source_commit": "e86b5841532ef04cc74cea5585ae396150452408",
+      "minimum_direct_elf_glibc": "2.39",
+      "minimum_fontconfig": "2.17.0",
+      "requires_opengl": false,
+      "native_backend": {
+        "library": "zgpui",
+        "version": "0.1.5",
+        "commit": "4aba3ba83815253fb7e4013baa8bcf894439d32d",
+        "renderer": "native Linux CPU"
+      },
+      "archive_bytes": 679358,
+      "archive_sha256": "5cb7945cb5888d1ec02d84e55a4b91576161ddb6fe6c3a6be2644c8f058fb3c4",
+      "binary_bytes": 1473144,
+      "binary_sha256": "71bf4017072703a91359ea84e2493db218d9962456ece2060d0f2e42b3500c32",
+      "payload_regular_files": 7,
+      "payload_regular_file_bytes": 1526666,
+      "packager_commit": "dc9e586ed541cc3e1d75661c54caacdd021834a9",
+      "download_url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.2/zmcl-0.1.2-linux-x86_64.tar.gz",
+      "checksum_url": "https://github.com/LIghtJUNction/zmcl/releases/download/v0.1.2/zmcl-0.1.2-linux-x86_64.tar.gz.sha256",
+      "aur": {
+        "package": "zmcl-bin",
+        "version": "0.1.2-1",
+        "url": "https://aur.archlinux.org/packages/zmcl-bin",
+        "source_commit": "16b688237f8c54b47085a16279535db8f6c5c553",
+        "publication_status": "published",
+        "fresh_public_build_validation": "passed",
+        "installed_upgrade_and_window_validation": "passed",
+        "validation_note": "Normal pacman upgrade from 0.1.1-1 to 0.1.2-1 passed; official executable SHA-256 and all 19 package entries match. Four installed native creation fixture groups passed; no real sign-in or game launch was added.",
+        "initial_rpc_helper_version": "0.1.1-1",
+        "latest_rpc_helper_status": "verified",
+        "metadata_verification": {
+          "checked_at": "2026-11-20T10:44:22.414102+00:00",
+          "sources": [
+            "current RPC",
+            "legacy RPC",
+            "yay -Si",
+            "paru -Si"
+          ],
+          "version": "0.1.2-1"
+        },
+        "validation_evidence": "docs/validation/aur-install-0.1.2-2026-11-20.json",
+        "installed_gui_evidence": "docs/validation/installed-gui-0.1.2-2026-11-20.json"
+      },
+      "minimum_python": "3.8"
     }
   ],
   "historical_measurement_scope": "measurement 与 measurements 保留原样：zmcl 0.1.0 固定源码 0337762 和 XMCL v0.73.1 的历史对照，不是当前发行版结果。",
@@ -558,7 +615,7 @@
       "src/gui/manage_smoke.py"
     ],
     "historical": true,
-    "label": "历史 v0.1.1 固定发行二进制；不是 v0.1.2 的新测量",
+    "label": "历史 v0.1.1 固定发行二进制；不是当前 v0.1.3 的新测量",
     "relation_to_current_release": "保留旧字段名以兼容已有数据；本对象的版本、二进制、条件和所有数值均属于 0.1.1。"
   },
   "iteration_measurements": [
@@ -679,6 +736,207 @@
       ],
       "evidence": "docs/measurements/2026-11-20-large-library-iteration.json",
       "evidence_url": "https://github.com/LIghtJUNction/zmcl/blob/dc9e586ed541cc3e1d75661c54caacdd021834a9/docs/measurements/2026-11-20-large-library-iteration.json"
+    },
+    {
+      "label": "两份各 10000 文件备份的实际 CLI 列表查询",
+      "phase": "paired_cli_query_comparison",
+      "final_release": {
+        "version": "0.1.3",
+        "binary_sha256": "02620a8ec4fac34e63fcbe483268149b2ed4032ac2d7bf42975ff6b19b72a1aa",
+        "included_in_this_comparison": true
+      },
+      "identity": {
+        "before": {
+          "source": "af14e2c0f9b3a39e5b5a8a70976d2d0721b4400f",
+          "sha256": "908f0582c07a7aeb8b452a410d45d0dd3bbb84e2e89a96993ff9ac6ed681b12f"
+        },
+        "after": {
+          "source": "9ef89bb92d46d324172d6ea8b13054c81434e178",
+          "sha256": "02620a8ec4fac34e63fcbe483268149b2ed4032ac2d7bf42975ff6b19b72a1aa"
+        }
+      },
+      "trials_per_variant": 3,
+      "scope": "Main CLI plus discovered related process tree; explicit system Python for both variants; no GUI or game.",
+      "metric": "Maximum observed tree peak across three runs; lower bounds, not complete-lifetime bounds",
+      "unit": "kib",
+      "rss": {
+        "before": 45692,
+        "after": 35368
+      },
+      "pss": {
+        "before": 35099,
+        "after": 24824
+      },
+      "all_responses_equal_within_query_type": true,
+      "samples": 1193,
+      "samples_with_unread_processes": 73,
+      "tree_medians": null,
+      "limitations": [
+        "Three adjacent AB/BA pairs, no cache flush. All canonical responses agree.",
+        "Each backup listing pair has a lower observed RSS/PSS peak after the patch. World-list values overlap across repeats; no consistent world-list peak reduction is claimed.",
+        "Observed peaks are lower bounds; none of the 12 runs has complete-tree reads throughout. Do not turn null medians into zero or use timing as a throughput guarantee."
+      ],
+      "evidence": "docs/measurements/2026-11-20-helper-queries-0.1.3.json"
     }
-  ]
+  ],
+  "management_measurement_0_1_3": {
+    "artifact_version": "0.1.3",
+    "source_commit": "9ef89bb92d46d324172d6ea8b13054c81434e178",
+    "binary_sha256": "02620a8ec4fac34e63fcbe483268149b2ed4032ac2d7bf42975ff6b19b72a1aa",
+    "all_states_below_10_mib": false,
+    "scope": "Final frozen release binary; six native management flows including startup and idle waits. Application tree includes spawned CLI/Python and observed mise images; Xvfb and test tooling are separate.",
+    "runs": [
+      {
+        "label": "final-default",
+        "recorded_at_utc": "2026-11-20T11:13:25Z",
+        "conditions": {
+          "sample_sleep_seconds": 0.005,
+          "display": "Owned Xvfb 1280x900x24",
+          "window": [
+            1120,
+            760
+          ],
+          "warmup": "Existing idle waits; startup and all six flows sampled",
+          "cpu_clock_ticks_per_second": 100,
+          "os_caches_flushed": false,
+          "LIBGL_ALWAYS_SOFTWARE": "1"
+        },
+        "summary": {
+          "samples": 2820,
+          "main": {
+            "all_samples_complete": true,
+            "complete_samples": 2820,
+            "rss_median_kib": 11316,
+            "rss_sampled_peak_kib": 17780,
+            "pss_median_kib": 7300,
+            "pss_sampled_peak_kib": 13326,
+            "swap_median_kib": 0,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_median_kib": 0,
+            "swap_pss_sampled_peak_kib": 0,
+            "pss_plus_swap_pss_median_kib": 7300,
+            "pss_plus_swap_pss_sampled_peak_kib": 13326
+          },
+          "tree": {
+            "all_samples_complete": false,
+            "complete_samples": 2704,
+            "rss_median_kib": null,
+            "rss_sampled_peak_kib": 59884,
+            "pss_median_kib": null,
+            "pss_sampled_peak_kib": 48651,
+            "swap_median_kib": null,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_median_kib": null,
+            "swap_pss_sampled_peak_kib": 0,
+            "pss_plus_swap_pss_median_kib": null,
+            "pss_plus_swap_pss_sampled_peak_kib": 48651
+          },
+          "display_server": {
+            "all_samples_complete": true,
+            "complete_samples": 2820,
+            "rss_median_kib": 38992,
+            "rss_sampled_peak_kib": 39008,
+            "pss_median_kib": 32746,
+            "pss_sampled_peak_kib": 33434,
+            "swap_median_kib": 0,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_median_kib": 0,
+            "swap_pss_sampled_peak_kib": 0,
+            "pss_plus_swap_pss_median_kib": 32746,
+            "pss_plus_swap_pss_sampled_peak_kib": 33434
+          },
+          "display_server_median_delta_kib": {
+            "rss_kib": 924,
+            "pss_kib": -149,
+            "swap_kib": 0,
+            "swap_pss_kib": 0
+          }
+        },
+        "sampling_thread_cpu_seconds": 9.833732653000013,
+        "actual_interval_seconds_median": 0.008239872986450791,
+        "status": "needs_review",
+        "functional_complete": true
+      },
+      {
+        "label": "final-system",
+        "recorded_at_utc": "2026-11-20T11:13:49Z",
+        "conditions": {
+          "sample_sleep_seconds": 0.005,
+          "display": "Owned Xvfb 1280x900x24",
+          "window": [
+            1120,
+            760
+          ],
+          "warmup": "Existing idle waits; startup and all six flows sampled",
+          "cpu_clock_ticks_per_second": 100,
+          "os_caches_flushed": false,
+          "LIBGL_ALWAYS_SOFTWARE": "1"
+        },
+        "summary": {
+          "samples": 2767,
+          "main": {
+            "all_samples_complete": true,
+            "complete_samples": 2767,
+            "rss_median_kib": 11020,
+            "rss_sampled_peak_kib": 17040,
+            "pss_median_kib": 6783,
+            "pss_sampled_peak_kib": 12528,
+            "swap_median_kib": 0,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_median_kib": 0,
+            "swap_pss_sampled_peak_kib": 0,
+            "pss_plus_swap_pss_median_kib": 6783,
+            "pss_plus_swap_pss_sampled_peak_kib": 12528
+          },
+          "tree": {
+            "all_samples_complete": false,
+            "complete_samples": 2635,
+            "rss_median_kib": null,
+            "rss_sampled_peak_kib": 37948,
+            "pss_median_kib": null,
+            "pss_sampled_peak_kib": 19306,
+            "swap_median_kib": null,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_median_kib": null,
+            "swap_pss_sampled_peak_kib": 0,
+            "pss_plus_swap_pss_median_kib": null,
+            "pss_plus_swap_pss_sampled_peak_kib": 19306
+          },
+          "display_server": {
+            "all_samples_complete": true,
+            "complete_samples": 2767,
+            "rss_median_kib": 38732,
+            "rss_sampled_peak_kib": 38844,
+            "pss_median_kib": 32496,
+            "pss_sampled_peak_kib": 32621,
+            "swap_median_kib": 0,
+            "swap_sampled_peak_kib": 0,
+            "swap_pss_median_kib": 0,
+            "swap_pss_sampled_peak_kib": 0,
+            "pss_plus_swap_pss_median_kib": 32496,
+            "pss_plus_swap_pss_sampled_peak_kib": 32621
+          },
+          "display_server_median_delta_kib": {
+            "rss_kib": 652,
+            "pss_kib": 284,
+            "swap_kib": 0,
+            "swap_pss_kib": 0
+          }
+        },
+        "sampling_thread_cpu_seconds": 9.305650801999981,
+        "actual_interval_seconds_median": 0.008181306497135665,
+        "status": "needs_review",
+        "functional_complete": true
+      }
+    ],
+    "limits": [
+      "Peaks are observations and lower bounds. Complete-tree medians are null if any sampled related process was unreadable. Unknown memory is not zero.",
+      "GUI scope includes its spawned CLI, Python and observed runtime shim images. Xvfb is separate; controller, xdotool, ImageMagick and fixture-side CLI work are not deployed application processes.",
+      "Controller memory was not independently measured in these GUI runs; the memory-sampling thread CPU is reported.",
+      "Default PATH selects a mise python3 shim; explicit /usr/bin/python3 is a separate environment condition, not a code change.",
+      "Shared development host; no deliberate concurrent build from this owner, no OS cache flush, no per-sample host memory-pressure capture.",
+      "RSS double-counts shared mappings across processes; PSS apportions shared pages and can vary when other processes share them."
+    ],
+    "evidence": "docs/measurements/2026-11-20-helper-gui-0.1.3.json"
+  }
 }
