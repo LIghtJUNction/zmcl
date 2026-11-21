@@ -18,9 +18,9 @@ gui = ["dep:zgpui", "dep:zi18n"]
 
 [dependencies]
 zmcl-core = { path = "crates/zmcl-core", version = "=0.1.0" }
-zclap = {  version = "=0.1.4", git = "https://github.com/LIghtJUNction/zclap.git"}
-zgpui = {  version = "=0.1.5", default-features = false, features = ["native", "linux-software"], optional = true, git = "https://github.com/LIghtJUNction/zgpui.git"}
-zi18n = {  version = "=0.1.0", default-features = false, optional = true, git = "https://github.com/LIghtJUNction/zi18n.git"}
+zclap = {  git = "https://github.com/LIghtJUNction/zclap.git"}
+zgpui = {  default-features = false, features = ["native", "linux-software"], optional = true, git = "https://github.com/LIghtJUNction/zgpui.git"}
+zi18n = {  default-features = false, optional = true, git = "https://github.com/LIghtJUNction/zi18n.git"}
 
 [profile.release]
 opt-level = "z"
