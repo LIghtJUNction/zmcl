@@ -20,7 +20,7 @@ source = "git+https://github.com/LIghtJUNction/zgpui.git#174a8b73087deeac2ecfa03
 [[package]]
 name = "zi18n"
 version = "0.1.0"
-source = "git+https://github.com/LIghtJUNction/zi18n.git#cdff8dea19e97268d296afa827767ea689420591"
+source = "git+https://github.com/LIghtJUNction/zi18n.git#755549f82fa513c4e4f2f5aaf6fdeea8da4a6347"
 
 [[package]]
 name = "zmcl"
