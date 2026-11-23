@@ -324,3 +324,45 @@ pub fn batch(app: &App, artifacts: &[zmcl_core::plan::Artifact], jobs: usize) ->
     }
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    struct Directory(PathBuf);
+
+    impl Drop for Directory {
+        fn drop(&mut self) {
+            let _ = fs::remove_dir_all(&self.0);
+        }
+    }
+
+    #[test]
+    fn digests_roundtrip_binary_files() {
+        let directory = Directory(std::env::temp_dir().join(format!(
+            "zmcl-store-digests-{}-{}",
+            std::process::id(),
+            NEXT.fetch_add(1, Ordering::Relaxed)
+        )));
+        fs::create_dir(&directory.0).unwrap();
+        let path = directory.0.join("payload.bin");
+        for (bytes, sha1, sha256) in [
+            (
+                Vec::new(),
+                "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+                "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            ),
+            (
+                (0..65537).map(|index| index as u8).collect(),
+                "e59142c546b1069d7b8dd556adeae6e40ec376e8",
+                "2deb0bd2129a9d3aed91e3cff58b3993752be549642890a3e853ec1065f9b617",
+            ),
+        ] {
+            fs::write(&path, &bytes).unwrap();
+            assert_eq!(
+                digests(&path).unwrap(),
+                (sha1.into(), sha256.into(), bytes.len() as u64)
+            );
+        }
+    }
+}
